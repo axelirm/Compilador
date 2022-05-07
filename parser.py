@@ -10,8 +10,9 @@ from lexer import tokens
 PilaO = []
 POper = []
 PilaTipos = []
-PilaSalto = []
+PilaSaltos = []
 cont = 0
+contCuad = 1
 
 sem = s.Semantica()
 tablaVariables = ts.tabla_simbolos_vars()
@@ -153,6 +154,8 @@ def p_asignacion(t):
     rechazar = cubo.cubo[tipoVariable, tipoExpresion, 10]
     if(rechazar != 11):
         sem.intermediario('=', expresion, None , variable)
+        global contCuad
+        contCuad = contCuad + 1
         # update tablaVariables
     else:
         print("Error semantico: error de asignacion type-mismatch")    
@@ -182,7 +185,20 @@ def p_variable3(t):
 
 #*********** condicion ***********
 def p_condicion(t):
-    'condicion : IF LPAR expresion RPAR bloque condicion1'
+    'condicion : IF LPAR expresion RPAR gotoF bloque fill condicion1'
+
+def p_gotoF(t):
+    'gotoF : e'
+    global contCuad
+    PilaSaltos.append(contCuad)
+    sem.intermediario('gotoF', PilaO.pop(), None , None)
+    contCuad = contCuad + 1
+
+def p_fill(t):
+    'fill : e'
+    global contCuad
+    ret = PilaSaltos.pop() - 1
+    sem.cuadruplos[ret].res = contCuad
 
 def p_condicion1(t):
     '''condicion1 : ELSE bloque
@@ -265,8 +281,9 @@ def p_pop_operador(t):
     num_oper = cubo.getOperando(operador)
     rechazar = cubo.cubo[left_type, right_type, num_oper]
     if(rechazar != 11):
-        global cont
+        global cont, contCuad
         sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
+        contCuad = contCuad + 1
         PilaO.append("t"+str(cont))
         tipo = cubo.getNumeroTipo(rechazar)
         PilaTipos.append(tipo)
@@ -389,9 +406,11 @@ def p_generar_cuadr(t):
     'generar_cuadr : e'
     poper = POper.pop()
     if(poper == "print"):
-      arg1 = str(PilaO.pop())
-      PilaTipos.pop()
-      sem.intermediario(poper, None, None , arg1)
+        arg1 = str(PilaO.pop())
+        PilaTipos.pop()
+        sem.intermediario(poper, None, None , arg1)
+        global contCuad
+        contCuad = contCuad + 1
 
 #********* error & pass **********
 def p_error(t):

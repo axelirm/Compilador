@@ -24,8 +24,10 @@ class Semantica:
       self.cuadruplos.append(cuadruplo)
 
   def imprimirCuadruplos(self):
+    cont = 1
     for i in self.cuadruplos:
-      print(str(i.operation) + ', ' + str(i.arg1) + ', ' + str(i.arg2) + ', ' + str(i.res))
+      print(str(cont) + ') ' + str(i.operation) + ', ' + str(i.arg1) + ', ' + str(i.arg2) + ', ' + str(i.res))
+      cont = cont + 1
     
   def intermediario(self, op, arg1, arg2, res):
     if op == 'print':
@@ -52,6 +54,8 @@ class Semantica:
         self.generarCuadruplo('*', arg1, arg2, res)
     elif op == '/':
         self.generarCuadruplo('/', arg1, arg2, res)
+    elif op == 'gotoF':
+        self.generarCuadruplo('gotoF', arg1, arg2, res)
 
     #elif op == '=':
      # resultado = tablaVars.get(res)[1]
