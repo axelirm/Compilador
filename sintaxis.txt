@@ -1,0 +1,18 @@
+program id ;
+
+var 
+  i : int;
+
+void function func2 (par1 : float) {
+        from ( i = 3 to sum ) do {
+          if ( ) {
+            i = i + 1 ;
+          }
+          else {
+            i = i + 2 ;
+          }
+        }
+      }
+
+main ( ) {
+}

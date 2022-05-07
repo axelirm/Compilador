@@ -1,0 +1,4908 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> PROGRAM ID SEMICOLON clase vars funcion main
+Rule 2     main -> MAIN LPAR RPAR bloque
+Rule 3     clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase
+Rule 4     clase -> e
+Rule 5     clase1 -> LT INHERITS ID GT
+Rule 6     clase1 -> e
+Rule 7     clase2 -> ATTRIBUTES declaracion atributos asign
+Rule 8     clase2 -> e
+Rule 9     atributos -> declaracion atributos
+Rule 10    atributos -> e
+Rule 11    asign -> asignacion asign
+Rule 12    asign -> e
+Rule 13    clase3 -> METHODS funcion metodos
+Rule 14    clase3 -> e
+Rule 15    metodos -> funcion metodos
+Rule 16    metodos -> e
+Rule 17    vars -> VAR declaracion declaraciones
+Rule 18    vars -> e
+Rule 19    declaraciones -> declaracion declaraciones
+Rule 20    declaraciones -> e
+Rule 21    declaracion -> declaracion1 COLON declaracion5 SEMICOLON
+Rule 22    declaracion1 -> ID declaracion2 declaracion4
+Rule 23    declaracion2 -> LSBRAC CTEI RSBRAC declaracion3
+Rule 24    declaracion2 -> e
+Rule 25    declaracion3 -> LSBRAC CTEI RSBRAC
+Rule 26    declaracion3 -> e
+Rule 27    declaracion4 -> COMMA declaracion1
+Rule 28    declaracion4 -> e
+Rule 29    declaracion5 -> tipo
+Rule 30    declaracion5 -> ID
+Rule 31    funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+Rule 32    funcion -> e
+Rule 33    funcion1 -> tipo
+Rule 34    funcion1 -> VOID
+Rule 35    funcion2 -> ID COLON tipo funcion3
+Rule 36    funcion2 -> e
+Rule 37    funcion3 -> COMMA ID COLON tipo funcion3
+Rule 38    funcion3 -> e
+Rule 39    tipo -> INT
+Rule 40    tipo -> FLOAT
+Rule 41    tipo -> STRING
+Rule 42    tipo -> BOOL
+Rule 43    bloque -> LCBRAC estatutos RCBRAC
+Rule 44    estatutos -> estatuto estatutos
+Rule 45    estatutos -> e
+Rule 46    estatuto -> asignacion
+Rule 47    estatuto -> condicion
+Rule 48    estatuto -> llamada
+Rule 49    estatuto -> leer
+Rule 50    estatuto -> escribir
+Rule 51    estatuto -> ciclo_w
+Rule 52    estatuto -> ciclo_f
+Rule 53    estatuto -> regresar
+Rule 54    asignacion -> variable EQ expresion SEMICOLON
+Rule 55    variable -> ID variable1 variable2
+Rule 56    variable1 -> DOT ID
+Rule 57    variable1 -> e
+Rule 58    variable2 -> LSBRAC expresion RSBRAC variable3
+Rule 59    variable2 -> e
+Rule 60    variable3 -> LSBRAC expresion RSBRAC
+Rule 61    variable3 -> e
+Rule 62    condicion -> IF LPAR expresion RPAR bloque condicion1
+Rule 63    condicion1 -> ELSE bloque
+Rule 64    condicion1 -> e
+Rule 65    llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON
+Rule 66    llamada1 -> DOT ID
+Rule 67    llamada1 -> e
+Rule 68    llamada2 -> expresion llamada3
+Rule 69    llamada2 -> e
+Rule 70    llamada3 -> COMMA expresion llamada3
+Rule 71    llamada3 -> e
+Rule 72    leer -> READ LPAR variable RPAR SEMICOLON
+Rule 73    escribir -> WRITE LPAR escribir1 RPAR SEMICOLON
+Rule 74    escribir1 -> texto add_print generar_cuadr escribir2
+Rule 75    escribir1 -> expresion add_print generar_cuadr escribir2
+Rule 76    add_print -> e
+Rule 77    escribir2 -> COMMA escribir1
+Rule 78    escribir2 -> e
+Rule 79    texto -> CTESTR
+Rule 80    ciclo_w -> WHILE LPAR expresion RPAR DO bloque
+Rule 81    ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque
+Rule 82    regresar -> RETURN expresion SEMICOLON
+Rule 83    expresion -> a_exp exp1
+Rule 84    exp1 -> OR push_or a_exp pop_operador exp1
+Rule 85    exp1 -> e
+Rule 86    push_or -> e
+Rule 87    pop_operador -> e
+Rule 88    a_exp -> b_exp exp2
+Rule 89    exp2 -> AND push_and b_exp pop_operador exp2
+Rule 90    exp2 -> e
+Rule 91    push_and -> e
+Rule 92    b_exp -> c_exp exp3
+Rule 93    exp3 -> LT push_lt c_exp pop_operador exp3
+Rule 94    exp3 -> GT push_gt c_exp pop_operador exp3
+Rule 95    exp3 -> COMP push_comp c_exp pop_operador exp3
+Rule 96    exp3 -> NOTEQ push_noteq c_exp pop_operador exp3
+Rule 97    exp3 -> e
+Rule 98    push_lt -> e
+Rule 99    push_gt -> e
+Rule 100   push_comp -> e
+Rule 101   push_noteq -> e
+Rule 102   c_exp -> d_exp exp4
+Rule 103   exp4 -> PLUS push_plus d_exp pop_operador exp4
+Rule 104   exp4 -> MINUS push_minus d_exp pop_operador exp4
+Rule 105   exp4 -> e
+Rule 106   push_plus -> e
+Rule 107   push_minus -> e
+Rule 108   d_exp -> e_exp exp5
+Rule 109   exp5 -> MULT push_mult e_exp pop_operador exp5
+Rule 110   exp5 -> DIV push_div e_exp pop_operador exp5
+Rule 111   exp5 -> e
+Rule 112   push_mult -> e
+Rule 113   push_div -> e
+Rule 114   e_exp -> LPAR expresion RPAR
+Rule 115   e_exp -> var_cte
+Rule 116   e_exp -> variable
+Rule 117   e_exp -> llamada
+Rule 118   var_cte -> CTEI ctei
+Rule 119   var_cte -> CTEF ctef
+Rule 120   var_cte -> CTESTR ctestr
+Rule 121   var_cte -> CTEB cteb
+Rule 122   ctei -> e
+Rule 123   ctef -> e
+Rule 124   ctestr -> e
+Rule 125   cteb -> e
+Rule 126   generar_cuadr -> e
+Rule 127   e -> <empty>
+
+Terminals, with rules where they appear
+
+AND                  : 89
+ATTRIBUTES           : 7
+BOOL                 : 42
+CLASS                : 3
+COLON                : 21 35 37
+COMMA                : 27 37 70 77
+COMP                 : 95
+CTEB                 : 121
+CTEF                 : 119
+CTEI                 : 23 25 118
+CTESTR               : 79 120
+DIV                  : 110
+DO                   : 80 81
+DOT                  : 56 66
+ELSE                 : 63
+EQ                   : 54 81
+FLOAT                : 40
+FROM                 : 81
+FUNCTION             : 31
+GT                   : 5 94
+ID                   : 1 3 5 22 30 31 35 37 55 56 65 66
+IF                   : 62
+INHERITS             : 5
+INT                  : 39
+LCBRAC               : 3 43
+LPAR                 : 2 31 62 65 72 73 80 81 114
+LSBRAC               : 23 25 58 60
+LT                   : 5 93
+MAIN                 : 2
+METHODS              : 13
+MINUS                : 104
+MULT                 : 109
+NOTEQ                : 96
+OR                   : 84
+PLUS                 : 103
+PROGRAM              : 1
+RCBRAC               : 3 43
+READ                 : 72
+RETURN               : 82
+RPAR                 : 2 31 62 65 72 73 80 81 114
+RSBRAC               : 23 25 58 60
+SEMICOLON            : 1 21 54 65 72 73 82
+STRING               : 41
+TO                   : 81
+VAR                  : 17
+VOID                 : 34
+WHILE                : 80
+WRITE                : 73
+error                : 
+
+Nonterminals, with rules where they appear
+
+a_exp                : 83 84
+add_print            : 74 75
+asign                : 7 11
+asignacion           : 11 46
+atributos            : 7 9
+b_exp                : 88 89
+bloque               : 2 31 62 63 80 81
+c_exp                : 92 93 94 95 96
+ciclo_f              : 52
+ciclo_w              : 51
+clase                : 1 3
+clase1               : 3
+clase2               : 3
+clase3               : 3
+condicion            : 47
+condicion1           : 62
+cteb                 : 121
+ctef                 : 119
+ctei                 : 118
+ctestr               : 120
+d_exp                : 102 103 104
+declaracion          : 7 9 17 19
+declaracion1         : 21 27
+declaracion2         : 22
+declaracion3         : 23
+declaracion4         : 22
+declaracion5         : 21
+declaraciones        : 17 19
+e                    : 4 6 8 10 12 14 16 18 20 24 26 28 32 36 38 45 57 59 61 64 67 69 71 76 78 85 86 87 90 91 97 98 99 100 101 105 106 107 111 112 113 122 123 124 125 126
+e_exp                : 108 109 110
+escribir             : 50
+escribir1            : 73 77
+escribir2            : 74 75
+estatuto             : 44
+estatutos            : 43 44
+exp1                 : 83 84
+exp2                 : 88 89
+exp3                 : 92 93 94 95 96
+exp4                 : 102 103 104
+exp5                 : 108 109 110
+expresion            : 54 58 60 62 68 70 75 80 81 81 82 114
+funcion              : 1 13 15 31
+funcion1             : 31
+funcion2             : 31
+funcion3             : 35 37
+generar_cuadr        : 74 75
+leer                 : 49
+llamada              : 48 117
+llamada1             : 65
+llamada2             : 65
+llamada3             : 68 70
+main                 : 1
+metodos              : 13 15
+pop_operador         : 84 89 93 94 95 96 103 104 109 110
+programa             : 0
+push_and             : 89
+push_comp            : 95
+push_div             : 110
+push_gt              : 94
+push_lt              : 93
+push_minus           : 104
+push_mult            : 109
+push_noteq           : 96
+push_or              : 84
+push_plus            : 103
+regresar             : 53
+texto                : 74
+tipo                 : 29 33 35 37
+var_cte              : 115
+variable             : 54 72 81 116
+variable1            : 55
+variable2            : 55
+variable3            : 58
+vars                 : 1
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . PROGRAM ID SEMICOLON clase vars funcion main
+
+    PROGRAM         shift and go to state 2
+
+    programa                       shift and go to state 1
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> PROGRAM . ID SEMICOLON clase vars funcion main
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) programa -> PROGRAM ID . SEMICOLON clase vars funcion main
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) programa -> PROGRAM ID SEMICOLON . clase vars funcion main
+    (3) clase -> . CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase
+    (4) clase -> . e
+    (127) e -> .
+
+    CLASS           shift and go to state 6
+    VAR             reduce using rule 127 (e -> .)
+    VOID            reduce using rule 127 (e -> .)
+    INT             reduce using rule 127 (e -> .)
+    FLOAT           reduce using rule 127 (e -> .)
+    STRING          reduce using rule 127 (e -> .)
+    BOOL            reduce using rule 127 (e -> .)
+    MAIN            reduce using rule 127 (e -> .)
+
+    clase                          shift and go to state 5
+    e                              shift and go to state 7
+
+state 5
+
+    (1) programa -> PROGRAM ID SEMICOLON clase . vars funcion main
+    (17) vars -> . VAR declaracion declaraciones
+    (18) vars -> . e
+    (127) e -> .
+
+    VAR             shift and go to state 9
+    VOID            reduce using rule 127 (e -> .)
+    INT             reduce using rule 127 (e -> .)
+    FLOAT           reduce using rule 127 (e -> .)
+    STRING          reduce using rule 127 (e -> .)
+    BOOL            reduce using rule 127 (e -> .)
+    MAIN            reduce using rule 127 (e -> .)
+
+    vars                           shift and go to state 8
+    e                              shift and go to state 10
+
+state 6
+
+    (3) clase -> CLASS . ID clase1 LCBRAC clase2 clase3 RCBRAC clase
+
+    ID              shift and go to state 11
+
+
+state 7
+
+    (4) clase -> e .
+
+    VAR             reduce using rule 4 (clase -> e .)
+    VOID            reduce using rule 4 (clase -> e .)
+    INT             reduce using rule 4 (clase -> e .)
+    FLOAT           reduce using rule 4 (clase -> e .)
+    STRING          reduce using rule 4 (clase -> e .)
+    BOOL            reduce using rule 4 (clase -> e .)
+    MAIN            reduce using rule 4 (clase -> e .)
+
+
+state 8
+
+    (1) programa -> PROGRAM ID SEMICOLON clase vars . funcion main
+    (31) funcion -> . funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+    (32) funcion -> . e
+    (33) funcion1 -> . tipo
+    (34) funcion1 -> . VOID
+    (127) e -> .
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+    VOID            shift and go to state 16
+    MAIN            reduce using rule 127 (e -> .)
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+    funcion                        shift and go to state 12
+    funcion1                       shift and go to state 13
+    e                              shift and go to state 14
+    tipo                           shift and go to state 15
+
+state 9
+
+    (17) vars -> VAR . declaracion declaraciones
+    (21) declaracion -> . declaracion1 COLON declaracion5 SEMICOLON
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+    ID              shift and go to state 23
+
+    declaracion                    shift and go to state 21
+    declaracion1                   shift and go to state 22
+
+state 10
+
+    (18) vars -> e .
+
+    VOID            reduce using rule 18 (vars -> e .)
+    INT             reduce using rule 18 (vars -> e .)
+    FLOAT           reduce using rule 18 (vars -> e .)
+    STRING          reduce using rule 18 (vars -> e .)
+    BOOL            reduce using rule 18 (vars -> e .)
+    MAIN            reduce using rule 18 (vars -> e .)
+
+
+state 11
+
+    (3) clase -> CLASS ID . clase1 LCBRAC clase2 clase3 RCBRAC clase
+    (5) clase1 -> . LT INHERITS ID GT
+    (6) clase1 -> . e
+    (127) e -> .
+
+    LT              shift and go to state 25
+    LCBRAC          reduce using rule 127 (e -> .)
+
+    clase1                         shift and go to state 24
+    e                              shift and go to state 26
+
+state 12
+
+    (1) programa -> PROGRAM ID SEMICOLON clase vars funcion . main
+    (2) main -> . MAIN LPAR RPAR bloque
+
+    MAIN            shift and go to state 28
+
+    main                           shift and go to state 27
+
+state 13
+
+    (31) funcion -> funcion1 . FUNCTION ID LPAR funcion2 RPAR bloque funcion
+
+    FUNCTION        shift and go to state 29
+
+
+state 14
+
+    (32) funcion -> e .
+
+    MAIN            reduce using rule 32 (funcion -> e .)
+    VOID            reduce using rule 32 (funcion -> e .)
+    INT             reduce using rule 32 (funcion -> e .)
+    FLOAT           reduce using rule 32 (funcion -> e .)
+    STRING          reduce using rule 32 (funcion -> e .)
+    BOOL            reduce using rule 32 (funcion -> e .)
+    RCBRAC          reduce using rule 32 (funcion -> e .)
+
+
+state 15
+
+    (33) funcion1 -> tipo .
+
+    FUNCTION        reduce using rule 33 (funcion1 -> tipo .)
+
+
+state 16
+
+    (34) funcion1 -> VOID .
+
+    FUNCTION        reduce using rule 34 (funcion1 -> VOID .)
+
+
+state 17
+
+    (39) tipo -> INT .
+
+    FUNCTION        reduce using rule 39 (tipo -> INT .)
+    SEMICOLON       reduce using rule 39 (tipo -> INT .)
+    COMMA           reduce using rule 39 (tipo -> INT .)
+    RPAR            reduce using rule 39 (tipo -> INT .)
+
+
+state 18
+
+    (40) tipo -> FLOAT .
+
+    FUNCTION        reduce using rule 40 (tipo -> FLOAT .)
+    SEMICOLON       reduce using rule 40 (tipo -> FLOAT .)
+    COMMA           reduce using rule 40 (tipo -> FLOAT .)
+    RPAR            reduce using rule 40 (tipo -> FLOAT .)
+
+
+state 19
+
+    (41) tipo -> STRING .
+
+    FUNCTION        reduce using rule 41 (tipo -> STRING .)
+    SEMICOLON       reduce using rule 41 (tipo -> STRING .)
+    COMMA           reduce using rule 41 (tipo -> STRING .)
+    RPAR            reduce using rule 41 (tipo -> STRING .)
+
+
+state 20
+
+    (42) tipo -> BOOL .
+
+    FUNCTION        reduce using rule 42 (tipo -> BOOL .)
+    SEMICOLON       reduce using rule 42 (tipo -> BOOL .)
+    COMMA           reduce using rule 42 (tipo -> BOOL .)
+    RPAR            reduce using rule 42 (tipo -> BOOL .)
+
+
+state 21
+
+    (17) vars -> VAR declaracion . declaraciones
+    (19) declaraciones -> . declaracion declaraciones
+    (20) declaraciones -> . e
+    (21) declaracion -> . declaracion1 COLON declaracion5 SEMICOLON
+    (127) e -> .
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+    VOID            reduce using rule 127 (e -> .)
+    INT             reduce using rule 127 (e -> .)
+    FLOAT           reduce using rule 127 (e -> .)
+    STRING          reduce using rule 127 (e -> .)
+    BOOL            reduce using rule 127 (e -> .)
+    MAIN            reduce using rule 127 (e -> .)
+    ID              shift and go to state 23
+
+    declaracion                    shift and go to state 30
+    declaraciones                  shift and go to state 31
+    e                              shift and go to state 32
+    declaracion1                   shift and go to state 22
+
+state 22
+
+    (21) declaracion -> declaracion1 . COLON declaracion5 SEMICOLON
+
+    COLON           shift and go to state 33
+
+
+state 23
+
+    (22) declaracion1 -> ID . declaracion2 declaracion4
+    (23) declaracion2 -> . LSBRAC CTEI RSBRAC declaracion3
+    (24) declaracion2 -> . e
+    (127) e -> .
+
+    LSBRAC          shift and go to state 35
+    COMMA           reduce using rule 127 (e -> .)
+    COLON           reduce using rule 127 (e -> .)
+
+    declaracion2                   shift and go to state 34
+    e                              shift and go to state 36
+
+state 24
+
+    (3) clase -> CLASS ID clase1 . LCBRAC clase2 clase3 RCBRAC clase
+
+    LCBRAC          shift and go to state 37
+
+
+state 25
+
+    (5) clase1 -> LT . INHERITS ID GT
+
+    INHERITS        shift and go to state 38
+
+
+state 26
+
+    (6) clase1 -> e .
+
+    LCBRAC          reduce using rule 6 (clase1 -> e .)
+
+
+state 27
+
+    (1) programa -> PROGRAM ID SEMICOLON clase vars funcion main .
+
+    $end            reduce using rule 1 (programa -> PROGRAM ID SEMICOLON clase vars funcion main .)
+
+
+state 28
+
+    (2) main -> MAIN . LPAR RPAR bloque
+
+    LPAR            shift and go to state 39
+
+
+state 29
+
+    (31) funcion -> funcion1 FUNCTION . ID LPAR funcion2 RPAR bloque funcion
+
+    ID              shift and go to state 40
+
+
+state 30
+
+    (19) declaraciones -> declaracion . declaraciones
+    (19) declaraciones -> . declaracion declaraciones
+    (20) declaraciones -> . e
+    (21) declaracion -> . declaracion1 COLON declaracion5 SEMICOLON
+    (127) e -> .
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+    VOID            reduce using rule 127 (e -> .)
+    INT             reduce using rule 127 (e -> .)
+    FLOAT           reduce using rule 127 (e -> .)
+    STRING          reduce using rule 127 (e -> .)
+    BOOL            reduce using rule 127 (e -> .)
+    MAIN            reduce using rule 127 (e -> .)
+    ID              shift and go to state 23
+
+    declaracion                    shift and go to state 30
+    declaraciones                  shift and go to state 41
+    e                              shift and go to state 32
+    declaracion1                   shift and go to state 22
+
+state 31
+
+    (17) vars -> VAR declaracion declaraciones .
+
+    VOID            reduce using rule 17 (vars -> VAR declaracion declaraciones .)
+    INT             reduce using rule 17 (vars -> VAR declaracion declaraciones .)
+    FLOAT           reduce using rule 17 (vars -> VAR declaracion declaraciones .)
+    STRING          reduce using rule 17 (vars -> VAR declaracion declaraciones .)
+    BOOL            reduce using rule 17 (vars -> VAR declaracion declaraciones .)
+    MAIN            reduce using rule 17 (vars -> VAR declaracion declaraciones .)
+
+
+state 32
+
+    (20) declaraciones -> e .
+
+    VOID            reduce using rule 20 (declaraciones -> e .)
+    INT             reduce using rule 20 (declaraciones -> e .)
+    FLOAT           reduce using rule 20 (declaraciones -> e .)
+    STRING          reduce using rule 20 (declaraciones -> e .)
+    BOOL            reduce using rule 20 (declaraciones -> e .)
+    MAIN            reduce using rule 20 (declaraciones -> e .)
+
+
+state 33
+
+    (21) declaracion -> declaracion1 COLON . declaracion5 SEMICOLON
+    (29) declaracion5 -> . tipo
+    (30) declaracion5 -> . ID
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+    ID              shift and go to state 44
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+    declaracion5                   shift and go to state 42
+    tipo                           shift and go to state 43
+
+state 34
+
+    (22) declaracion1 -> ID declaracion2 . declaracion4
+    (27) declaracion4 -> . COMMA declaracion1
+    (28) declaracion4 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 46
+    COLON           reduce using rule 127 (e -> .)
+
+    declaracion4                   shift and go to state 45
+    e                              shift and go to state 47
+
+state 35
+
+    (23) declaracion2 -> LSBRAC . CTEI RSBRAC declaracion3
+
+    CTEI            shift and go to state 48
+
+
+state 36
+
+    (24) declaracion2 -> e .
+
+    COMMA           reduce using rule 24 (declaracion2 -> e .)
+    COLON           reduce using rule 24 (declaracion2 -> e .)
+
+
+state 37
+
+    (3) clase -> CLASS ID clase1 LCBRAC . clase2 clase3 RCBRAC clase
+    (7) clase2 -> . ATTRIBUTES declaracion atributos asign
+    (8) clase2 -> . e
+    (127) e -> .
+
+    ATTRIBUTES      shift and go to state 50
+    METHODS         reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+
+    clase2                         shift and go to state 49
+    e                              shift and go to state 51
+
+state 38
+
+    (5) clase1 -> LT INHERITS . ID GT
+
+    ID              shift and go to state 52
+
+
+state 39
+
+    (2) main -> MAIN LPAR . RPAR bloque
+
+    RPAR            shift and go to state 53
+
+
+state 40
+
+    (31) funcion -> funcion1 FUNCTION ID . LPAR funcion2 RPAR bloque funcion
+
+    LPAR            shift and go to state 54
+
+
+state 41
+
+    (19) declaraciones -> declaracion declaraciones .
+
+    VOID            reduce using rule 19 (declaraciones -> declaracion declaraciones .)
+    INT             reduce using rule 19 (declaraciones -> declaracion declaraciones .)
+    FLOAT           reduce using rule 19 (declaraciones -> declaracion declaraciones .)
+    STRING          reduce using rule 19 (declaraciones -> declaracion declaraciones .)
+    BOOL            reduce using rule 19 (declaraciones -> declaracion declaraciones .)
+    MAIN            reduce using rule 19 (declaraciones -> declaracion declaraciones .)
+
+
+state 42
+
+    (21) declaracion -> declaracion1 COLON declaracion5 . SEMICOLON
+
+    SEMICOLON       shift and go to state 55
+
+
+state 43
+
+    (29) declaracion5 -> tipo .
+
+    SEMICOLON       reduce using rule 29 (declaracion5 -> tipo .)
+
+
+state 44
+
+    (30) declaracion5 -> ID .
+
+    SEMICOLON       reduce using rule 30 (declaracion5 -> ID .)
+
+
+state 45
+
+    (22) declaracion1 -> ID declaracion2 declaracion4 .
+
+    COLON           reduce using rule 22 (declaracion1 -> ID declaracion2 declaracion4 .)
+
+
+state 46
+
+    (27) declaracion4 -> COMMA . declaracion1
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+    ID              shift and go to state 23
+
+    declaracion1                   shift and go to state 56
+
+state 47
+
+    (28) declaracion4 -> e .
+
+    COLON           reduce using rule 28 (declaracion4 -> e .)
+
+
+state 48
+
+    (23) declaracion2 -> LSBRAC CTEI . RSBRAC declaracion3
+
+    RSBRAC          shift and go to state 57
+
+
+state 49
+
+    (3) clase -> CLASS ID clase1 LCBRAC clase2 . clase3 RCBRAC clase
+    (13) clase3 -> . METHODS funcion metodos
+    (14) clase3 -> . e
+    (127) e -> .
+
+    METHODS         shift and go to state 59
+    RCBRAC          reduce using rule 127 (e -> .)
+
+    clase3                         shift and go to state 58
+    e                              shift and go to state 60
+
+state 50
+
+    (7) clase2 -> ATTRIBUTES . declaracion atributos asign
+    (21) declaracion -> . declaracion1 COLON declaracion5 SEMICOLON
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+    ID              shift and go to state 23
+
+    declaracion                    shift and go to state 61
+    declaracion1                   shift and go to state 22
+
+state 51
+
+    (8) clase2 -> e .
+
+    METHODS         reduce using rule 8 (clase2 -> e .)
+    RCBRAC          reduce using rule 8 (clase2 -> e .)
+
+
+state 52
+
+    (5) clase1 -> LT INHERITS ID . GT
+
+    GT              shift and go to state 62
+
+
+state 53
+
+    (2) main -> MAIN LPAR RPAR . bloque
+    (43) bloque -> . LCBRAC estatutos RCBRAC
+
+    LCBRAC          shift and go to state 64
+
+    bloque                         shift and go to state 63
+
+state 54
+
+    (31) funcion -> funcion1 FUNCTION ID LPAR . funcion2 RPAR bloque funcion
+    (35) funcion2 -> . ID COLON tipo funcion3
+    (36) funcion2 -> . e
+    (127) e -> .
+
+    ID              shift and go to state 65
+    RPAR            reduce using rule 127 (e -> .)
+
+    funcion2                       shift and go to state 66
+    e                              shift and go to state 67
+
+state 55
+
+    (21) declaracion -> declaracion1 COLON declaracion5 SEMICOLON .
+
+    ID              reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    VOID            reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    INT             reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    FLOAT           reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    STRING          reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    BOOL            reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    MAIN            reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    METHODS         reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+    RCBRAC          reduce using rule 21 (declaracion -> declaracion1 COLON declaracion5 SEMICOLON .)
+
+
+state 56
+
+    (27) declaracion4 -> COMMA declaracion1 .
+
+    COLON           reduce using rule 27 (declaracion4 -> COMMA declaracion1 .)
+
+
+state 57
+
+    (23) declaracion2 -> LSBRAC CTEI RSBRAC . declaracion3
+    (25) declaracion3 -> . LSBRAC CTEI RSBRAC
+    (26) declaracion3 -> . e
+    (127) e -> .
+
+    LSBRAC          shift and go to state 68
+    COMMA           reduce using rule 127 (e -> .)
+    COLON           reduce using rule 127 (e -> .)
+
+    declaracion3                   shift and go to state 69
+    e                              shift and go to state 70
+
+state 58
+
+    (3) clase -> CLASS ID clase1 LCBRAC clase2 clase3 . RCBRAC clase
+
+    RCBRAC          shift and go to state 71
+
+
+state 59
+
+    (13) clase3 -> METHODS . funcion metodos
+    (31) funcion -> . funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+    (32) funcion -> . e
+    (33) funcion1 -> . tipo
+    (34) funcion1 -> . VOID
+    (127) e -> .
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+  ! shift/reduce conflict for VOID resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+  ! shift/reduce conflict for BOOL resolved as shift
+    VOID            shift and go to state 16
+    RCBRAC          reduce using rule 127 (e -> .)
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+  ! VOID            [ reduce using rule 127 (e -> .) ]
+  ! INT             [ reduce using rule 127 (e -> .) ]
+  ! FLOAT           [ reduce using rule 127 (e -> .) ]
+  ! STRING          [ reduce using rule 127 (e -> .) ]
+  ! BOOL            [ reduce using rule 127 (e -> .) ]
+
+    funcion                        shift and go to state 72
+    funcion1                       shift and go to state 13
+    e                              shift and go to state 14
+    tipo                           shift and go to state 15
+
+state 60
+
+    (14) clase3 -> e .
+
+    RCBRAC          reduce using rule 14 (clase3 -> e .)
+
+
+state 61
+
+    (7) clase2 -> ATTRIBUTES declaracion . atributos asign
+    (9) atributos -> . declaracion atributos
+    (10) atributos -> . e
+    (21) declaracion -> . declaracion1 COLON declaracion5 SEMICOLON
+    (127) e -> .
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+  ! shift/reduce conflict for ID resolved as shift
+    METHODS         reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+    ID              shift and go to state 23
+
+  ! ID              [ reduce using rule 127 (e -> .) ]
+
+    declaracion                    shift and go to state 73
+    atributos                      shift and go to state 74
+    e                              shift and go to state 75
+    declaracion1                   shift and go to state 22
+
+state 62
+
+    (5) clase1 -> LT INHERITS ID GT .
+
+    LCBRAC          reduce using rule 5 (clase1 -> LT INHERITS ID GT .)
+
+
+state 63
+
+    (2) main -> MAIN LPAR RPAR bloque .
+
+    $end            reduce using rule 2 (main -> MAIN LPAR RPAR bloque .)
+
+
+state 64
+
+    (43) bloque -> LCBRAC . estatutos RCBRAC
+    (44) estatutos -> . estatuto estatutos
+    (45) estatutos -> . e
+    (46) estatuto -> . asignacion
+    (47) estatuto -> . condicion
+    (48) estatuto -> . llamada
+    (49) estatuto -> . leer
+    (50) estatuto -> . escribir
+    (51) estatuto -> . ciclo_w
+    (52) estatuto -> . ciclo_f
+    (53) estatuto -> . regresar
+    (127) e -> .
+    (54) asignacion -> . variable EQ expresion SEMICOLON
+    (62) condicion -> . IF LPAR expresion RPAR bloque condicion1
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+    (72) leer -> . READ LPAR variable RPAR SEMICOLON
+    (73) escribir -> . WRITE LPAR escribir1 RPAR SEMICOLON
+    (80) ciclo_w -> . WHILE LPAR expresion RPAR DO bloque
+    (81) ciclo_f -> . FROM LPAR variable EQ expresion TO expresion RPAR DO bloque
+    (82) regresar -> . RETURN expresion SEMICOLON
+    (55) variable -> . ID variable1 variable2
+
+    RCBRAC          reduce using rule 127 (e -> .)
+    IF              shift and go to state 88
+    ID              shift and go to state 89
+    READ            shift and go to state 90
+    WRITE           shift and go to state 91
+    WHILE           shift and go to state 92
+    FROM            shift and go to state 93
+    RETURN          shift and go to state 94
+
+    estatutos                      shift and go to state 76
+    estatuto                       shift and go to state 77
+    e                              shift and go to state 78
+    asignacion                     shift and go to state 79
+    condicion                      shift and go to state 80
+    llamada                        shift and go to state 81
+    leer                           shift and go to state 82
+    escribir                       shift and go to state 83
+    ciclo_w                        shift and go to state 84
+    ciclo_f                        shift and go to state 85
+    regresar                       shift and go to state 86
+    variable                       shift and go to state 87
+
+state 65
+
+    (35) funcion2 -> ID . COLON tipo funcion3
+
+    COLON           shift and go to state 95
+
+
+state 66
+
+    (31) funcion -> funcion1 FUNCTION ID LPAR funcion2 . RPAR bloque funcion
+
+    RPAR            shift and go to state 96
+
+
+state 67
+
+    (36) funcion2 -> e .
+
+    RPAR            reduce using rule 36 (funcion2 -> e .)
+
+
+state 68
+
+    (25) declaracion3 -> LSBRAC . CTEI RSBRAC
+
+    CTEI            shift and go to state 97
+
+
+state 69
+
+    (23) declaracion2 -> LSBRAC CTEI RSBRAC declaracion3 .
+
+    COMMA           reduce using rule 23 (declaracion2 -> LSBRAC CTEI RSBRAC declaracion3 .)
+    COLON           reduce using rule 23 (declaracion2 -> LSBRAC CTEI RSBRAC declaracion3 .)
+
+
+state 70
+
+    (26) declaracion3 -> e .
+
+    COMMA           reduce using rule 26 (declaracion3 -> e .)
+    COLON           reduce using rule 26 (declaracion3 -> e .)
+
+
+state 71
+
+    (3) clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC . clase
+    (3) clase -> . CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase
+    (4) clase -> . e
+    (127) e -> .
+
+    CLASS           shift and go to state 6
+    VAR             reduce using rule 127 (e -> .)
+    VOID            reduce using rule 127 (e -> .)
+    INT             reduce using rule 127 (e -> .)
+    FLOAT           reduce using rule 127 (e -> .)
+    STRING          reduce using rule 127 (e -> .)
+    BOOL            reduce using rule 127 (e -> .)
+    MAIN            reduce using rule 127 (e -> .)
+
+    clase                          shift and go to state 98
+    e                              shift and go to state 7
+
+state 72
+
+    (13) clase3 -> METHODS funcion . metodos
+    (15) metodos -> . funcion metodos
+    (16) metodos -> . e
+    (31) funcion -> . funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+    (32) funcion -> . e
+    (127) e -> .
+    (33) funcion1 -> . tipo
+    (34) funcion1 -> . VOID
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+  ! shift/reduce conflict for VOID resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+  ! shift/reduce conflict for BOOL resolved as shift
+    RCBRAC          reduce using rule 127 (e -> .)
+    VOID            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+  ! VOID            [ reduce using rule 127 (e -> .) ]
+  ! INT             [ reduce using rule 127 (e -> .) ]
+  ! FLOAT           [ reduce using rule 127 (e -> .) ]
+  ! STRING          [ reduce using rule 127 (e -> .) ]
+  ! BOOL            [ reduce using rule 127 (e -> .) ]
+
+    funcion                        shift and go to state 99
+    metodos                        shift and go to state 100
+    e                              shift and go to state 101
+    funcion1                       shift and go to state 13
+    tipo                           shift and go to state 15
+
+state 73
+
+    (9) atributos -> declaracion . atributos
+    (9) atributos -> . declaracion atributos
+    (10) atributos -> . e
+    (21) declaracion -> . declaracion1 COLON declaracion5 SEMICOLON
+    (127) e -> .
+    (22) declaracion1 -> . ID declaracion2 declaracion4
+
+  ! shift/reduce conflict for ID resolved as shift
+    METHODS         reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+    ID              shift and go to state 23
+
+  ! ID              [ reduce using rule 127 (e -> .) ]
+
+    declaracion                    shift and go to state 73
+    atributos                      shift and go to state 102
+    e                              shift and go to state 75
+    declaracion1                   shift and go to state 22
+
+state 74
+
+    (7) clase2 -> ATTRIBUTES declaracion atributos . asign
+    (11) asign -> . asignacion asign
+    (12) asign -> . e
+    (54) asignacion -> . variable EQ expresion SEMICOLON
+    (127) e -> .
+    (55) variable -> . ID variable1 variable2
+
+    METHODS         reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+    ID              shift and go to state 106
+
+    asign                          shift and go to state 103
+    asignacion                     shift and go to state 104
+    e                              shift and go to state 105
+    variable                       shift and go to state 87
+
+state 75
+
+    (10) atributos -> e .
+
+    ID              reduce using rule 10 (atributos -> e .)
+    METHODS         reduce using rule 10 (atributos -> e .)
+    RCBRAC          reduce using rule 10 (atributos -> e .)
+
+
+state 76
+
+    (43) bloque -> LCBRAC estatutos . RCBRAC
+
+    RCBRAC          shift and go to state 107
+
+
+state 77
+
+    (44) estatutos -> estatuto . estatutos
+    (44) estatutos -> . estatuto estatutos
+    (45) estatutos -> . e
+    (46) estatuto -> . asignacion
+    (47) estatuto -> . condicion
+    (48) estatuto -> . llamada
+    (49) estatuto -> . leer
+    (50) estatuto -> . escribir
+    (51) estatuto -> . ciclo_w
+    (52) estatuto -> . ciclo_f
+    (53) estatuto -> . regresar
+    (127) e -> .
+    (54) asignacion -> . variable EQ expresion SEMICOLON
+    (62) condicion -> . IF LPAR expresion RPAR bloque condicion1
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+    (72) leer -> . READ LPAR variable RPAR SEMICOLON
+    (73) escribir -> . WRITE LPAR escribir1 RPAR SEMICOLON
+    (80) ciclo_w -> . WHILE LPAR expresion RPAR DO bloque
+    (81) ciclo_f -> . FROM LPAR variable EQ expresion TO expresion RPAR DO bloque
+    (82) regresar -> . RETURN expresion SEMICOLON
+    (55) variable -> . ID variable1 variable2
+
+    RCBRAC          reduce using rule 127 (e -> .)
+    IF              shift and go to state 88
+    ID              shift and go to state 89
+    READ            shift and go to state 90
+    WRITE           shift and go to state 91
+    WHILE           shift and go to state 92
+    FROM            shift and go to state 93
+    RETURN          shift and go to state 94
+
+    estatuto                       shift and go to state 77
+    estatutos                      shift and go to state 108
+    e                              shift and go to state 78
+    asignacion                     shift and go to state 79
+    condicion                      shift and go to state 80
+    llamada                        shift and go to state 81
+    leer                           shift and go to state 82
+    escribir                       shift and go to state 83
+    ciclo_w                        shift and go to state 84
+    ciclo_f                        shift and go to state 85
+    regresar                       shift and go to state 86
+    variable                       shift and go to state 87
+
+state 78
+
+    (45) estatutos -> e .
+
+    RCBRAC          reduce using rule 45 (estatutos -> e .)
+
+
+state 79
+
+    (46) estatuto -> asignacion .
+
+    IF              reduce using rule 46 (estatuto -> asignacion .)
+    ID              reduce using rule 46 (estatuto -> asignacion .)
+    READ            reduce using rule 46 (estatuto -> asignacion .)
+    WRITE           reduce using rule 46 (estatuto -> asignacion .)
+    WHILE           reduce using rule 46 (estatuto -> asignacion .)
+    FROM            reduce using rule 46 (estatuto -> asignacion .)
+    RETURN          reduce using rule 46 (estatuto -> asignacion .)
+    RCBRAC          reduce using rule 46 (estatuto -> asignacion .)
+
+
+state 80
+
+    (47) estatuto -> condicion .
+
+    IF              reduce using rule 47 (estatuto -> condicion .)
+    ID              reduce using rule 47 (estatuto -> condicion .)
+    READ            reduce using rule 47 (estatuto -> condicion .)
+    WRITE           reduce using rule 47 (estatuto -> condicion .)
+    WHILE           reduce using rule 47 (estatuto -> condicion .)
+    FROM            reduce using rule 47 (estatuto -> condicion .)
+    RETURN          reduce using rule 47 (estatuto -> condicion .)
+    RCBRAC          reduce using rule 47 (estatuto -> condicion .)
+
+
+state 81
+
+    (48) estatuto -> llamada .
+
+    IF              reduce using rule 48 (estatuto -> llamada .)
+    ID              reduce using rule 48 (estatuto -> llamada .)
+    READ            reduce using rule 48 (estatuto -> llamada .)
+    WRITE           reduce using rule 48 (estatuto -> llamada .)
+    WHILE           reduce using rule 48 (estatuto -> llamada .)
+    FROM            reduce using rule 48 (estatuto -> llamada .)
+    RETURN          reduce using rule 48 (estatuto -> llamada .)
+    RCBRAC          reduce using rule 48 (estatuto -> llamada .)
+
+
+state 82
+
+    (49) estatuto -> leer .
+
+    IF              reduce using rule 49 (estatuto -> leer .)
+    ID              reduce using rule 49 (estatuto -> leer .)
+    READ            reduce using rule 49 (estatuto -> leer .)
+    WRITE           reduce using rule 49 (estatuto -> leer .)
+    WHILE           reduce using rule 49 (estatuto -> leer .)
+    FROM            reduce using rule 49 (estatuto -> leer .)
+    RETURN          reduce using rule 49 (estatuto -> leer .)
+    RCBRAC          reduce using rule 49 (estatuto -> leer .)
+
+
+state 83
+
+    (50) estatuto -> escribir .
+
+    IF              reduce using rule 50 (estatuto -> escribir .)
+    ID              reduce using rule 50 (estatuto -> escribir .)
+    READ            reduce using rule 50 (estatuto -> escribir .)
+    WRITE           reduce using rule 50 (estatuto -> escribir .)
+    WHILE           reduce using rule 50 (estatuto -> escribir .)
+    FROM            reduce using rule 50 (estatuto -> escribir .)
+    RETURN          reduce using rule 50 (estatuto -> escribir .)
+    RCBRAC          reduce using rule 50 (estatuto -> escribir .)
+
+
+state 84
+
+    (51) estatuto -> ciclo_w .
+
+    IF              reduce using rule 51 (estatuto -> ciclo_w .)
+    ID              reduce using rule 51 (estatuto -> ciclo_w .)
+    READ            reduce using rule 51 (estatuto -> ciclo_w .)
+    WRITE           reduce using rule 51 (estatuto -> ciclo_w .)
+    WHILE           reduce using rule 51 (estatuto -> ciclo_w .)
+    FROM            reduce using rule 51 (estatuto -> ciclo_w .)
+    RETURN          reduce using rule 51 (estatuto -> ciclo_w .)
+    RCBRAC          reduce using rule 51 (estatuto -> ciclo_w .)
+
+
+state 85
+
+    (52) estatuto -> ciclo_f .
+
+    IF              reduce using rule 52 (estatuto -> ciclo_f .)
+    ID              reduce using rule 52 (estatuto -> ciclo_f .)
+    READ            reduce using rule 52 (estatuto -> ciclo_f .)
+    WRITE           reduce using rule 52 (estatuto -> ciclo_f .)
+    WHILE           reduce using rule 52 (estatuto -> ciclo_f .)
+    FROM            reduce using rule 52 (estatuto -> ciclo_f .)
+    RETURN          reduce using rule 52 (estatuto -> ciclo_f .)
+    RCBRAC          reduce using rule 52 (estatuto -> ciclo_f .)
+
+
+state 86
+
+    (53) estatuto -> regresar .
+
+    IF              reduce using rule 53 (estatuto -> regresar .)
+    ID              reduce using rule 53 (estatuto -> regresar .)
+    READ            reduce using rule 53 (estatuto -> regresar .)
+    WRITE           reduce using rule 53 (estatuto -> regresar .)
+    WHILE           reduce using rule 53 (estatuto -> regresar .)
+    FROM            reduce using rule 53 (estatuto -> regresar .)
+    RETURN          reduce using rule 53 (estatuto -> regresar .)
+    RCBRAC          reduce using rule 53 (estatuto -> regresar .)
+
+
+state 87
+
+    (54) asignacion -> variable . EQ expresion SEMICOLON
+
+    EQ              shift and go to state 109
+
+
+state 88
+
+    (62) condicion -> IF . LPAR expresion RPAR bloque condicion1
+
+    LPAR            shift and go to state 110
+
+
+state 89
+
+    (65) llamada -> ID . llamada1 LPAR llamada2 RPAR SEMICOLON
+    (55) variable -> ID . variable1 variable2
+    (66) llamada1 -> . DOT ID
+    (67) llamada1 -> . e
+    (56) variable1 -> . DOT ID
+    (57) variable1 -> . e
+    (127) e -> .
+
+    DOT             shift and go to state 113
+    LPAR            reduce using rule 127 (e -> .)
+    LSBRAC          reduce using rule 127 (e -> .)
+    EQ              reduce using rule 127 (e -> .)
+
+    llamada1                       shift and go to state 111
+    variable1                      shift and go to state 112
+    e                              shift and go to state 114
+
+state 90
+
+    (72) leer -> READ . LPAR variable RPAR SEMICOLON
+
+    LPAR            shift and go to state 115
+
+
+state 91
+
+    (73) escribir -> WRITE . LPAR escribir1 RPAR SEMICOLON
+
+    LPAR            shift and go to state 116
+
+
+state 92
+
+    (80) ciclo_w -> WHILE . LPAR expresion RPAR DO bloque
+
+    LPAR            shift and go to state 117
+
+
+state 93
+
+    (81) ciclo_f -> FROM . LPAR variable EQ expresion TO expresion RPAR DO bloque
+
+    LPAR            shift and go to state 118
+
+
+state 94
+
+    (82) regresar -> RETURN . expresion SEMICOLON
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 119
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 95
+
+    (35) funcion2 -> ID COLON . tipo funcion3
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+    tipo                           shift and go to state 134
+
+state 96
+
+    (31) funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR . bloque funcion
+    (43) bloque -> . LCBRAC estatutos RCBRAC
+
+    LCBRAC          shift and go to state 64
+
+    bloque                         shift and go to state 135
+
+state 97
+
+    (25) declaracion3 -> LSBRAC CTEI . RSBRAC
+
+    RSBRAC          shift and go to state 136
+
+
+state 98
+
+    (3) clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .
+
+    VAR             reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+    VOID            reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+    INT             reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+    FLOAT           reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+    STRING          reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+    BOOL            reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+    MAIN            reduce using rule 3 (clase -> CLASS ID clase1 LCBRAC clase2 clase3 RCBRAC clase .)
+
+
+state 99
+
+    (15) metodos -> funcion . metodos
+    (15) metodos -> . funcion metodos
+    (16) metodos -> . e
+    (31) funcion -> . funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+    (32) funcion -> . e
+    (127) e -> .
+    (33) funcion1 -> . tipo
+    (34) funcion1 -> . VOID
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+  ! shift/reduce conflict for VOID resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+  ! shift/reduce conflict for BOOL resolved as shift
+    RCBRAC          reduce using rule 127 (e -> .)
+    VOID            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+  ! VOID            [ reduce using rule 127 (e -> .) ]
+  ! INT             [ reduce using rule 127 (e -> .) ]
+  ! FLOAT           [ reduce using rule 127 (e -> .) ]
+  ! STRING          [ reduce using rule 127 (e -> .) ]
+  ! BOOL            [ reduce using rule 127 (e -> .) ]
+
+    funcion                        shift and go to state 99
+    metodos                        shift and go to state 137
+    e                              shift and go to state 101
+    funcion1                       shift and go to state 13
+    tipo                           shift and go to state 15
+
+state 100
+
+    (13) clase3 -> METHODS funcion metodos .
+
+    RCBRAC          reduce using rule 13 (clase3 -> METHODS funcion metodos .)
+
+
+state 101
+
+    (16) metodos -> e .
+    (32) funcion -> e .
+
+  ! reduce/reduce conflict for RCBRAC resolved using rule 16 (metodos -> e .)
+    RCBRAC          reduce using rule 16 (metodos -> e .)
+    VOID            reduce using rule 32 (funcion -> e .)
+    INT             reduce using rule 32 (funcion -> e .)
+    FLOAT           reduce using rule 32 (funcion -> e .)
+    STRING          reduce using rule 32 (funcion -> e .)
+    BOOL            reduce using rule 32 (funcion -> e .)
+
+  ! RCBRAC          [ reduce using rule 32 (funcion -> e .) ]
+
+
+state 102
+
+    (9) atributos -> declaracion atributos .
+
+    ID              reduce using rule 9 (atributos -> declaracion atributos .)
+    METHODS         reduce using rule 9 (atributos -> declaracion atributos .)
+    RCBRAC          reduce using rule 9 (atributos -> declaracion atributos .)
+
+
+state 103
+
+    (7) clase2 -> ATTRIBUTES declaracion atributos asign .
+
+    METHODS         reduce using rule 7 (clase2 -> ATTRIBUTES declaracion atributos asign .)
+    RCBRAC          reduce using rule 7 (clase2 -> ATTRIBUTES declaracion atributos asign .)
+
+
+state 104
+
+    (11) asign -> asignacion . asign
+    (11) asign -> . asignacion asign
+    (12) asign -> . e
+    (54) asignacion -> . variable EQ expresion SEMICOLON
+    (127) e -> .
+    (55) variable -> . ID variable1 variable2
+
+    METHODS         reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+    ID              shift and go to state 106
+
+    asignacion                     shift and go to state 104
+    asign                          shift and go to state 138
+    e                              shift and go to state 105
+    variable                       shift and go to state 87
+
+state 105
+
+    (12) asign -> e .
+
+    METHODS         reduce using rule 12 (asign -> e .)
+    RCBRAC          reduce using rule 12 (asign -> e .)
+
+
+state 106
+
+    (55) variable -> ID . variable1 variable2
+    (56) variable1 -> . DOT ID
+    (57) variable1 -> . e
+    (127) e -> .
+
+    DOT             shift and go to state 139
+    LSBRAC          reduce using rule 127 (e -> .)
+    EQ              reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+
+    variable1                      shift and go to state 112
+    e                              shift and go to state 140
+
+state 107
+
+    (43) bloque -> LCBRAC estatutos RCBRAC .
+
+    $end            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    VOID            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    INT             reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    FLOAT           reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    STRING          reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    BOOL            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    MAIN            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    RCBRAC          reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    ELSE            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    IF              reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    ID              reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    READ            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    WRITE           reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    WHILE           reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    FROM            reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+    RETURN          reduce using rule 43 (bloque -> LCBRAC estatutos RCBRAC .)
+
+
+state 108
+
+    (44) estatutos -> estatuto estatutos .
+
+    RCBRAC          reduce using rule 44 (estatutos -> estatuto estatutos .)
+
+
+state 109
+
+    (54) asignacion -> variable EQ . expresion SEMICOLON
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    variable                       shift and go to state 127
+    expresion                      shift and go to state 141
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    llamada                        shift and go to state 128
+
+state 110
+
+    (62) condicion -> IF LPAR . expresion RPAR bloque condicion1
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 142
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 111
+
+    (65) llamada -> ID llamada1 . LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 143
+
+
+state 112
+
+    (55) variable -> ID variable1 . variable2
+    (58) variable2 -> . LSBRAC expresion RSBRAC variable3
+    (59) variable2 -> . e
+    (127) e -> .
+
+    LSBRAC          shift and go to state 145
+    EQ              reduce using rule 127 (e -> .)
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    variable2                      shift and go to state 144
+    e                              shift and go to state 146
+
+state 113
+
+    (66) llamada1 -> DOT . ID
+    (56) variable1 -> DOT . ID
+
+    ID              shift and go to state 147
+
+
+state 114
+
+    (67) llamada1 -> e .
+    (57) variable1 -> e .
+
+    LPAR            reduce using rule 67 (llamada1 -> e .)
+    LSBRAC          reduce using rule 57 (variable1 -> e .)
+    EQ              reduce using rule 57 (variable1 -> e .)
+
+
+state 115
+
+    (72) leer -> READ LPAR . variable RPAR SEMICOLON
+    (55) variable -> . ID variable1 variable2
+
+    ID              shift and go to state 106
+
+    variable                       shift and go to state 148
+
+state 116
+
+    (73) escribir -> WRITE LPAR . escribir1 RPAR SEMICOLON
+    (74) escribir1 -> . texto add_print generar_cuadr escribir2
+    (75) escribir1 -> . expresion add_print generar_cuadr escribir2
+    (79) texto -> . CTESTR
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    CTESTR          shift and go to state 152
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    escribir1                      shift and go to state 149
+    texto                          shift and go to state 150
+    expresion                      shift and go to state 151
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 117
+
+    (80) ciclo_w -> WHILE LPAR . expresion RPAR DO bloque
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 153
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 118
+
+    (81) ciclo_f -> FROM LPAR . variable EQ expresion TO expresion RPAR DO bloque
+    (55) variable -> . ID variable1 variable2
+
+    ID              shift and go to state 106
+
+    variable                       shift and go to state 154
+
+state 119
+
+    (82) regresar -> RETURN expresion . SEMICOLON
+
+    SEMICOLON       shift and go to state 155
+
+
+state 120
+
+    (83) expresion -> a_exp . exp1
+    (84) exp1 -> . OR push_or a_exp pop_operador exp1
+    (85) exp1 -> . e
+    (127) e -> .
+
+    OR              shift and go to state 157
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp1                           shift and go to state 156
+    e                              shift and go to state 158
+
+state 121
+
+    (88) a_exp -> b_exp . exp2
+    (89) exp2 -> . AND push_and b_exp pop_operador exp2
+    (90) exp2 -> . e
+    (127) e -> .
+
+    AND             shift and go to state 160
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp2                           shift and go to state 159
+    e                              shift and go to state 161
+
+state 122
+
+    (92) b_exp -> c_exp . exp3
+    (93) exp3 -> . LT push_lt c_exp pop_operador exp3
+    (94) exp3 -> . GT push_gt c_exp pop_operador exp3
+    (95) exp3 -> . COMP push_comp c_exp pop_operador exp3
+    (96) exp3 -> . NOTEQ push_noteq c_exp pop_operador exp3
+    (97) exp3 -> . e
+    (127) e -> .
+
+    LT              shift and go to state 163
+    GT              shift and go to state 164
+    COMP            shift and go to state 165
+    NOTEQ           shift and go to state 166
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp3                           shift and go to state 162
+    e                              shift and go to state 167
+
+state 123
+
+    (102) c_exp -> d_exp . exp4
+    (103) exp4 -> . PLUS push_plus d_exp pop_operador exp4
+    (104) exp4 -> . MINUS push_minus d_exp pop_operador exp4
+    (105) exp4 -> . e
+    (127) e -> .
+
+    PLUS            shift and go to state 169
+    MINUS           shift and go to state 170
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp4                           shift and go to state 168
+    e                              shift and go to state 171
+
+state 124
+
+    (108) d_exp -> e_exp . exp5
+    (109) exp5 -> . MULT push_mult e_exp pop_operador exp5
+    (110) exp5 -> . DIV push_div e_exp pop_operador exp5
+    (111) exp5 -> . e
+    (127) e -> .
+
+    MULT            shift and go to state 173
+    DIV             shift and go to state 174
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp5                           shift and go to state 172
+    e                              shift and go to state 175
+
+state 125
+
+    (114) e_exp -> LPAR . expresion RPAR
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 176
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 126
+
+    (115) e_exp -> var_cte .
+
+    MULT            reduce using rule 115 (e_exp -> var_cte .)
+    DIV             reduce using rule 115 (e_exp -> var_cte .)
+    PLUS            reduce using rule 115 (e_exp -> var_cte .)
+    MINUS           reduce using rule 115 (e_exp -> var_cte .)
+    LT              reduce using rule 115 (e_exp -> var_cte .)
+    GT              reduce using rule 115 (e_exp -> var_cte .)
+    COMP            reduce using rule 115 (e_exp -> var_cte .)
+    NOTEQ           reduce using rule 115 (e_exp -> var_cte .)
+    AND             reduce using rule 115 (e_exp -> var_cte .)
+    OR              reduce using rule 115 (e_exp -> var_cte .)
+    SEMICOLON       reduce using rule 115 (e_exp -> var_cte .)
+    RPAR            reduce using rule 115 (e_exp -> var_cte .)
+    COMMA           reduce using rule 115 (e_exp -> var_cte .)
+    RSBRAC          reduce using rule 115 (e_exp -> var_cte .)
+    TO              reduce using rule 115 (e_exp -> var_cte .)
+
+
+state 127
+
+    (116) e_exp -> variable .
+
+    MULT            reduce using rule 116 (e_exp -> variable .)
+    DIV             reduce using rule 116 (e_exp -> variable .)
+    PLUS            reduce using rule 116 (e_exp -> variable .)
+    MINUS           reduce using rule 116 (e_exp -> variable .)
+    LT              reduce using rule 116 (e_exp -> variable .)
+    GT              reduce using rule 116 (e_exp -> variable .)
+    COMP            reduce using rule 116 (e_exp -> variable .)
+    NOTEQ           reduce using rule 116 (e_exp -> variable .)
+    AND             reduce using rule 116 (e_exp -> variable .)
+    OR              reduce using rule 116 (e_exp -> variable .)
+    SEMICOLON       reduce using rule 116 (e_exp -> variable .)
+    RPAR            reduce using rule 116 (e_exp -> variable .)
+    COMMA           reduce using rule 116 (e_exp -> variable .)
+    RSBRAC          reduce using rule 116 (e_exp -> variable .)
+    TO              reduce using rule 116 (e_exp -> variable .)
+
+
+state 128
+
+    (117) e_exp -> llamada .
+
+    MULT            reduce using rule 117 (e_exp -> llamada .)
+    DIV             reduce using rule 117 (e_exp -> llamada .)
+    PLUS            reduce using rule 117 (e_exp -> llamada .)
+    MINUS           reduce using rule 117 (e_exp -> llamada .)
+    LT              reduce using rule 117 (e_exp -> llamada .)
+    GT              reduce using rule 117 (e_exp -> llamada .)
+    COMP            reduce using rule 117 (e_exp -> llamada .)
+    NOTEQ           reduce using rule 117 (e_exp -> llamada .)
+    AND             reduce using rule 117 (e_exp -> llamada .)
+    OR              reduce using rule 117 (e_exp -> llamada .)
+    SEMICOLON       reduce using rule 117 (e_exp -> llamada .)
+    RPAR            reduce using rule 117 (e_exp -> llamada .)
+    COMMA           reduce using rule 117 (e_exp -> llamada .)
+    RSBRAC          reduce using rule 117 (e_exp -> llamada .)
+    TO              reduce using rule 117 (e_exp -> llamada .)
+
+
+state 129
+
+    (118) var_cte -> CTEI . ctei
+    (122) ctei -> . e
+    (127) e -> .
+
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    ctei                           shift and go to state 177
+    e                              shift and go to state 178
+
+state 130
+
+    (119) var_cte -> CTEF . ctef
+    (123) ctef -> . e
+    (127) e -> .
+
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    ctef                           shift and go to state 179
+    e                              shift and go to state 180
+
+state 131
+
+    (120) var_cte -> CTESTR . ctestr
+    (124) ctestr -> . e
+    (127) e -> .
+
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    ctestr                         shift and go to state 181
+    e                              shift and go to state 182
+
+state 132
+
+    (121) var_cte -> CTEB . cteb
+    (125) cteb -> . e
+    (127) e -> .
+
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    cteb                           shift and go to state 183
+    e                              shift and go to state 184
+
+state 133
+
+    (55) variable -> ID . variable1 variable2
+    (65) llamada -> ID . llamada1 LPAR llamada2 RPAR SEMICOLON
+    (56) variable1 -> . DOT ID
+    (57) variable1 -> . e
+    (66) llamada1 -> . DOT ID
+    (67) llamada1 -> . e
+    (127) e -> .
+
+    DOT             shift and go to state 185
+    LSBRAC          reduce using rule 127 (e -> .)
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+    LPAR            reduce using rule 127 (e -> .)
+
+    variable1                      shift and go to state 112
+    llamada1                       shift and go to state 111
+    e                              shift and go to state 186
+
+state 134
+
+    (35) funcion2 -> ID COLON tipo . funcion3
+    (37) funcion3 -> . COMMA ID COLON tipo funcion3
+    (38) funcion3 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 188
+    RPAR            reduce using rule 127 (e -> .)
+
+    funcion3                       shift and go to state 187
+    e                              shift and go to state 189
+
+state 135
+
+    (31) funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque . funcion
+    (31) funcion -> . funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+    (32) funcion -> . e
+    (33) funcion1 -> . tipo
+    (34) funcion1 -> . VOID
+    (127) e -> .
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+  ! shift/reduce conflict for VOID resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+  ! shift/reduce conflict for BOOL resolved as shift
+    VOID            shift and go to state 16
+    MAIN            reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+  ! VOID            [ reduce using rule 127 (e -> .) ]
+  ! INT             [ reduce using rule 127 (e -> .) ]
+  ! FLOAT           [ reduce using rule 127 (e -> .) ]
+  ! STRING          [ reduce using rule 127 (e -> .) ]
+  ! BOOL            [ reduce using rule 127 (e -> .) ]
+
+    funcion1                       shift and go to state 13
+    funcion                        shift and go to state 190
+    e                              shift and go to state 14
+    tipo                           shift and go to state 15
+
+state 136
+
+    (25) declaracion3 -> LSBRAC CTEI RSBRAC .
+
+    COMMA           reduce using rule 25 (declaracion3 -> LSBRAC CTEI RSBRAC .)
+    COLON           reduce using rule 25 (declaracion3 -> LSBRAC CTEI RSBRAC .)
+
+
+state 137
+
+    (15) metodos -> funcion metodos .
+
+    RCBRAC          reduce using rule 15 (metodos -> funcion metodos .)
+
+
+state 138
+
+    (11) asign -> asignacion asign .
+
+    METHODS         reduce using rule 11 (asign -> asignacion asign .)
+    RCBRAC          reduce using rule 11 (asign -> asignacion asign .)
+
+
+state 139
+
+    (56) variable1 -> DOT . ID
+
+    ID              shift and go to state 191
+
+
+state 140
+
+    (57) variable1 -> e .
+
+    LSBRAC          reduce using rule 57 (variable1 -> e .)
+    EQ              reduce using rule 57 (variable1 -> e .)
+    RPAR            reduce using rule 57 (variable1 -> e .)
+
+
+state 141
+
+    (54) asignacion -> variable EQ expresion . SEMICOLON
+
+    SEMICOLON       shift and go to state 192
+
+
+state 142
+
+    (62) condicion -> IF LPAR expresion . RPAR bloque condicion1
+
+    RPAR            shift and go to state 193
+
+
+state 143
+
+    (65) llamada -> ID llamada1 LPAR . llamada2 RPAR SEMICOLON
+    (68) llamada2 -> . expresion llamada3
+    (69) llamada2 -> . e
+    (83) expresion -> . a_exp exp1
+    (127) e -> .
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    RPAR            reduce using rule 127 (e -> .)
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    llamada2                       shift and go to state 194
+    expresion                      shift and go to state 195
+    e                              shift and go to state 196
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 144
+
+    (55) variable -> ID variable1 variable2 .
+
+    EQ              reduce using rule 55 (variable -> ID variable1 variable2 .)
+    MULT            reduce using rule 55 (variable -> ID variable1 variable2 .)
+    DIV             reduce using rule 55 (variable -> ID variable1 variable2 .)
+    PLUS            reduce using rule 55 (variable -> ID variable1 variable2 .)
+    MINUS           reduce using rule 55 (variable -> ID variable1 variable2 .)
+    LT              reduce using rule 55 (variable -> ID variable1 variable2 .)
+    GT              reduce using rule 55 (variable -> ID variable1 variable2 .)
+    COMP            reduce using rule 55 (variable -> ID variable1 variable2 .)
+    NOTEQ           reduce using rule 55 (variable -> ID variable1 variable2 .)
+    AND             reduce using rule 55 (variable -> ID variable1 variable2 .)
+    OR              reduce using rule 55 (variable -> ID variable1 variable2 .)
+    SEMICOLON       reduce using rule 55 (variable -> ID variable1 variable2 .)
+    RPAR            reduce using rule 55 (variable -> ID variable1 variable2 .)
+    COMMA           reduce using rule 55 (variable -> ID variable1 variable2 .)
+    RSBRAC          reduce using rule 55 (variable -> ID variable1 variable2 .)
+    TO              reduce using rule 55 (variable -> ID variable1 variable2 .)
+
+
+state 145
+
+    (58) variable2 -> LSBRAC . expresion RSBRAC variable3
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 197
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 146
+
+    (59) variable2 -> e .
+
+    EQ              reduce using rule 59 (variable2 -> e .)
+    MULT            reduce using rule 59 (variable2 -> e .)
+    DIV             reduce using rule 59 (variable2 -> e .)
+    PLUS            reduce using rule 59 (variable2 -> e .)
+    MINUS           reduce using rule 59 (variable2 -> e .)
+    LT              reduce using rule 59 (variable2 -> e .)
+    GT              reduce using rule 59 (variable2 -> e .)
+    COMP            reduce using rule 59 (variable2 -> e .)
+    NOTEQ           reduce using rule 59 (variable2 -> e .)
+    AND             reduce using rule 59 (variable2 -> e .)
+    OR              reduce using rule 59 (variable2 -> e .)
+    SEMICOLON       reduce using rule 59 (variable2 -> e .)
+    RPAR            reduce using rule 59 (variable2 -> e .)
+    COMMA           reduce using rule 59 (variable2 -> e .)
+    RSBRAC          reduce using rule 59 (variable2 -> e .)
+    TO              reduce using rule 59 (variable2 -> e .)
+
+
+state 147
+
+    (66) llamada1 -> DOT ID .
+    (56) variable1 -> DOT ID .
+
+    LPAR            reduce using rule 66 (llamada1 -> DOT ID .)
+    LSBRAC          reduce using rule 56 (variable1 -> DOT ID .)
+    EQ              reduce using rule 56 (variable1 -> DOT ID .)
+
+
+state 148
+
+    (72) leer -> READ LPAR variable . RPAR SEMICOLON
+
+    RPAR            shift and go to state 198
+
+
+state 149
+
+    (73) escribir -> WRITE LPAR escribir1 . RPAR SEMICOLON
+
+    RPAR            shift and go to state 199
+
+
+state 150
+
+    (74) escribir1 -> texto . add_print generar_cuadr escribir2
+    (76) add_print -> . e
+    (127) e -> .
+
+    COMMA           reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+
+    add_print                      shift and go to state 200
+    e                              shift and go to state 201
+
+state 151
+
+    (75) escribir1 -> expresion . add_print generar_cuadr escribir2
+    (76) add_print -> . e
+    (127) e -> .
+
+    COMMA           reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+
+    add_print                      shift and go to state 202
+    e                              shift and go to state 201
+
+state 152
+
+    (79) texto -> CTESTR .
+    (120) var_cte -> CTESTR . ctestr
+    (124) ctestr -> . e
+    (127) e -> .
+
+  ! reduce/reduce conflict for COMMA resolved using rule 79 (texto -> CTESTR .)
+  ! reduce/reduce conflict for RPAR resolved using rule 79 (texto -> CTESTR .)
+    COMMA           reduce using rule 79 (texto -> CTESTR .)
+    RPAR            reduce using rule 79 (texto -> CTESTR .)
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+
+  ! COMMA           [ reduce using rule 127 (e -> .) ]
+  ! RPAR            [ reduce using rule 127 (e -> .) ]
+
+    ctestr                         shift and go to state 181
+    e                              shift and go to state 182
+
+state 153
+
+    (80) ciclo_w -> WHILE LPAR expresion . RPAR DO bloque
+
+    RPAR            shift and go to state 203
+
+
+state 154
+
+    (81) ciclo_f -> FROM LPAR variable . EQ expresion TO expresion RPAR DO bloque
+
+    EQ              shift and go to state 204
+
+
+state 155
+
+    (82) regresar -> RETURN expresion SEMICOLON .
+
+    IF              reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    ID              reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    READ            reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    WRITE           reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    WHILE           reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    FROM            reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    RETURN          reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+    RCBRAC          reduce using rule 82 (regresar -> RETURN expresion SEMICOLON .)
+
+
+state 156
+
+    (83) expresion -> a_exp exp1 .
+
+    SEMICOLON       reduce using rule 83 (expresion -> a_exp exp1 .)
+    RPAR            reduce using rule 83 (expresion -> a_exp exp1 .)
+    COMMA           reduce using rule 83 (expresion -> a_exp exp1 .)
+    RSBRAC          reduce using rule 83 (expresion -> a_exp exp1 .)
+    TO              reduce using rule 83 (expresion -> a_exp exp1 .)
+
+
+state 157
+
+    (84) exp1 -> OR . push_or a_exp pop_operador exp1
+    (86) push_or -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_or                        shift and go to state 205
+    e                              shift and go to state 206
+
+state 158
+
+    (85) exp1 -> e .
+
+    SEMICOLON       reduce using rule 85 (exp1 -> e .)
+    RPAR            reduce using rule 85 (exp1 -> e .)
+    COMMA           reduce using rule 85 (exp1 -> e .)
+    RSBRAC          reduce using rule 85 (exp1 -> e .)
+    TO              reduce using rule 85 (exp1 -> e .)
+
+
+state 159
+
+    (88) a_exp -> b_exp exp2 .
+
+    OR              reduce using rule 88 (a_exp -> b_exp exp2 .)
+    SEMICOLON       reduce using rule 88 (a_exp -> b_exp exp2 .)
+    RPAR            reduce using rule 88 (a_exp -> b_exp exp2 .)
+    COMMA           reduce using rule 88 (a_exp -> b_exp exp2 .)
+    RSBRAC          reduce using rule 88 (a_exp -> b_exp exp2 .)
+    TO              reduce using rule 88 (a_exp -> b_exp exp2 .)
+
+
+state 160
+
+    (89) exp2 -> AND . push_and b_exp pop_operador exp2
+    (91) push_and -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_and                       shift and go to state 207
+    e                              shift and go to state 208
+
+state 161
+
+    (90) exp2 -> e .
+
+    OR              reduce using rule 90 (exp2 -> e .)
+    SEMICOLON       reduce using rule 90 (exp2 -> e .)
+    RPAR            reduce using rule 90 (exp2 -> e .)
+    COMMA           reduce using rule 90 (exp2 -> e .)
+    RSBRAC          reduce using rule 90 (exp2 -> e .)
+    TO              reduce using rule 90 (exp2 -> e .)
+
+
+state 162
+
+    (92) b_exp -> c_exp exp3 .
+
+    AND             reduce using rule 92 (b_exp -> c_exp exp3 .)
+    OR              reduce using rule 92 (b_exp -> c_exp exp3 .)
+    SEMICOLON       reduce using rule 92 (b_exp -> c_exp exp3 .)
+    RPAR            reduce using rule 92 (b_exp -> c_exp exp3 .)
+    COMMA           reduce using rule 92 (b_exp -> c_exp exp3 .)
+    RSBRAC          reduce using rule 92 (b_exp -> c_exp exp3 .)
+    TO              reduce using rule 92 (b_exp -> c_exp exp3 .)
+
+
+state 163
+
+    (93) exp3 -> LT . push_lt c_exp pop_operador exp3
+    (98) push_lt -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_lt                        shift and go to state 209
+    e                              shift and go to state 210
+
+state 164
+
+    (94) exp3 -> GT . push_gt c_exp pop_operador exp3
+    (99) push_gt -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_gt                        shift and go to state 211
+    e                              shift and go to state 212
+
+state 165
+
+    (95) exp3 -> COMP . push_comp c_exp pop_operador exp3
+    (100) push_comp -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_comp                      shift and go to state 213
+    e                              shift and go to state 214
+
+state 166
+
+    (96) exp3 -> NOTEQ . push_noteq c_exp pop_operador exp3
+    (101) push_noteq -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_noteq                     shift and go to state 215
+    e                              shift and go to state 216
+
+state 167
+
+    (97) exp3 -> e .
+
+    AND             reduce using rule 97 (exp3 -> e .)
+    OR              reduce using rule 97 (exp3 -> e .)
+    SEMICOLON       reduce using rule 97 (exp3 -> e .)
+    RPAR            reduce using rule 97 (exp3 -> e .)
+    COMMA           reduce using rule 97 (exp3 -> e .)
+    RSBRAC          reduce using rule 97 (exp3 -> e .)
+    TO              reduce using rule 97 (exp3 -> e .)
+
+
+state 168
+
+    (102) c_exp -> d_exp exp4 .
+
+    LT              reduce using rule 102 (c_exp -> d_exp exp4 .)
+    GT              reduce using rule 102 (c_exp -> d_exp exp4 .)
+    COMP            reduce using rule 102 (c_exp -> d_exp exp4 .)
+    NOTEQ           reduce using rule 102 (c_exp -> d_exp exp4 .)
+    AND             reduce using rule 102 (c_exp -> d_exp exp4 .)
+    OR              reduce using rule 102 (c_exp -> d_exp exp4 .)
+    SEMICOLON       reduce using rule 102 (c_exp -> d_exp exp4 .)
+    RPAR            reduce using rule 102 (c_exp -> d_exp exp4 .)
+    COMMA           reduce using rule 102 (c_exp -> d_exp exp4 .)
+    RSBRAC          reduce using rule 102 (c_exp -> d_exp exp4 .)
+    TO              reduce using rule 102 (c_exp -> d_exp exp4 .)
+
+
+state 169
+
+    (103) exp4 -> PLUS . push_plus d_exp pop_operador exp4
+    (106) push_plus -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_plus                      shift and go to state 217
+    e                              shift and go to state 218
+
+state 170
+
+    (104) exp4 -> MINUS . push_minus d_exp pop_operador exp4
+    (107) push_minus -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_minus                     shift and go to state 219
+    e                              shift and go to state 220
+
+state 171
+
+    (105) exp4 -> e .
+
+    LT              reduce using rule 105 (exp4 -> e .)
+    GT              reduce using rule 105 (exp4 -> e .)
+    COMP            reduce using rule 105 (exp4 -> e .)
+    NOTEQ           reduce using rule 105 (exp4 -> e .)
+    AND             reduce using rule 105 (exp4 -> e .)
+    OR              reduce using rule 105 (exp4 -> e .)
+    SEMICOLON       reduce using rule 105 (exp4 -> e .)
+    RPAR            reduce using rule 105 (exp4 -> e .)
+    COMMA           reduce using rule 105 (exp4 -> e .)
+    RSBRAC          reduce using rule 105 (exp4 -> e .)
+    TO              reduce using rule 105 (exp4 -> e .)
+
+
+state 172
+
+    (108) d_exp -> e_exp exp5 .
+
+    PLUS            reduce using rule 108 (d_exp -> e_exp exp5 .)
+    MINUS           reduce using rule 108 (d_exp -> e_exp exp5 .)
+    LT              reduce using rule 108 (d_exp -> e_exp exp5 .)
+    GT              reduce using rule 108 (d_exp -> e_exp exp5 .)
+    COMP            reduce using rule 108 (d_exp -> e_exp exp5 .)
+    NOTEQ           reduce using rule 108 (d_exp -> e_exp exp5 .)
+    AND             reduce using rule 108 (d_exp -> e_exp exp5 .)
+    OR              reduce using rule 108 (d_exp -> e_exp exp5 .)
+    SEMICOLON       reduce using rule 108 (d_exp -> e_exp exp5 .)
+    RPAR            reduce using rule 108 (d_exp -> e_exp exp5 .)
+    COMMA           reduce using rule 108 (d_exp -> e_exp exp5 .)
+    RSBRAC          reduce using rule 108 (d_exp -> e_exp exp5 .)
+    TO              reduce using rule 108 (d_exp -> e_exp exp5 .)
+
+
+state 173
+
+    (109) exp5 -> MULT . push_mult e_exp pop_operador exp5
+    (112) push_mult -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_mult                      shift and go to state 221
+    e                              shift and go to state 222
+
+state 174
+
+    (110) exp5 -> DIV . push_div e_exp pop_operador exp5
+    (113) push_div -> . e
+    (127) e -> .
+
+    LPAR            reduce using rule 127 (e -> .)
+    CTEI            reduce using rule 127 (e -> .)
+    CTEF            reduce using rule 127 (e -> .)
+    CTESTR          reduce using rule 127 (e -> .)
+    CTEB            reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+
+    push_div                       shift and go to state 223
+    e                              shift and go to state 224
+
+state 175
+
+    (111) exp5 -> e .
+
+    PLUS            reduce using rule 111 (exp5 -> e .)
+    MINUS           reduce using rule 111 (exp5 -> e .)
+    LT              reduce using rule 111 (exp5 -> e .)
+    GT              reduce using rule 111 (exp5 -> e .)
+    COMP            reduce using rule 111 (exp5 -> e .)
+    NOTEQ           reduce using rule 111 (exp5 -> e .)
+    AND             reduce using rule 111 (exp5 -> e .)
+    OR              reduce using rule 111 (exp5 -> e .)
+    SEMICOLON       reduce using rule 111 (exp5 -> e .)
+    RPAR            reduce using rule 111 (exp5 -> e .)
+    COMMA           reduce using rule 111 (exp5 -> e .)
+    RSBRAC          reduce using rule 111 (exp5 -> e .)
+    TO              reduce using rule 111 (exp5 -> e .)
+
+
+state 176
+
+    (114) e_exp -> LPAR expresion . RPAR
+
+    RPAR            shift and go to state 225
+
+
+state 177
+
+    (118) var_cte -> CTEI ctei .
+
+    MULT            reduce using rule 118 (var_cte -> CTEI ctei .)
+    DIV             reduce using rule 118 (var_cte -> CTEI ctei .)
+    PLUS            reduce using rule 118 (var_cte -> CTEI ctei .)
+    MINUS           reduce using rule 118 (var_cte -> CTEI ctei .)
+    LT              reduce using rule 118 (var_cte -> CTEI ctei .)
+    GT              reduce using rule 118 (var_cte -> CTEI ctei .)
+    COMP            reduce using rule 118 (var_cte -> CTEI ctei .)
+    NOTEQ           reduce using rule 118 (var_cte -> CTEI ctei .)
+    AND             reduce using rule 118 (var_cte -> CTEI ctei .)
+    OR              reduce using rule 118 (var_cte -> CTEI ctei .)
+    SEMICOLON       reduce using rule 118 (var_cte -> CTEI ctei .)
+    RPAR            reduce using rule 118 (var_cte -> CTEI ctei .)
+    COMMA           reduce using rule 118 (var_cte -> CTEI ctei .)
+    RSBRAC          reduce using rule 118 (var_cte -> CTEI ctei .)
+    TO              reduce using rule 118 (var_cte -> CTEI ctei .)
+
+
+state 178
+
+    (122) ctei -> e .
+
+    MULT            reduce using rule 122 (ctei -> e .)
+    DIV             reduce using rule 122 (ctei -> e .)
+    PLUS            reduce using rule 122 (ctei -> e .)
+    MINUS           reduce using rule 122 (ctei -> e .)
+    LT              reduce using rule 122 (ctei -> e .)
+    GT              reduce using rule 122 (ctei -> e .)
+    COMP            reduce using rule 122 (ctei -> e .)
+    NOTEQ           reduce using rule 122 (ctei -> e .)
+    AND             reduce using rule 122 (ctei -> e .)
+    OR              reduce using rule 122 (ctei -> e .)
+    SEMICOLON       reduce using rule 122 (ctei -> e .)
+    RPAR            reduce using rule 122 (ctei -> e .)
+    COMMA           reduce using rule 122 (ctei -> e .)
+    RSBRAC          reduce using rule 122 (ctei -> e .)
+    TO              reduce using rule 122 (ctei -> e .)
+
+
+state 179
+
+    (119) var_cte -> CTEF ctef .
+
+    MULT            reduce using rule 119 (var_cte -> CTEF ctef .)
+    DIV             reduce using rule 119 (var_cte -> CTEF ctef .)
+    PLUS            reduce using rule 119 (var_cte -> CTEF ctef .)
+    MINUS           reduce using rule 119 (var_cte -> CTEF ctef .)
+    LT              reduce using rule 119 (var_cte -> CTEF ctef .)
+    GT              reduce using rule 119 (var_cte -> CTEF ctef .)
+    COMP            reduce using rule 119 (var_cte -> CTEF ctef .)
+    NOTEQ           reduce using rule 119 (var_cte -> CTEF ctef .)
+    AND             reduce using rule 119 (var_cte -> CTEF ctef .)
+    OR              reduce using rule 119 (var_cte -> CTEF ctef .)
+    SEMICOLON       reduce using rule 119 (var_cte -> CTEF ctef .)
+    RPAR            reduce using rule 119 (var_cte -> CTEF ctef .)
+    COMMA           reduce using rule 119 (var_cte -> CTEF ctef .)
+    RSBRAC          reduce using rule 119 (var_cte -> CTEF ctef .)
+    TO              reduce using rule 119 (var_cte -> CTEF ctef .)
+
+
+state 180
+
+    (123) ctef -> e .
+
+    MULT            reduce using rule 123 (ctef -> e .)
+    DIV             reduce using rule 123 (ctef -> e .)
+    PLUS            reduce using rule 123 (ctef -> e .)
+    MINUS           reduce using rule 123 (ctef -> e .)
+    LT              reduce using rule 123 (ctef -> e .)
+    GT              reduce using rule 123 (ctef -> e .)
+    COMP            reduce using rule 123 (ctef -> e .)
+    NOTEQ           reduce using rule 123 (ctef -> e .)
+    AND             reduce using rule 123 (ctef -> e .)
+    OR              reduce using rule 123 (ctef -> e .)
+    SEMICOLON       reduce using rule 123 (ctef -> e .)
+    RPAR            reduce using rule 123 (ctef -> e .)
+    COMMA           reduce using rule 123 (ctef -> e .)
+    RSBRAC          reduce using rule 123 (ctef -> e .)
+    TO              reduce using rule 123 (ctef -> e .)
+
+
+state 181
+
+    (120) var_cte -> CTESTR ctestr .
+
+    MULT            reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    DIV             reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    PLUS            reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    MINUS           reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    LT              reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    GT              reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    COMP            reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    NOTEQ           reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    AND             reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    OR              reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    SEMICOLON       reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    RPAR            reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    COMMA           reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    RSBRAC          reduce using rule 120 (var_cte -> CTESTR ctestr .)
+    TO              reduce using rule 120 (var_cte -> CTESTR ctestr .)
+
+
+state 182
+
+    (124) ctestr -> e .
+
+    MULT            reduce using rule 124 (ctestr -> e .)
+    DIV             reduce using rule 124 (ctestr -> e .)
+    PLUS            reduce using rule 124 (ctestr -> e .)
+    MINUS           reduce using rule 124 (ctestr -> e .)
+    LT              reduce using rule 124 (ctestr -> e .)
+    GT              reduce using rule 124 (ctestr -> e .)
+    COMP            reduce using rule 124 (ctestr -> e .)
+    NOTEQ           reduce using rule 124 (ctestr -> e .)
+    AND             reduce using rule 124 (ctestr -> e .)
+    OR              reduce using rule 124 (ctestr -> e .)
+    SEMICOLON       reduce using rule 124 (ctestr -> e .)
+    RPAR            reduce using rule 124 (ctestr -> e .)
+    COMMA           reduce using rule 124 (ctestr -> e .)
+    RSBRAC          reduce using rule 124 (ctestr -> e .)
+    TO              reduce using rule 124 (ctestr -> e .)
+
+
+state 183
+
+    (121) var_cte -> CTEB cteb .
+
+    MULT            reduce using rule 121 (var_cte -> CTEB cteb .)
+    DIV             reduce using rule 121 (var_cte -> CTEB cteb .)
+    PLUS            reduce using rule 121 (var_cte -> CTEB cteb .)
+    MINUS           reduce using rule 121 (var_cte -> CTEB cteb .)
+    LT              reduce using rule 121 (var_cte -> CTEB cteb .)
+    GT              reduce using rule 121 (var_cte -> CTEB cteb .)
+    COMP            reduce using rule 121 (var_cte -> CTEB cteb .)
+    NOTEQ           reduce using rule 121 (var_cte -> CTEB cteb .)
+    AND             reduce using rule 121 (var_cte -> CTEB cteb .)
+    OR              reduce using rule 121 (var_cte -> CTEB cteb .)
+    SEMICOLON       reduce using rule 121 (var_cte -> CTEB cteb .)
+    RPAR            reduce using rule 121 (var_cte -> CTEB cteb .)
+    COMMA           reduce using rule 121 (var_cte -> CTEB cteb .)
+    RSBRAC          reduce using rule 121 (var_cte -> CTEB cteb .)
+    TO              reduce using rule 121 (var_cte -> CTEB cteb .)
+
+
+state 184
+
+    (125) cteb -> e .
+
+    MULT            reduce using rule 125 (cteb -> e .)
+    DIV             reduce using rule 125 (cteb -> e .)
+    PLUS            reduce using rule 125 (cteb -> e .)
+    MINUS           reduce using rule 125 (cteb -> e .)
+    LT              reduce using rule 125 (cteb -> e .)
+    GT              reduce using rule 125 (cteb -> e .)
+    COMP            reduce using rule 125 (cteb -> e .)
+    NOTEQ           reduce using rule 125 (cteb -> e .)
+    AND             reduce using rule 125 (cteb -> e .)
+    OR              reduce using rule 125 (cteb -> e .)
+    SEMICOLON       reduce using rule 125 (cteb -> e .)
+    RPAR            reduce using rule 125 (cteb -> e .)
+    COMMA           reduce using rule 125 (cteb -> e .)
+    RSBRAC          reduce using rule 125 (cteb -> e .)
+    TO              reduce using rule 125 (cteb -> e .)
+
+
+state 185
+
+    (56) variable1 -> DOT . ID
+    (66) llamada1 -> DOT . ID
+
+    ID              shift and go to state 226
+
+
+state 186
+
+    (57) variable1 -> e .
+    (67) llamada1 -> e .
+
+    LSBRAC          reduce using rule 57 (variable1 -> e .)
+    MULT            reduce using rule 57 (variable1 -> e .)
+    DIV             reduce using rule 57 (variable1 -> e .)
+    PLUS            reduce using rule 57 (variable1 -> e .)
+    MINUS           reduce using rule 57 (variable1 -> e .)
+    LT              reduce using rule 57 (variable1 -> e .)
+    GT              reduce using rule 57 (variable1 -> e .)
+    COMP            reduce using rule 57 (variable1 -> e .)
+    NOTEQ           reduce using rule 57 (variable1 -> e .)
+    AND             reduce using rule 57 (variable1 -> e .)
+    OR              reduce using rule 57 (variable1 -> e .)
+    SEMICOLON       reduce using rule 57 (variable1 -> e .)
+    RPAR            reduce using rule 57 (variable1 -> e .)
+    COMMA           reduce using rule 57 (variable1 -> e .)
+    RSBRAC          reduce using rule 57 (variable1 -> e .)
+    TO              reduce using rule 57 (variable1 -> e .)
+    LPAR            reduce using rule 67 (llamada1 -> e .)
+
+
+state 187
+
+    (35) funcion2 -> ID COLON tipo funcion3 .
+
+    RPAR            reduce using rule 35 (funcion2 -> ID COLON tipo funcion3 .)
+
+
+state 188
+
+    (37) funcion3 -> COMMA . ID COLON tipo funcion3
+
+    ID              shift and go to state 227
+
+
+state 189
+
+    (38) funcion3 -> e .
+
+    RPAR            reduce using rule 38 (funcion3 -> e .)
+
+
+state 190
+
+    (31) funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .
+
+    MAIN            reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+    VOID            reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+    INT             reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+    FLOAT           reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+    STRING          reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+    BOOL            reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+    RCBRAC          reduce using rule 31 (funcion -> funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion .)
+
+
+state 191
+
+    (56) variable1 -> DOT ID .
+
+    LSBRAC          reduce using rule 56 (variable1 -> DOT ID .)
+    EQ              reduce using rule 56 (variable1 -> DOT ID .)
+    RPAR            reduce using rule 56 (variable1 -> DOT ID .)
+
+
+state 192
+
+    (54) asignacion -> variable EQ expresion SEMICOLON .
+
+    IF              reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    ID              reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    READ            reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    WRITE           reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    WHILE           reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    FROM            reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    RETURN          reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    RCBRAC          reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+    METHODS         reduce using rule 54 (asignacion -> variable EQ expresion SEMICOLON .)
+
+
+state 193
+
+    (62) condicion -> IF LPAR expresion RPAR . bloque condicion1
+    (43) bloque -> . LCBRAC estatutos RCBRAC
+
+    LCBRAC          shift and go to state 64
+
+    bloque                         shift and go to state 228
+
+state 194
+
+    (65) llamada -> ID llamada1 LPAR llamada2 . RPAR SEMICOLON
+
+    RPAR            shift and go to state 229
+
+
+state 195
+
+    (68) llamada2 -> expresion . llamada3
+    (70) llamada3 -> . COMMA expresion llamada3
+    (71) llamada3 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 231
+    RPAR            reduce using rule 127 (e -> .)
+
+    llamada3                       shift and go to state 230
+    e                              shift and go to state 232
+
+state 196
+
+    (69) llamada2 -> e .
+
+    RPAR            reduce using rule 69 (llamada2 -> e .)
+
+
+state 197
+
+    (58) variable2 -> LSBRAC expresion . RSBRAC variable3
+
+    RSBRAC          shift and go to state 233
+
+
+state 198
+
+    (72) leer -> READ LPAR variable RPAR . SEMICOLON
+
+    SEMICOLON       shift and go to state 234
+
+
+state 199
+
+    (73) escribir -> WRITE LPAR escribir1 RPAR . SEMICOLON
+
+    SEMICOLON       shift and go to state 235
+
+
+state 200
+
+    (74) escribir1 -> texto add_print . generar_cuadr escribir2
+    (126) generar_cuadr -> . e
+    (127) e -> .
+
+    COMMA           reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+
+    generar_cuadr                  shift and go to state 236
+    e                              shift and go to state 237
+
+state 201
+
+    (76) add_print -> e .
+
+    COMMA           reduce using rule 76 (add_print -> e .)
+    RPAR            reduce using rule 76 (add_print -> e .)
+
+
+state 202
+
+    (75) escribir1 -> expresion add_print . generar_cuadr escribir2
+    (126) generar_cuadr -> . e
+    (127) e -> .
+
+    COMMA           reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+
+    generar_cuadr                  shift and go to state 238
+    e                              shift and go to state 237
+
+state 203
+
+    (80) ciclo_w -> WHILE LPAR expresion RPAR . DO bloque
+
+    DO              shift and go to state 239
+
+
+state 204
+
+    (81) ciclo_f -> FROM LPAR variable EQ . expresion TO expresion RPAR DO bloque
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    variable                       shift and go to state 127
+    expresion                      shift and go to state 240
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    llamada                        shift and go to state 128
+
+state 205
+
+    (84) exp1 -> OR push_or . a_exp pop_operador exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    a_exp                          shift and go to state 241
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 206
+
+    (86) push_or -> e .
+
+    LPAR            reduce using rule 86 (push_or -> e .)
+    CTEI            reduce using rule 86 (push_or -> e .)
+    CTEF            reduce using rule 86 (push_or -> e .)
+    CTESTR          reduce using rule 86 (push_or -> e .)
+    CTEB            reduce using rule 86 (push_or -> e .)
+    ID              reduce using rule 86 (push_or -> e .)
+
+
+state 207
+
+    (89) exp2 -> AND push_and . b_exp pop_operador exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    b_exp                          shift and go to state 242
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 208
+
+    (91) push_and -> e .
+
+    LPAR            reduce using rule 91 (push_and -> e .)
+    CTEI            reduce using rule 91 (push_and -> e .)
+    CTEF            reduce using rule 91 (push_and -> e .)
+    CTESTR          reduce using rule 91 (push_and -> e .)
+    CTEB            reduce using rule 91 (push_and -> e .)
+    ID              reduce using rule 91 (push_and -> e .)
+
+
+state 209
+
+    (93) exp3 -> LT push_lt . c_exp pop_operador exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    c_exp                          shift and go to state 243
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 210
+
+    (98) push_lt -> e .
+
+    LPAR            reduce using rule 98 (push_lt -> e .)
+    CTEI            reduce using rule 98 (push_lt -> e .)
+    CTEF            reduce using rule 98 (push_lt -> e .)
+    CTESTR          reduce using rule 98 (push_lt -> e .)
+    CTEB            reduce using rule 98 (push_lt -> e .)
+    ID              reduce using rule 98 (push_lt -> e .)
+
+
+state 211
+
+    (94) exp3 -> GT push_gt . c_exp pop_operador exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    c_exp                          shift and go to state 244
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 212
+
+    (99) push_gt -> e .
+
+    LPAR            reduce using rule 99 (push_gt -> e .)
+    CTEI            reduce using rule 99 (push_gt -> e .)
+    CTEF            reduce using rule 99 (push_gt -> e .)
+    CTESTR          reduce using rule 99 (push_gt -> e .)
+    CTEB            reduce using rule 99 (push_gt -> e .)
+    ID              reduce using rule 99 (push_gt -> e .)
+
+
+state 213
+
+    (95) exp3 -> COMP push_comp . c_exp pop_operador exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    c_exp                          shift and go to state 245
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 214
+
+    (100) push_comp -> e .
+
+    LPAR            reduce using rule 100 (push_comp -> e .)
+    CTEI            reduce using rule 100 (push_comp -> e .)
+    CTEF            reduce using rule 100 (push_comp -> e .)
+    CTESTR          reduce using rule 100 (push_comp -> e .)
+    CTEB            reduce using rule 100 (push_comp -> e .)
+    ID              reduce using rule 100 (push_comp -> e .)
+
+
+state 215
+
+    (96) exp3 -> NOTEQ push_noteq . c_exp pop_operador exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    c_exp                          shift and go to state 246
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 216
+
+    (101) push_noteq -> e .
+
+    LPAR            reduce using rule 101 (push_noteq -> e .)
+    CTEI            reduce using rule 101 (push_noteq -> e .)
+    CTEF            reduce using rule 101 (push_noteq -> e .)
+    CTESTR          reduce using rule 101 (push_noteq -> e .)
+    CTEB            reduce using rule 101 (push_noteq -> e .)
+    ID              reduce using rule 101 (push_noteq -> e .)
+
+
+state 217
+
+    (103) exp4 -> PLUS push_plus . d_exp pop_operador exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    d_exp                          shift and go to state 247
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 218
+
+    (106) push_plus -> e .
+
+    LPAR            reduce using rule 106 (push_plus -> e .)
+    CTEI            reduce using rule 106 (push_plus -> e .)
+    CTEF            reduce using rule 106 (push_plus -> e .)
+    CTESTR          reduce using rule 106 (push_plus -> e .)
+    CTEB            reduce using rule 106 (push_plus -> e .)
+    ID              reduce using rule 106 (push_plus -> e .)
+
+
+state 219
+
+    (104) exp4 -> MINUS push_minus . d_exp pop_operador exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    d_exp                          shift and go to state 248
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 220
+
+    (107) push_minus -> e .
+
+    LPAR            reduce using rule 107 (push_minus -> e .)
+    CTEI            reduce using rule 107 (push_minus -> e .)
+    CTEF            reduce using rule 107 (push_minus -> e .)
+    CTESTR          reduce using rule 107 (push_minus -> e .)
+    CTEB            reduce using rule 107 (push_minus -> e .)
+    ID              reduce using rule 107 (push_minus -> e .)
+
+
+state 221
+
+    (109) exp5 -> MULT push_mult . e_exp pop_operador exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    e_exp                          shift and go to state 249
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 222
+
+    (112) push_mult -> e .
+
+    LPAR            reduce using rule 112 (push_mult -> e .)
+    CTEI            reduce using rule 112 (push_mult -> e .)
+    CTEF            reduce using rule 112 (push_mult -> e .)
+    CTESTR          reduce using rule 112 (push_mult -> e .)
+    CTEB            reduce using rule 112 (push_mult -> e .)
+    ID              reduce using rule 112 (push_mult -> e .)
+
+
+state 223
+
+    (110) exp5 -> DIV push_div . e_exp pop_operador exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    e_exp                          shift and go to state 250
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 224
+
+    (113) push_div -> e .
+
+    LPAR            reduce using rule 113 (push_div -> e .)
+    CTEI            reduce using rule 113 (push_div -> e .)
+    CTEF            reduce using rule 113 (push_div -> e .)
+    CTESTR          reduce using rule 113 (push_div -> e .)
+    CTEB            reduce using rule 113 (push_div -> e .)
+    ID              reduce using rule 113 (push_div -> e .)
+
+
+state 225
+
+    (114) e_exp -> LPAR expresion RPAR .
+
+    MULT            reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    DIV             reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    PLUS            reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    MINUS           reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    LT              reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    GT              reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    COMP            reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    NOTEQ           reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    AND             reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    OR              reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    SEMICOLON       reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    RPAR            reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    COMMA           reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    RSBRAC          reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+    TO              reduce using rule 114 (e_exp -> LPAR expresion RPAR .)
+
+
+state 226
+
+    (56) variable1 -> DOT ID .
+    (66) llamada1 -> DOT ID .
+
+    LSBRAC          reduce using rule 56 (variable1 -> DOT ID .)
+    MULT            reduce using rule 56 (variable1 -> DOT ID .)
+    DIV             reduce using rule 56 (variable1 -> DOT ID .)
+    PLUS            reduce using rule 56 (variable1 -> DOT ID .)
+    MINUS           reduce using rule 56 (variable1 -> DOT ID .)
+    LT              reduce using rule 56 (variable1 -> DOT ID .)
+    GT              reduce using rule 56 (variable1 -> DOT ID .)
+    COMP            reduce using rule 56 (variable1 -> DOT ID .)
+    NOTEQ           reduce using rule 56 (variable1 -> DOT ID .)
+    AND             reduce using rule 56 (variable1 -> DOT ID .)
+    OR              reduce using rule 56 (variable1 -> DOT ID .)
+    SEMICOLON       reduce using rule 56 (variable1 -> DOT ID .)
+    RPAR            reduce using rule 56 (variable1 -> DOT ID .)
+    COMMA           reduce using rule 56 (variable1 -> DOT ID .)
+    RSBRAC          reduce using rule 56 (variable1 -> DOT ID .)
+    TO              reduce using rule 56 (variable1 -> DOT ID .)
+    LPAR            reduce using rule 66 (llamada1 -> DOT ID .)
+
+
+state 227
+
+    (37) funcion3 -> COMMA ID . COLON tipo funcion3
+
+    COLON           shift and go to state 251
+
+
+state 228
+
+    (62) condicion -> IF LPAR expresion RPAR bloque . condicion1
+    (63) condicion1 -> . ELSE bloque
+    (64) condicion1 -> . e
+    (127) e -> .
+
+    ELSE            shift and go to state 253
+    IF              reduce using rule 127 (e -> .)
+    ID              reduce using rule 127 (e -> .)
+    READ            reduce using rule 127 (e -> .)
+    WRITE           reduce using rule 127 (e -> .)
+    WHILE           reduce using rule 127 (e -> .)
+    FROM            reduce using rule 127 (e -> .)
+    RETURN          reduce using rule 127 (e -> .)
+    RCBRAC          reduce using rule 127 (e -> .)
+
+    condicion1                     shift and go to state 252
+    e                              shift and go to state 254
+
+state 229
+
+    (65) llamada -> ID llamada1 LPAR llamada2 RPAR . SEMICOLON
+
+    SEMICOLON       shift and go to state 255
+
+
+state 230
+
+    (68) llamada2 -> expresion llamada3 .
+
+    RPAR            reduce using rule 68 (llamada2 -> expresion llamada3 .)
+
+
+state 231
+
+    (70) llamada3 -> COMMA . expresion llamada3
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 256
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 232
+
+    (71) llamada3 -> e .
+
+    RPAR            reduce using rule 71 (llamada3 -> e .)
+
+
+state 233
+
+    (58) variable2 -> LSBRAC expresion RSBRAC . variable3
+    (60) variable3 -> . LSBRAC expresion RSBRAC
+    (61) variable3 -> . e
+    (127) e -> .
+
+    LSBRAC          shift and go to state 257
+    EQ              reduce using rule 127 (e -> .)
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    variable3                      shift and go to state 258
+    e                              shift and go to state 259
+
+state 234
+
+    (72) leer -> READ LPAR variable RPAR SEMICOLON .
+
+    IF              reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    ID              reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    READ            reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    WRITE           reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    WHILE           reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    FROM            reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    RETURN          reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+    RCBRAC          reduce using rule 72 (leer -> READ LPAR variable RPAR SEMICOLON .)
+
+
+state 235
+
+    (73) escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .
+
+    IF              reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    ID              reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    READ            reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    WRITE           reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    WHILE           reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    FROM            reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    RETURN          reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+    RCBRAC          reduce using rule 73 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
+
+
+state 236
+
+    (74) escribir1 -> texto add_print generar_cuadr . escribir2
+    (77) escribir2 -> . COMMA escribir1
+    (78) escribir2 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 261
+    RPAR            reduce using rule 127 (e -> .)
+
+    escribir2                      shift and go to state 260
+    e                              shift and go to state 262
+
+state 237
+
+    (126) generar_cuadr -> e .
+
+    COMMA           reduce using rule 126 (generar_cuadr -> e .)
+    RPAR            reduce using rule 126 (generar_cuadr -> e .)
+
+
+state 238
+
+    (75) escribir1 -> expresion add_print generar_cuadr . escribir2
+    (77) escribir2 -> . COMMA escribir1
+    (78) escribir2 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 261
+    RPAR            reduce using rule 127 (e -> .)
+
+    escribir2                      shift and go to state 263
+    e                              shift and go to state 262
+
+state 239
+
+    (80) ciclo_w -> WHILE LPAR expresion RPAR DO . bloque
+    (43) bloque -> . LCBRAC estatutos RCBRAC
+
+    LCBRAC          shift and go to state 64
+
+    bloque                         shift and go to state 264
+
+state 240
+
+    (81) ciclo_f -> FROM LPAR variable EQ expresion . TO expresion RPAR DO bloque
+
+    TO              shift and go to state 265
+
+
+state 241
+
+    (84) exp1 -> OR push_or a_exp . pop_operador exp1
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 266
+    e                              shift and go to state 267
+
+state 242
+
+    (89) exp2 -> AND push_and b_exp . pop_operador exp2
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 268
+    e                              shift and go to state 267
+
+state 243
+
+    (93) exp3 -> LT push_lt c_exp . pop_operador exp3
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 269
+    e                              shift and go to state 267
+
+state 244
+
+    (94) exp3 -> GT push_gt c_exp . pop_operador exp3
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 270
+    e                              shift and go to state 267
+
+state 245
+
+    (95) exp3 -> COMP push_comp c_exp . pop_operador exp3
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 271
+    e                              shift and go to state 267
+
+state 246
+
+    (96) exp3 -> NOTEQ push_noteq c_exp . pop_operador exp3
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 272
+    e                              shift and go to state 267
+
+state 247
+
+    (103) exp4 -> PLUS push_plus d_exp . pop_operador exp4
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 273
+    e                              shift and go to state 267
+
+state 248
+
+    (104) exp4 -> MINUS push_minus d_exp . pop_operador exp4
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 274
+    e                              shift and go to state 267
+
+state 249
+
+    (109) exp5 -> MULT push_mult e_exp . pop_operador exp5
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 275
+    e                              shift and go to state 267
+
+state 250
+
+    (110) exp5 -> DIV push_div e_exp . pop_operador exp5
+    (87) pop_operador -> . e
+    (127) e -> .
+
+    MULT            reduce using rule 127 (e -> .)
+    DIV             reduce using rule 127 (e -> .)
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    pop_operador                   shift and go to state 276
+    e                              shift and go to state 267
+
+state 251
+
+    (37) funcion3 -> COMMA ID COLON . tipo funcion3
+    (39) tipo -> . INT
+    (40) tipo -> . FLOAT
+    (41) tipo -> . STRING
+    (42) tipo -> . BOOL
+
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    STRING          shift and go to state 19
+    BOOL            shift and go to state 20
+
+    tipo                           shift and go to state 277
+
+state 252
+
+    (62) condicion -> IF LPAR expresion RPAR bloque condicion1 .
+
+    IF              reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    ID              reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    READ            reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    WRITE           reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    WHILE           reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    FROM            reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    RETURN          reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+    RCBRAC          reduce using rule 62 (condicion -> IF LPAR expresion RPAR bloque condicion1 .)
+
+
+state 253
+
+    (63) condicion1 -> ELSE . bloque
+    (43) bloque -> . LCBRAC estatutos RCBRAC
+
+    LCBRAC          shift and go to state 64
+
+    bloque                         shift and go to state 278
+
+state 254
+
+    (64) condicion1 -> e .
+
+    IF              reduce using rule 64 (condicion1 -> e .)
+    ID              reduce using rule 64 (condicion1 -> e .)
+    READ            reduce using rule 64 (condicion1 -> e .)
+    WRITE           reduce using rule 64 (condicion1 -> e .)
+    WHILE           reduce using rule 64 (condicion1 -> e .)
+    FROM            reduce using rule 64 (condicion1 -> e .)
+    RETURN          reduce using rule 64 (condicion1 -> e .)
+    RCBRAC          reduce using rule 64 (condicion1 -> e .)
+
+
+state 255
+
+    (65) llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .
+
+    IF              reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    ID              reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    READ            reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    WRITE           reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    WHILE           reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    FROM            reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    RETURN          reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    RCBRAC          reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    MULT            reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    DIV             reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    PLUS            reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    MINUS           reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    LT              reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    GT              reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    COMP            reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    NOTEQ           reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    AND             reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    OR              reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    SEMICOLON       reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    RPAR            reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    COMMA           reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    RSBRAC          reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+    TO              reduce using rule 65 (llamada -> ID llamada1 LPAR llamada2 RPAR SEMICOLON .)
+
+
+state 256
+
+    (70) llamada3 -> COMMA expresion . llamada3
+    (70) llamada3 -> . COMMA expresion llamada3
+    (71) llamada3 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 231
+    RPAR            reduce using rule 127 (e -> .)
+
+    llamada3                       shift and go to state 279
+    e                              shift and go to state 232
+
+state 257
+
+    (60) variable3 -> LSBRAC . expresion RSBRAC
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    expresion                      shift and go to state 280
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 258
+
+    (58) variable2 -> LSBRAC expresion RSBRAC variable3 .
+
+    EQ              reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    MULT            reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    DIV             reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    PLUS            reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    MINUS           reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    LT              reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    GT              reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    COMP            reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    NOTEQ           reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    AND             reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    OR              reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    SEMICOLON       reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    RPAR            reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    COMMA           reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    RSBRAC          reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+    TO              reduce using rule 58 (variable2 -> LSBRAC expresion RSBRAC variable3 .)
+
+
+state 259
+
+    (61) variable3 -> e .
+
+    EQ              reduce using rule 61 (variable3 -> e .)
+    MULT            reduce using rule 61 (variable3 -> e .)
+    DIV             reduce using rule 61 (variable3 -> e .)
+    PLUS            reduce using rule 61 (variable3 -> e .)
+    MINUS           reduce using rule 61 (variable3 -> e .)
+    LT              reduce using rule 61 (variable3 -> e .)
+    GT              reduce using rule 61 (variable3 -> e .)
+    COMP            reduce using rule 61 (variable3 -> e .)
+    NOTEQ           reduce using rule 61 (variable3 -> e .)
+    AND             reduce using rule 61 (variable3 -> e .)
+    OR              reduce using rule 61 (variable3 -> e .)
+    SEMICOLON       reduce using rule 61 (variable3 -> e .)
+    RPAR            reduce using rule 61 (variable3 -> e .)
+    COMMA           reduce using rule 61 (variable3 -> e .)
+    RSBRAC          reduce using rule 61 (variable3 -> e .)
+    TO              reduce using rule 61 (variable3 -> e .)
+
+
+state 260
+
+    (74) escribir1 -> texto add_print generar_cuadr escribir2 .
+
+    RPAR            reduce using rule 74 (escribir1 -> texto add_print generar_cuadr escribir2 .)
+
+
+state 261
+
+    (77) escribir2 -> COMMA . escribir1
+    (74) escribir1 -> . texto add_print generar_cuadr escribir2
+    (75) escribir1 -> . expresion add_print generar_cuadr escribir2
+    (79) texto -> . CTESTR
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    CTESTR          shift and go to state 152
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    escribir1                      shift and go to state 281
+    texto                          shift and go to state 150
+    expresion                      shift and go to state 151
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    variable                       shift and go to state 127
+    llamada                        shift and go to state 128
+
+state 262
+
+    (78) escribir2 -> e .
+
+    RPAR            reduce using rule 78 (escribir2 -> e .)
+
+
+state 263
+
+    (75) escribir1 -> expresion add_print generar_cuadr escribir2 .
+
+    RPAR            reduce using rule 75 (escribir1 -> expresion add_print generar_cuadr escribir2 .)
+
+
+state 264
+
+    (80) ciclo_w -> WHILE LPAR expresion RPAR DO bloque .
+
+    IF              reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    ID              reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    READ            reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    WRITE           reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    WHILE           reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    FROM            reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    RETURN          reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+    RCBRAC          reduce using rule 80 (ciclo_w -> WHILE LPAR expresion RPAR DO bloque .)
+
+
+state 265
+
+    (81) ciclo_f -> FROM LPAR variable EQ expresion TO . expresion RPAR DO bloque
+    (83) expresion -> . a_exp exp1
+    (88) a_exp -> . b_exp exp2
+    (92) b_exp -> . c_exp exp3
+    (102) c_exp -> . d_exp exp4
+    (108) d_exp -> . e_exp exp5
+    (114) e_exp -> . LPAR expresion RPAR
+    (115) e_exp -> . var_cte
+    (116) e_exp -> . variable
+    (117) e_exp -> . llamada
+    (118) var_cte -> . CTEI ctei
+    (119) var_cte -> . CTEF ctef
+    (120) var_cte -> . CTESTR ctestr
+    (121) var_cte -> . CTEB cteb
+    (55) variable -> . ID variable1 variable2
+    (65) llamada -> . ID llamada1 LPAR llamada2 RPAR SEMICOLON
+
+    LPAR            shift and go to state 125
+    CTEI            shift and go to state 129
+    CTEF            shift and go to state 130
+    CTESTR          shift and go to state 131
+    CTEB            shift and go to state 132
+    ID              shift and go to state 133
+
+    variable                       shift and go to state 127
+    expresion                      shift and go to state 282
+    a_exp                          shift and go to state 120
+    b_exp                          shift and go to state 121
+    c_exp                          shift and go to state 122
+    d_exp                          shift and go to state 123
+    e_exp                          shift and go to state 124
+    var_cte                        shift and go to state 126
+    llamada                        shift and go to state 128
+
+state 266
+
+    (84) exp1 -> OR push_or a_exp pop_operador . exp1
+    (84) exp1 -> . OR push_or a_exp pop_operador exp1
+    (85) exp1 -> . e
+    (127) e -> .
+
+    OR              shift and go to state 157
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp1                           shift and go to state 283
+    e                              shift and go to state 158
+
+state 267
+
+    (87) pop_operador -> e .
+
+    OR              reduce using rule 87 (pop_operador -> e .)
+    SEMICOLON       reduce using rule 87 (pop_operador -> e .)
+    RPAR            reduce using rule 87 (pop_operador -> e .)
+    COMMA           reduce using rule 87 (pop_operador -> e .)
+    RSBRAC          reduce using rule 87 (pop_operador -> e .)
+    TO              reduce using rule 87 (pop_operador -> e .)
+    AND             reduce using rule 87 (pop_operador -> e .)
+    LT              reduce using rule 87 (pop_operador -> e .)
+    GT              reduce using rule 87 (pop_operador -> e .)
+    COMP            reduce using rule 87 (pop_operador -> e .)
+    NOTEQ           reduce using rule 87 (pop_operador -> e .)
+    PLUS            reduce using rule 87 (pop_operador -> e .)
+    MINUS           reduce using rule 87 (pop_operador -> e .)
+    MULT            reduce using rule 87 (pop_operador -> e .)
+    DIV             reduce using rule 87 (pop_operador -> e .)
+
+
+state 268
+
+    (89) exp2 -> AND push_and b_exp pop_operador . exp2
+    (89) exp2 -> . AND push_and b_exp pop_operador exp2
+    (90) exp2 -> . e
+    (127) e -> .
+
+    AND             shift and go to state 160
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp2                           shift and go to state 284
+    e                              shift and go to state 161
+
+state 269
+
+    (93) exp3 -> LT push_lt c_exp pop_operador . exp3
+    (93) exp3 -> . LT push_lt c_exp pop_operador exp3
+    (94) exp3 -> . GT push_gt c_exp pop_operador exp3
+    (95) exp3 -> . COMP push_comp c_exp pop_operador exp3
+    (96) exp3 -> . NOTEQ push_noteq c_exp pop_operador exp3
+    (97) exp3 -> . e
+    (127) e -> .
+
+    LT              shift and go to state 163
+    GT              shift and go to state 164
+    COMP            shift and go to state 165
+    NOTEQ           shift and go to state 166
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp3                           shift and go to state 285
+    e                              shift and go to state 167
+
+state 270
+
+    (94) exp3 -> GT push_gt c_exp pop_operador . exp3
+    (93) exp3 -> . LT push_lt c_exp pop_operador exp3
+    (94) exp3 -> . GT push_gt c_exp pop_operador exp3
+    (95) exp3 -> . COMP push_comp c_exp pop_operador exp3
+    (96) exp3 -> . NOTEQ push_noteq c_exp pop_operador exp3
+    (97) exp3 -> . e
+    (127) e -> .
+
+    LT              shift and go to state 163
+    GT              shift and go to state 164
+    COMP            shift and go to state 165
+    NOTEQ           shift and go to state 166
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp3                           shift and go to state 286
+    e                              shift and go to state 167
+
+state 271
+
+    (95) exp3 -> COMP push_comp c_exp pop_operador . exp3
+    (93) exp3 -> . LT push_lt c_exp pop_operador exp3
+    (94) exp3 -> . GT push_gt c_exp pop_operador exp3
+    (95) exp3 -> . COMP push_comp c_exp pop_operador exp3
+    (96) exp3 -> . NOTEQ push_noteq c_exp pop_operador exp3
+    (97) exp3 -> . e
+    (127) e -> .
+
+    LT              shift and go to state 163
+    GT              shift and go to state 164
+    COMP            shift and go to state 165
+    NOTEQ           shift and go to state 166
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp3                           shift and go to state 287
+    e                              shift and go to state 167
+
+state 272
+
+    (96) exp3 -> NOTEQ push_noteq c_exp pop_operador . exp3
+    (93) exp3 -> . LT push_lt c_exp pop_operador exp3
+    (94) exp3 -> . GT push_gt c_exp pop_operador exp3
+    (95) exp3 -> . COMP push_comp c_exp pop_operador exp3
+    (96) exp3 -> . NOTEQ push_noteq c_exp pop_operador exp3
+    (97) exp3 -> . e
+    (127) e -> .
+
+    LT              shift and go to state 163
+    GT              shift and go to state 164
+    COMP            shift and go to state 165
+    NOTEQ           shift and go to state 166
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp3                           shift and go to state 288
+    e                              shift and go to state 167
+
+state 273
+
+    (103) exp4 -> PLUS push_plus d_exp pop_operador . exp4
+    (103) exp4 -> . PLUS push_plus d_exp pop_operador exp4
+    (104) exp4 -> . MINUS push_minus d_exp pop_operador exp4
+    (105) exp4 -> . e
+    (127) e -> .
+
+    PLUS            shift and go to state 169
+    MINUS           shift and go to state 170
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp4                           shift and go to state 289
+    e                              shift and go to state 171
+
+state 274
+
+    (104) exp4 -> MINUS push_minus d_exp pop_operador . exp4
+    (103) exp4 -> . PLUS push_plus d_exp pop_operador exp4
+    (104) exp4 -> . MINUS push_minus d_exp pop_operador exp4
+    (105) exp4 -> . e
+    (127) e -> .
+
+    PLUS            shift and go to state 169
+    MINUS           shift and go to state 170
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp4                           shift and go to state 290
+    e                              shift and go to state 171
+
+state 275
+
+    (109) exp5 -> MULT push_mult e_exp pop_operador . exp5
+    (109) exp5 -> . MULT push_mult e_exp pop_operador exp5
+    (110) exp5 -> . DIV push_div e_exp pop_operador exp5
+    (111) exp5 -> . e
+    (127) e -> .
+
+    MULT            shift and go to state 173
+    DIV             shift and go to state 174
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp5                           shift and go to state 291
+    e                              shift and go to state 175
+
+state 276
+
+    (110) exp5 -> DIV push_div e_exp pop_operador . exp5
+    (109) exp5 -> . MULT push_mult e_exp pop_operador exp5
+    (110) exp5 -> . DIV push_div e_exp pop_operador exp5
+    (111) exp5 -> . e
+    (127) e -> .
+
+    MULT            shift and go to state 173
+    DIV             shift and go to state 174
+    PLUS            reduce using rule 127 (e -> .)
+    MINUS           reduce using rule 127 (e -> .)
+    LT              reduce using rule 127 (e -> .)
+    GT              reduce using rule 127 (e -> .)
+    COMP            reduce using rule 127 (e -> .)
+    NOTEQ           reduce using rule 127 (e -> .)
+    AND             reduce using rule 127 (e -> .)
+    OR              reduce using rule 127 (e -> .)
+    SEMICOLON       reduce using rule 127 (e -> .)
+    RPAR            reduce using rule 127 (e -> .)
+    COMMA           reduce using rule 127 (e -> .)
+    RSBRAC          reduce using rule 127 (e -> .)
+    TO              reduce using rule 127 (e -> .)
+
+    exp5                           shift and go to state 292
+    e                              shift and go to state 175
+
+state 277
+
+    (37) funcion3 -> COMMA ID COLON tipo . funcion3
+    (37) funcion3 -> . COMMA ID COLON tipo funcion3
+    (38) funcion3 -> . e
+    (127) e -> .
+
+    COMMA           shift and go to state 188
+    RPAR            reduce using rule 127 (e -> .)
+
+    funcion3                       shift and go to state 293
+    e                              shift and go to state 189
+
+state 278
+
+    (63) condicion1 -> ELSE bloque .
+
+    IF              reduce using rule 63 (condicion1 -> ELSE bloque .)
+    ID              reduce using rule 63 (condicion1 -> ELSE bloque .)
+    READ            reduce using rule 63 (condicion1 -> ELSE bloque .)
+    WRITE           reduce using rule 63 (condicion1 -> ELSE bloque .)
+    WHILE           reduce using rule 63 (condicion1 -> ELSE bloque .)
+    FROM            reduce using rule 63 (condicion1 -> ELSE bloque .)
+    RETURN          reduce using rule 63 (condicion1 -> ELSE bloque .)
+    RCBRAC          reduce using rule 63 (condicion1 -> ELSE bloque .)
+
+
+state 279
+
+    (70) llamada3 -> COMMA expresion llamada3 .
+
+    RPAR            reduce using rule 70 (llamada3 -> COMMA expresion llamada3 .)
+
+
+state 280
+
+    (60) variable3 -> LSBRAC expresion . RSBRAC
+
+    RSBRAC          shift and go to state 294
+
+
+state 281
+
+    (77) escribir2 -> COMMA escribir1 .
+
+    RPAR            reduce using rule 77 (escribir2 -> COMMA escribir1 .)
+
+
+state 282
+
+    (81) ciclo_f -> FROM LPAR variable EQ expresion TO expresion . RPAR DO bloque
+
+    RPAR            shift and go to state 295
+
+
+state 283
+
+    (84) exp1 -> OR push_or a_exp pop_operador exp1 .
+
+    SEMICOLON       reduce using rule 84 (exp1 -> OR push_or a_exp pop_operador exp1 .)
+    RPAR            reduce using rule 84 (exp1 -> OR push_or a_exp pop_operador exp1 .)
+    COMMA           reduce using rule 84 (exp1 -> OR push_or a_exp pop_operador exp1 .)
+    RSBRAC          reduce using rule 84 (exp1 -> OR push_or a_exp pop_operador exp1 .)
+    TO              reduce using rule 84 (exp1 -> OR push_or a_exp pop_operador exp1 .)
+
+
+state 284
+
+    (89) exp2 -> AND push_and b_exp pop_operador exp2 .
+
+    OR              reduce using rule 89 (exp2 -> AND push_and b_exp pop_operador exp2 .)
+    SEMICOLON       reduce using rule 89 (exp2 -> AND push_and b_exp pop_operador exp2 .)
+    RPAR            reduce using rule 89 (exp2 -> AND push_and b_exp pop_operador exp2 .)
+    COMMA           reduce using rule 89 (exp2 -> AND push_and b_exp pop_operador exp2 .)
+    RSBRAC          reduce using rule 89 (exp2 -> AND push_and b_exp pop_operador exp2 .)
+    TO              reduce using rule 89 (exp2 -> AND push_and b_exp pop_operador exp2 .)
+
+
+state 285
+
+    (93) exp3 -> LT push_lt c_exp pop_operador exp3 .
+
+    AND             reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+    OR              reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+    SEMICOLON       reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+    RPAR            reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+    COMMA           reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+    RSBRAC          reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+    TO              reduce using rule 93 (exp3 -> LT push_lt c_exp pop_operador exp3 .)
+
+
+state 286
+
+    (94) exp3 -> GT push_gt c_exp pop_operador exp3 .
+
+    AND             reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+    OR              reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+    SEMICOLON       reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+    RPAR            reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+    COMMA           reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+    RSBRAC          reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+    TO              reduce using rule 94 (exp3 -> GT push_gt c_exp pop_operador exp3 .)
+
+
+state 287
+
+    (95) exp3 -> COMP push_comp c_exp pop_operador exp3 .
+
+    AND             reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+    OR              reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+    SEMICOLON       reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+    RPAR            reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+    COMMA           reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+    RSBRAC          reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+    TO              reduce using rule 95 (exp3 -> COMP push_comp c_exp pop_operador exp3 .)
+
+
+state 288
+
+    (96) exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .
+
+    AND             reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+    OR              reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+    SEMICOLON       reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+    RPAR            reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+    COMMA           reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+    RSBRAC          reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+    TO              reduce using rule 96 (exp3 -> NOTEQ push_noteq c_exp pop_operador exp3 .)
+
+
+state 289
+
+    (103) exp4 -> PLUS push_plus d_exp pop_operador exp4 .
+
+    LT              reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    GT              reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    COMP            reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    NOTEQ           reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    AND             reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    OR              reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    SEMICOLON       reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    RPAR            reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    COMMA           reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    RSBRAC          reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+    TO              reduce using rule 103 (exp4 -> PLUS push_plus d_exp pop_operador exp4 .)
+
+
+state 290
+
+    (104) exp4 -> MINUS push_minus d_exp pop_operador exp4 .
+
+    LT              reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    GT              reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    COMP            reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    NOTEQ           reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    AND             reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    OR              reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    SEMICOLON       reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    RPAR            reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    COMMA           reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    RSBRAC          reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+    TO              reduce using rule 104 (exp4 -> MINUS push_minus d_exp pop_operador exp4 .)
+
+
+state 291
+
+    (109) exp5 -> MULT push_mult e_exp pop_operador exp5 .
+
+    PLUS            reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    MINUS           reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    LT              reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    GT              reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    COMP            reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    NOTEQ           reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    AND             reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    OR              reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    SEMICOLON       reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    RPAR            reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    COMMA           reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    RSBRAC          reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+    TO              reduce using rule 109 (exp5 -> MULT push_mult e_exp pop_operador exp5 .)
+
+
+state 292
+
+    (110) exp5 -> DIV push_div e_exp pop_operador exp5 .
+
+    PLUS            reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    MINUS           reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    LT              reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    GT              reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    COMP            reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    NOTEQ           reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    AND             reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    OR              reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    SEMICOLON       reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    RPAR            reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    COMMA           reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    RSBRAC          reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+    TO              reduce using rule 110 (exp5 -> DIV push_div e_exp pop_operador exp5 .)
+
+
+state 293
+
+    (37) funcion3 -> COMMA ID COLON tipo funcion3 .
+
+    RPAR            reduce using rule 37 (funcion3 -> COMMA ID COLON tipo funcion3 .)
+
+
+state 294
+
+    (60) variable3 -> LSBRAC expresion RSBRAC .
+
+    EQ              reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    MULT            reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    DIV             reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    PLUS            reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    MINUS           reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    LT              reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    GT              reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    COMP            reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    NOTEQ           reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    AND             reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    OR              reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    SEMICOLON       reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    RPAR            reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    COMMA           reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    RSBRAC          reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+    TO              reduce using rule 60 (variable3 -> LSBRAC expresion RSBRAC .)
+
+
+state 295
+
+    (81) ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR . DO bloque
+
+    DO              shift and go to state 296
+
+
+state 296
+
+    (81) ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO . bloque
+    (43) bloque -> . LCBRAC estatutos RCBRAC
+
+    LCBRAC          shift and go to state 64
+
+    bloque                         shift and go to state 297
+
+state 297
+
+    (81) ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .
+
+    IF              reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    ID              reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    READ            reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    WRITE           reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    WHILE           reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    FROM            reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    RETURN          reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+    RCBRAC          reduce using rule 81 (ciclo_f -> FROM LPAR variable EQ expresion TO expresion RPAR DO bloque .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for VOID in state 59 resolved as shift
+WARNING: shift/reduce conflict for INT in state 59 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 59 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 59 resolved as shift
+WARNING: shift/reduce conflict for BOOL in state 59 resolved as shift
+WARNING: shift/reduce conflict for ID in state 61 resolved as shift
+WARNING: shift/reduce conflict for VOID in state 72 resolved as shift
+WARNING: shift/reduce conflict for INT in state 72 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 72 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 72 resolved as shift
+WARNING: shift/reduce conflict for BOOL in state 72 resolved as shift
+WARNING: shift/reduce conflict for ID in state 73 resolved as shift
+WARNING: shift/reduce conflict for VOID in state 99 resolved as shift
+WARNING: shift/reduce conflict for INT in state 99 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 99 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 99 resolved as shift
+WARNING: shift/reduce conflict for BOOL in state 99 resolved as shift
+WARNING: shift/reduce conflict for VOID in state 135 resolved as shift
+WARNING: shift/reduce conflict for INT in state 135 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 135 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 135 resolved as shift
+WARNING: shift/reduce conflict for BOOL in state 135 resolved as shift
+WARNING: reduce/reduce conflict in state 101 resolved using rule (metodos -> e)
+WARNING: rejected rule (funcion -> e) in state 101
+WARNING: reduce/reduce conflict in state 152 resolved using rule (texto -> CTESTR)
+WARNING: rejected rule (e -> <empty>) in state 152

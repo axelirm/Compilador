@@ -1,0 +1,41 @@
+program id ;
+
+class idClase {
+  attributes
+    sum , res , ans : int ;
+    mat[2][2] : float ;
+    booleano, booleano2 : bool;
+    objeto : idClase ;
+  methods
+      bool function func1 (par1 : int, par2 : string) {
+        while ( par1 < 4 && par1 > 2 ) do {
+          par1 = par1 + 1 ;
+        }
+        par2 = "hola" ;
+        return par1 != 5 ;
+      }
+
+} 
+
+var 
+  str1 , str2 : string ;
+  num1 , num2, num3 : int ;
+  clase1 : idClase ;
+
+void function func2 (par1 : float) {
+        from ( i = 3 to sum ) do {
+          if ( par1 < 10 ) {
+            i = i + 1 ;
+          }
+          else {
+            i = i + 2 ;
+          }
+        }
+      }
+
+main ( ) {
+  write ( "escribe un string" ) ;
+  read ( str1 ) ;
+  write ( "string leido: " , str1 ) ;
+  clase1.func1( 2, str1 ) ;
+}

@@ -1,0 +1,8 @@
+program id;
+
+var 
+  str1 , str@ : string ;
+
+int main( ) {
+
+}
