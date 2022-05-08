@@ -1,0 +1,14 @@
+program id ; 
+
+var 
+  A , B , C , D : int ;
+
+main() {
+  if ( A + B > C * D ){
+    A = B + D;
+  }
+  else {
+    A = D - C;
+  }
+  B = A * C + D;
+}

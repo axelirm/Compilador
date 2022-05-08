@@ -1,0 +1,12 @@
+program id ; 
+
+var 
+  A , B , C , D : int ;
+
+main() {
+  while ( A > B * C ) do {
+    A = A - D ;
+    print( A ) ;
+  }
+  B = C + A ;
+}

@@ -11,7 +11,9 @@ PilaO = []
 POper = []
 PilaTipos = []
 PilaSaltos = []
+# contador para temporales
 cont = 0
+# contador para cuadruplos
 contCuad = 1
 
 sem = s.Semantica()
@@ -158,7 +160,7 @@ def p_asignacion(t):
         contCuad = contCuad + 1
         # update tablaVariables
     else:
-        print("Error semantico: error de asignacion type-mismatch")    
+        print("Error semantico: error de asignacion type-mismatch: ", variable)    
 
 #************ variable ************
 def p_variable(t):
@@ -185,14 +187,18 @@ def p_variable3(t):
 
 #*********** condicion ***********
 def p_condicion(t):
-    'condicion : IF LPAR expresion RPAR gotoF bloque fill condicion1'
+    'condicion : IF LPAR expresion RPAR gotoF bloque condicion1 fill'
 
 def p_gotoF(t):
     'gotoF : e'
     global contCuad
-    PilaSaltos.append(contCuad)
-    sem.intermediario('gotoF', PilaO.pop(), None , None)
-    contCuad = contCuad + 1
+    exp_tipo = PilaTipos.pop()
+    if(exp_tipo == "bool" ):
+      PilaSaltos.append(contCuad)
+      sem.intermediario('gotoF', PilaO.pop(), None , None)
+      contCuad = contCuad + 1
+    else:
+      print("Error semantico: type-mismatch")
 
 def p_fill(t):
     'fill : e'
@@ -201,8 +207,17 @@ def p_fill(t):
     sem.cuadruplos[ret].res = contCuad
 
 def p_condicion1(t):
-    '''condicion1 : ELSE bloque
+    '''condicion1 : ELSE goto bloque
     | e'''
+
+def p_goto(t):
+    '''goto : e'''
+    global contCuad
+    sem.intermediario('goto', None, None, None)
+    false = PilaSaltos.pop() - 1
+    PilaSaltos.append(contCuad)
+    contCuad = contCuad + 1
+    sem.cuadruplos[false].res = contCuad
 
 #*********** llamada ************
 def p_llamada(t):
@@ -222,7 +237,11 @@ def p_llamada3(t):
 
 #************ leer *************
 def p_leer(t):
-    'leer : READ LPAR variable RPAR SEMICOLON'
+    'leer : READ LPAR variable add_read generar_cuadr RPAR SEMICOLON'
+
+def p_add_read(t):
+    '''add_read : e'''
+    POper.append("read")
 
 #*********** escribir ***********
 def p_escribir(t):
@@ -247,7 +266,20 @@ def p_texto(t):
 
 #*********** ciclo_w ************
 def p_ciclo_w(t):
-    'ciclo_w : WHILE LPAR expresion RPAR DO bloque'
+    'ciclo_w : WHILE push_while LPAR expresion RPAR  gotoF DO bloque return_while'
+
+def p_push_while(t):
+    'push_while : e'
+    PilaSaltos.append(contCuad)
+
+def p_return_while(t):
+    'return_while : e'
+    global contCuad
+    salida = PilaSaltos.pop() - 1
+    regreso = PilaSaltos.pop()
+    sem.intermediario("goto", None, None, regreso)
+    contCuad = contCuad + 1
+    sem.cuadruplos[salida].res = (contCuad + 1)
 
 #*********** ciclo_f ************
 def p_ciclo_f(t):
@@ -405,11 +437,16 @@ def p_cteb(t):
 def p_generar_cuadr(t):
     'generar_cuadr : e'
     poper = POper.pop()
+    global contCuad
     if(poper == "print"):
         arg1 = str(PilaO.pop())
         PilaTipos.pop()
         sem.intermediario(poper, None, None , arg1)
-        global contCuad
+        contCuad = contCuad + 1
+    if(poper == "read"):
+        arg1 = str(PilaO.pop())
+        PilaTipos.pop()
+        sem.intermediario(poper, None, None, arg1)
         contCuad = contCuad + 1
 
 #********* error & pass **********

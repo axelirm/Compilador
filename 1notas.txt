@@ -1,10 +1,2 @@
 10-5 no jala
 pero 10 - 5 si (o 10- 5)
-
-true y false las marca como variables >:| (ctebool arriba de id en lexer)
-
-a los false tmb les pone TRUE wtf (era el t.value en lexer)
-
-asignaciones (habia 1 pop extra)
-
-hacemos un contador para saber en cual cuadruplo va (?)

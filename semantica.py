@@ -56,6 +56,10 @@ class Semantica:
         self.generarCuadruplo('/', arg1, arg2, res)
     elif op == 'gotoF':
         self.generarCuadruplo('gotoF', arg1, arg2, res)
+    elif op == "read":
+        self.generarCuadruplo('read', '', '', res)
+    elif op == "goto":
+        self.generarCuadruplo('goto', arg1, arg2, res)
 
     #elif op == '=':
      # resultado = tablaVars.get(res)[1]

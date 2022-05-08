@@ -59,13 +59,13 @@ class CuboSemantico:
     self.cubo[1,1,0] = 1
     self.cubo[1,0,0] = 1
     # resta de flotantes
-    self.cubo[0,0,1] = 1
+    self.cubo[1,1,1] = 1
     self.cubo[1,0,1] = 1
     # multiplicacion
-    self.cubo[0,0,2] = 1
+    self.cubo[1,1,2] = 1
     self.cubo[1,0,2] = 1
     # division de flotantes
-    self.cubo[0,0,3] = 1
+    self.cubo[1,1,3] = 1
     self.cubo[1,0,3] = 1
     # mayor que de flotantes
     self.cubo[0,0,4] = 3
@@ -80,7 +80,7 @@ class CuboSemantico:
     # or de flotantes
     self.cubo[0,0,9] = 3
     # eq de flotantes
-    self.cubo[0,0,10] = 1
+    self.cubo[1,1,10] = 1
     self.cubo[1,0,10] = 1
 
     
