@@ -193,9 +193,10 @@ def p_gotoF(t):
     'gotoF : e'
     global contCuad
     exp_tipo = PilaTipos.pop()
+    print(exp_tipo)
     if(exp_tipo == "bool" ):
       PilaSaltos.append(contCuad)
-      sem.intermediario('gotoF', PilaO.pop(), None , None)
+      sem.intermediario('gotoF', PilaO.pop(), None, None)
       contCuad = contCuad + 1
     else:
       print("Error semantico: type-mismatch")
@@ -283,8 +284,120 @@ def p_return_while(t):
 
 #*********** ciclo_f ************
 def p_ciclo_f(t):
-    'ciclo_f : FROM LPAR variable EQ expresion TO expresion RPAR DO bloque'
-  
+    'ciclo_f : FROM LPAR variable EQ expresion asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go'
+
+# guardar valor de exp en variable
+def p_asign_var(t):
+    'asign_var : e'
+    expresion = PilaO.pop()
+    variable = PilaO.pop()
+    tipoExpresion = cubo.getTipo(PilaTipos.pop())
+    tipoVariable = cubo.getTipo(PilaTipos.pop())
+    rechazar = cubo.cubo[tipoVariable, tipoExpresion, 10]
+    if(rechazar != 11):
+        sem.intermediario('=', expresion, None , variable)
+        global contCuad
+        contCuad = contCuad + 1
+        PilaO.append(variable)
+        PilaTipos.append(cubo.getNumeroTipo(tipoVariable))
+        # update tablaVariables
+    else:
+        print("Error semantico: error de asignacion type-mismatch: ", variable)  
+# guardar valor de expresion en var2
+def p_asign_exp(t):
+    'asign_exp : e'
+    expresion = PilaO.pop()
+    global contCuad
+    variable = "for_" + str(contCuad)
+    tipoExpresion = cubo.getTipo(PilaTipos.pop())
+    tipoVariable = tipoExpresion
+    PilaO.append(variable)
+    print(PilaTipos)
+    PilaTipos.append(cubo.getNumeroTipo(tipoVariable))
+    print(PilaTipos)
+    tablaVariables.insertar(variable, tipoExpresion, None)
+    rechazar = cubo.cubo[tipoVariable, tipoExpresion, 10]
+    if(rechazar != 11):
+        sem.intermediario('=', expresion, None , variable)
+        contCuad = contCuad + 1
+        # update tablaVariables
+    else:
+        print("Error semantico: error de asignacion type-mismatch: ", variable)  
+# comparar variable y var2 <
+def p_pop_for(t):
+    'pop_for : e'
+    right_op = PilaO.pop()
+    right_type = cubo.getTipo(PilaTipos.pop())
+    left_op = PilaO.pop()
+    print(PilaTipos)
+    left_type = cubo.getTipo(PilaTipos.pop())
+    operador = POper.pop()
+    num_oper = cubo.getOperando(operador)
+    rechazar = cubo.cubo[left_type, right_type, num_oper]
+    if(rechazar != 11):
+        global cont, contCuad
+        print("aaaafdsf"+str(right_op))
+        sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
+        PilaO.append(left_op)
+        PilaTipos.append(cubo.getNumeroTipo(left_type))
+        PilaO.append(right_op)
+        PilaTipos.append(cubo.getNumeroTipo(right_type))
+        PilaO.append(left_op)
+        PilaTipos.append(cubo.getNumeroTipo(left_type))
+        contCuad = contCuad + 1
+        PilaO.append("t"+str(cont))
+        tipo = cubo.getNumeroTipo(rechazar)
+        PilaTipos.append(tipo)
+        cont = cont + 1
+    else:
+        print("Error semantico en expresiones: type mismatch")
+        exit(1)
+# migaja y poner gotoF fuera del ciclo
+def p_migaja(t):
+    'migaja : e'
+    global contCuad
+    print(PilaSaltos)
+    PilaSaltos.append(contCuad)
+    print(PilaSaltos)
+# final bloque variable+1, fill gotoF y goto
+def p_update_fill_go(t):
+    'update_fill_go : push_plus push1 pop_operfor asign_var'
+    global contCuad
+    print(PilaSaltos)
+    fill = PilaSaltos.pop() - 1
+    ret = PilaSaltos.pop()
+    sem.intermediario("goto", None, None, ret)
+    contCuad = contCuad + 1
+    sem.cuadruplos[fill].res = contCuad
+
+def p_push1(t):
+    'push1 : e'
+    PilaO.append("1")
+    PilaTipos.append("int")
+    
+def p_pop_operfor(t):
+    'pop_operfor : e'
+    right_op = PilaO.pop()
+    right_type = cubo.getTipo(PilaTipos.pop())
+    left_op = PilaO.pop()
+    left_type = cubo.getTipo(PilaTipos.pop())
+    operador = POper.pop()
+    num_oper = cubo.getOperando(operador)
+    rechazar = cubo.cubo[left_type, right_type, num_oper]
+    if(rechazar != 11):
+        global cont, contCuad
+        PilaO.append(left_op)
+        PilaTipos.append(cubo.getNumeroTipo(left_type))
+        sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
+        contCuad = contCuad + 1
+        PilaO.append("t"+str(cont))
+        tipo = cubo.getNumeroTipo(rechazar)
+        PilaTipos.append(tipo)
+        cont = cont + 1
+    else:
+        print("Error semantico en expresiones: type mismatch")
+        exit(1)
+    
 #*********** regresar ***********
 def p_regresar(t):
     'regresar : RETURN expresion SEMICOLON'

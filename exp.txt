@@ -12,4 +12,9 @@ main() {
         var3 = 5;
         write(str1, "adios");
     }
+    var2 = 10;
+    from (var1 = 1 to 5) do{
+        write("ciclo for");
+    }
+    var3 = 100;
 }
