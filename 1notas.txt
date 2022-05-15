@@ -1,2 +1,5 @@
 10-5 no jala
 pero 10 - 5 si (o 10- 5)
+
+type mismatch: par1:float; par1 < 10; nvm
+ola:) hice lo declaracion de variables al hacer una funcion y goto al main

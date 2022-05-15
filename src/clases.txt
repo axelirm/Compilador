@@ -1,0 +1,18 @@
+program id ;
+
+class idClase {
+  attributes
+    sum , res , ans : int ;
+    mat[2][2] : float ;
+    booleano, booleano2 : bool;
+    objeto : idClase ;
+
+
+} 
+
+class id_Clase2 {
+
+}
+
+main ( ) {
+}
