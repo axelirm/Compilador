@@ -66,6 +66,10 @@ class Semantica:
         self.generarCuadruplo('param', arg1, '', res)
     elif op == "gosub":
         self.generarCuadruplo('gosub', '', '', res)
+    elif op == "endfunc":
+        self.generarCuadruplo('endfunc', '', '', '')
+    elif op == "param":
+        self.generarCuadruplo('param', arg1, '', res)
 
     #elif op == '=':
      # resultado = tablaVars.get(res)[1]

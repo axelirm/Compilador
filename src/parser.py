@@ -106,7 +106,7 @@ def p_declaracion(t):
 def p_declaracion1(t):
     'declaracion1 : ID declaracion2 declaracion4'
     if (dentroClase):
-      tablaLocalVars.insertar(t[1], None, None)
+      tablaLocalVars.insertar(t[1], None, None)#checar duplicados
       pilaVars.append(t[1])
       print("----------------")
       print(tablaLocalVars.dict)
@@ -152,10 +152,7 @@ def p_funcion(t):
       if (tablaFunciones.buscar(t[3]) == None):
         global contCuad
         tablaFunciones.insertar(t[3], PilaTipos.pop(), parametros, t[4], None, vars)
-        sem.intermediario("gosub", None, None, None)
-        contCuad = contCuad + 1
-        sem.intermediario("goto", None, None, None)
-        PilaSaltos.append(contCuad)
+        sem.intermediario("endfunc", None, None, None)
         contCuad = contCuad + 1
       else:
        print("Error de semantica: doble declaracion")
@@ -164,6 +161,8 @@ def p_funcion(t):
 def p_funcion1(t):
     '''funcion1 : tipo
     | VOID funcion_void'''
+    global contCuad
+    PilaSaltos.append(contCuad)
     t[0] = t[1]
 
 def p_funcion_void(t):
@@ -297,23 +296,33 @@ def p_goto(t):
     sem.cuadruplos[false].res = contCuad
 
 #*********** llamada ************
+contadorParam = 0
+
 def p_llamada(t):
-    'llamada : ID llamada1 LPAR llamada2 RPAR SEMICOLON'
+    'llamada : validar_id llamada1 LPAR llamada2 RPAR SEMICOLON'
+    if(t[1] != 'none'):
+        global contCuad
+        funcStart = PilaSaltos.pop()
+        sem.intermediario("gosub", None, None, funcStart)
+        contCuad = contCuad + 1
+        
+
+def p_validar_id(t):
+    'validar_id : ID'
     obj = tablaVariables.buscar(t[1])
     func = tablaFunciones.buscar(t[1])
     if(obj != None):
         print("obj");
+        t[0] = 'obj'
     elif(func != None):
-        global contCuad
+        global contCuad, contadorParam
         sem.intermediario("era", None, None, func[3])
-        contCuad = contCuad + 1
-        #pasar parametros "param", arg1, None, num_param
-        sem.intermediario("goto", None, None, func[2])
-        contCuad = contCuad + 1
-        fillFunc = PilaSaltos.pop() - 1
-        sem.cuadruplos[fillFunc].res = contCuad
+        contCuad = contCuad + 1        
+        contadorParam = 0
+        t[0] = 'func'
     else:
         print("Function not declared")
+        t[0] = 'none'
 
 def p_llamada1(t):
     '''llamada1 : DOT ID
@@ -321,23 +330,30 @@ def p_llamada1(t):
     if(t[1] == '.'):
         classFunc = tablaLocalFuncs.buscar(t[2])
         if(classFunc != None):
-            global contCuad
+            global contCuad, contadorParam
             sem.intermediario("era", None, None, classFunc[3])
             contCuad = contCuad + 1
             #pasar parametros "param", arg1, None, num_param
-            sem.intermediario("goto", None, None, classFunc[2])
+            sem.intermediario("gosub", None, None, None)
             contCuad = contCuad + 1
-            fillFunc = PilaSaltos.pop() - 1
-            sem.cuadruplos[fillFunc].res = contCuad
+            contadorParam = 0
         else:
             print("Function not declared")
 
 def p_llamada2(t):
-    '''llamada2 : expresion llamada3
+    '''llamada2 : expresion cuad_param llamada3
     | e'''
 
+def p_cuad_param(t):
+    'cuad_param : e'
+    param = PilaO.pop()
+    global contCuad, contadorParam
+    contadorParam = contadorParam + 1
+    sem.intermediario("param", param, None, contadorParam)
+    contCuad = contCuad + 1
+
 def p_llamada3(t):
-    '''llamada3 : COMMA expresion llamada3
+    '''llamada3 : COMMA expresion cuad_param llamada3
     | e'''
 
 #************ leer *************

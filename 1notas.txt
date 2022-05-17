@@ -1,9 +1,0 @@
-10-5 no jala
-pero 10 - 5 si (o 10- 5)
-
-solo tenemos 1 tabla de funciones locales
-hay que hacer que cada clase tenga la suya?
-
-t0...tn?
-
-num1 = func2(5, 10, "hola"); no jala var = llamada
