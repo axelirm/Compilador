@@ -34,6 +34,9 @@ def p_programa(t):
 def p_goto_main(t):
     'goto_main : e'
     sem.intermediario("goto", None, None, None)
+    global contCuad
+    contCuad = contCuad + 1
+    #tablaFunciones.insertar("program_"+t[2], "programa", None, 0, None, vars)
 
 #************ main *************
 def p_main(t):
@@ -41,7 +44,7 @@ def p_main(t):
 
 def p_main_start(t):
     'main_start : e'
-    sem.cuadruplos[0].res = contCuad + 1
+    sem.cuadruplos[0].res = contCuad
 
 #*********** clase **************
 def p_clase(t):
@@ -143,11 +146,17 @@ def p_declaracion5(t):
 parametros = []
 vars = [] # (var, dirV)
 def p_funcion(t):
-    '''funcion : funcion1 FUNCTION ID LPAR funcion2 RPAR bloque funcion
+    '''funcion : funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque funcion
     | e'''
     if (t[1] != None):
       if (tablaFunciones.buscar(t[3]) == None):
-        tablaFunciones.insertar(t[3], PilaTipos.pop(), parametros, contCuad, None, vars)
+        global contCuad
+        tablaFunciones.insertar(t[3], PilaTipos.pop(), parametros, t[4], None, vars)
+        sem.intermediario("gosub", None, None, None)
+        contCuad = contCuad + 1
+        sem.intermediario("goto", None, None, None)
+        PilaSaltos.append(contCuad)
+        contCuad = contCuad + 1
       else:
        print("Error de semantica: doble declaracion")
        exit(1)
@@ -158,8 +167,13 @@ def p_funcion1(t):
     t[0] = t[1]
 
 def p_funcion_void(t):
-    '''funcion_void : e'''
+    'funcion_void : e'
     PilaTipos.append("void")
+
+def p_inicio(t):
+    'inicio : e'
+    global contCuad
+    t[0] = contCuad
 
 def p_funcion2(t):
     '''funcion2 : ID COLON tipo funcion3
@@ -175,6 +189,7 @@ def p_funcion3(t):
         parametros.insert(0,PilaTipos.pop())
         vars.insert(0,(t[2], None))
         tablaLocalVars.insertar(t[1], t[4], None)
+        #validacion de no repetir
   
 #*********** tipo ***********
 def p_tipo(t):
@@ -284,10 +299,38 @@ def p_goto(t):
 #*********** llamada ************
 def p_llamada(t):
     'llamada : ID llamada1 LPAR llamada2 RPAR SEMICOLON'
+    obj = tablaVariables.buscar(t[1])
+    func = tablaFunciones.buscar(t[1])
+    if(obj != None):
+        print("obj");
+    elif(func != None):
+        global contCuad
+        sem.intermediario("era", None, None, func[3])
+        contCuad = contCuad + 1
+        #pasar parametros "param", arg1, None, num_param
+        sem.intermediario("goto", None, None, func[2])
+        contCuad = contCuad + 1
+        fillFunc = PilaSaltos.pop() - 1
+        sem.cuadruplos[fillFunc].res = contCuad
+    else:
+        print("Function not declared")
 
 def p_llamada1(t):
     '''llamada1 : DOT ID
     | e'''
+    if(t[1] == '.'):
+        classFunc = tablaLocalFuncs.buscar(t[2])
+        if(classFunc != None):
+            global contCuad
+            sem.intermediario("era", None, None, classFunc[3])
+            contCuad = contCuad + 1
+            #pasar parametros "param", arg1, None, num_param
+            sem.intermediario("goto", None, None, classFunc[2])
+            contCuad = contCuad + 1
+            fillFunc = PilaSaltos.pop() - 1
+            sem.cuadruplos[fillFunc].res = contCuad
+        else:
+            print("Function not declared")
 
 def p_llamada2(t):
     '''llamada2 : expresion llamada3
@@ -455,6 +498,7 @@ def p_pop_operfor(t):
 #*********** regresar ***********
 def p_regresar(t):
     'regresar : RETURN expresion SEMICOLON'
+    #GOSUB
   
 #*********** expresion ***********
 def p_expresion(t):

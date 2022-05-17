@@ -5,7 +5,7 @@ var
   num1 , num2, num3, i, sum : int ;
   clase1 : idClase ;
 
-void function func2 (par1 : int, num4 : int, str : string) {
+int function func2 (par1 : int, num4 : float, str : string) {
         from ( i = 3 to sum ) do {
           if ( par1 < 10 ) {
             i = i + 1 ;
@@ -20,4 +20,5 @@ main ( ) {
   write ( "escribe un string" ) ;
   read ( str1 ) ;
   write ( "string leido: " , str1 ) ;
+  func2(5, 10, "hola");
 }

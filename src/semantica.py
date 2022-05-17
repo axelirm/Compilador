@@ -60,6 +60,12 @@ class Semantica:
         self.generarCuadruplo('read', '', '', res)
     elif op == "goto":
         self.generarCuadruplo('goto', '', '', res)
+    elif op == "era":
+        self.generarCuadruplo('era', '', '', res)
+    elif op == "param":
+        self.generarCuadruplo('param', arg1, '', res)
+    elif op == "gosub":
+        self.generarCuadruplo('gosub', '', '', res)
 
     #elif op == '=':
      # resultado = tablaVars.get(res)[1]
