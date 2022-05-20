@@ -7,7 +7,8 @@ hay que hacer que cada clase y función tenga la suya
 t0...tn, sí lo dejamos así?
 sí está bien solo ponerle dir virtual ponerlas en la tabla de variables actual, ya sea func o global
 
-num1 = func2(5, 10, "hola"); no jala. var = llamada
+num1 = func2(5, 10, "hola"); no jala. var = llamada *ya*
+YA POR FIN ENCONTRE EL ERROR checa doble ';' jajaj sufrí
 
 con el 'era' ya sabe en qué cuádruplo inicia la función?
 gosub para cuadruplo de inicio
@@ -17,6 +18,12 @@ lo hace en la máquina virtual
 
 hay que guardar las constantes en una tabla y ponerles dirección
 
-hacer validaciones de variables y funciones duplicadas en el insert de la tabla y no en parser.py
+hacer validaciones de variables y funciones duplicadas en el insert de la tabla y no en parser.py *ya*
 
-checar tipo y cantidad de parametros
+checar tipo y cantidad de parametros *ya*
+eliminar de pila de tipos lo del for y declaracion *ya*
+
+guardar nombre de función en vars globales si no regresa void *ya*
+nada mas que hay conflicto con objetos porque se guardan en la misma tabla. una llamada puede ser func(); y diria que es un objeto por estar en la tabla de variables globales
+
+cuadruplos de return (y validar que devuelva el mismo tipo que la función)

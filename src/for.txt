@@ -1,0 +1,29 @@
+program id ; 
+
+var
+    validar : bool;
+    str1 : string;
+    A , B , C , D, i, sum : int ;
+    str2 : string;
+
+int function func(){
+    return 5;
+}
+
+main() {
+    from ( i = 3 to sum ) do {
+        write(A, B);
+        C = D;
+        D = D + 1;
+    }
+    from ( i = 3 to sum ) do {
+        write(A, B);
+        C = D;
+        D = D + 1;
+    }
+    from ( i = 3 to sum ) do {
+    }
+    func();
+    sum = 6+5;
+    sum = func();
+}

@@ -5,6 +5,7 @@ import semantica as s
 import tablaSimbolos as ts
 import cuboSemantico as cuboS
 from lexer import tokens
+import dirVir as dir
 
 # stacks para crear los cuadruplos
 PilaO = []
@@ -19,12 +20,19 @@ contCuad = 1
 dentroClase = False
 
 sem = s.Semantica()
-tablaVariables = ts.tabla_simbolos_vars()
+# para saber que estas declarando vars y funcs de una clase
 tablaLocalVars = ts.tabla_simbolos_vars()
 tablaLocalFuncs = ts.tabla_simbolos_funcs()
+
+# tablas globales
+tablaVariables = ts.tabla_simbolos_vars()
 tablaFunciones = ts.tabla_simbolos_funcs()
 tablaClases = ts.tabla_simbolos_clases()
 cubo = cuboS.CuboSemantico()
+contGlobal = dir.varGlobal()
+contLocal = dir.varLocal()
+contTemps = dir.varTemps()
+contConst = dir.varConst()
 
 #*********** programa ***********
 def p_programa(t):
@@ -90,8 +98,6 @@ def p_metodos(t):
 def p_vars(t):
     '''vars : VAR declaracion declaraciones
     | e'''
-    if(t[1] == "var"):
-      PilaTipos.pop()
 
 def p_declaraciones(t):
     '''declaraciones : declaracion declaraciones
@@ -102,17 +108,24 @@ pilaVars = []
 
 def p_declaracion(t):
     'declaracion : declaracion1 COLON declaracion5 SEMICOLON'
+    PilaTipos.pop()
   
 def p_declaracion1(t):
     'declaracion1 : ID declaracion2 declaracion4'
     if (dentroClase):
-      tablaLocalVars.insertar(t[1], None, None)#checar duplicados
-      pilaVars.append(t[1])
-      print("----------------")
-      print(tablaLocalVars.dict)
+      existe = tablaLocalVars.insertar(t[1], None, None, None)
+      if(existe):
+        pilaVars.append(t[1])
+      else:
+        print("Variable ya declarada: ", t[1])
+        exit(1)
     else:
-      tablaVariables.insertar(t[1], None, None)
-      pilaVars.append(t[1])
+      existe = tablaVariables.insertar(t[1], None, None, None)
+      if(existe):
+        pilaVars.append(t[1])
+      else:
+        print("Variable ya declarada: ", t[1])
+        exit(1)
 
 def p_declaracion2(t):
     '''declaracion2 : LSBRAC CTEI RSBRAC declaracion3
@@ -132,15 +145,15 @@ def p_declaracion5(t):
     if(dentroClase):
       while(len(pilaVars) > 0):
           if(t[1] == None):
-            tablaLocalVars.insertar(pilaVars.pop(), PilaTipos[-1], None)
+            tablaLocalVars.actualizar(pilaVars.pop(), PilaTipos[-1], None)
           else:
-            tablaLocalVars.insertar(pilaVars.pop(), t[1], None)
+            tablaLocalVars.actualizar(pilaVars.pop(), t[1], None)
     else:
         while(len(pilaVars) > 0):
           if(t[1] == None):
-            tablaVariables.insertar(pilaVars.pop(), PilaTipos[-1], None)
+            tablaVariables.actualizar(pilaVars.pop(), PilaTipos[-1], None)
           else:
-            tablaVariables.insertar(pilaVars.pop(), t[1], None)
+            tablaVariables.actualizar(pilaVars.pop(), t[1], None, None)
 
 #*********** funcion ***********
 parametros = []
@@ -149,14 +162,17 @@ def p_funcion(t):
     '''funcion : funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque funcion
     | e'''
     if (t[1] != None):
-      if (tablaFunciones.buscar(t[3]) == None):
-        global contCuad
-        tablaFunciones.insertar(t[3], PilaTipos.pop(), parametros, t[4], None, vars)
-        sem.intermediario("endfunc", None, None, None)
-        contCuad = contCuad + 1
-      else:
-       print("Error de semantica: doble declaracion")
-       exit(1)
+        if (tablaFunciones.buscar(t[3]) == None):
+            if(t[1] != 'void'):
+                tablaVariables.insertar(t[3], t[1], None, None)
+            global contCuad
+            tablaFunciones.insertar(t[3], PilaTipos.pop(), parametros, t[4], None, vars)
+            sem.intermediario("endfunc", None, None, None)
+            contCuad = contCuad + 1
+        else:
+           print("Error de semantica: doble declaracion")
+           exit(1)
+        tablaLocalVars.inversa()
 
 def p_funcion1(t):
     '''funcion1 : tipo
@@ -177,9 +193,18 @@ def p_inicio(t):
 def p_funcion2(t):
     '''funcion2 : ID COLON tipo funcion3
     | e'''
-    parametros.insert(0,PilaTipos.pop())
-    vars.insert(0,(t[1], None))
-    tablaLocalVars.insertar(t[1], t[3], None)
+    if(t[1] != None):
+        parametros.insert(0,PilaTipos.pop())
+        vars.insert(0,(t[1], None))
+        existe = tablaVariables.buscar(t[1])
+        if(existe != None):
+          print("Error - variable global ya declarada: ", t[1])
+          exit(1)
+        else:
+          existe = tablaLocalVars.insertar(t[1], t[3], None, None)
+          if(existe == False):
+            print("Error - variable ya declarada en parametros: ", t[1])
+            exit(1)
 
 def p_funcion3(t):
     '''funcion3 : COMMA ID COLON tipo funcion3
@@ -187,8 +212,17 @@ def p_funcion3(t):
     if(t[1] != None):
         parametros.insert(0,PilaTipos.pop())
         vars.insert(0,(t[2], None))
-        tablaLocalVars.insertar(t[1], t[4], None)
-        #validacion de no repetir
+        existe = tablaVariables.buscar(t[2])
+        if(existe != None):
+          print("Error - variable global ya declarada: ", t[2])
+          exit(1)
+        else:
+          existe = tablaLocalVars.insertar(t[2], t[4], None, None)
+          if(existe == False):
+            print("Error - variable ya declarada en parametros: ", t[2])
+            exit(1)
+      
+        
   
 #*********** tipo ***********
 def p_tipo(t):
@@ -211,7 +245,7 @@ def p_estatutos(t):
 def p_estatuto(t):
     '''estatuto : asignacion
     | condicion
-    | llamada
+    | llamada SEMICOLON
     | leer
     | escribir
     | ciclo_w
@@ -232,8 +266,8 @@ def p_asignacion(t):
         contCuad = contCuad + 1
         # update tablaVariables
     else:
-        print("Error semantico: error de asignacion type-mismatch: ", variable)    
-
+        print("Error semantico: error de asignacion type-mismatch: ", variable)
+        
 #************ variable ************
 def p_variable(t):
     'variable : ID variable1 variable2'
@@ -247,7 +281,7 @@ def p_variable(t):
         PilaTipos.append(existeLocal[0])
     else:
         print("Error de semantica: variable no declarada: ", t[1])
-        #exit(1)
+        exit(1)
 
 def p_variable1(t):
     '''variable1 : DOT ID
@@ -299,27 +333,35 @@ def p_goto(t):
 contadorParam = 0
 
 def p_llamada(t):
-    'llamada : validar_id llamada1 LPAR llamada2 RPAR SEMICOLON'
+    'llamada : validar_id llamada1 LPAR llamada2 RPAR'
     if(t[1] != 'none'):
-        global contCuad
-        funcStart = PilaSaltos.pop()
-        sem.intermediario("gosub", None, None, funcStart)
-        contCuad = contCuad + 1
+        global contadorParam, parametros
+        if(contadorParam == len(parametros)):
+            global contCuad
+            funcStart = tablaFunciones.buscar(t[1])
+            sem.intermediario("gosub", None, None, funcStart[2])
+            contCuad = contCuad + 1
+            funcReturnTipo = tablaVariables.buscar(t[1])
+            PilaO.append(t[1])
+            PilaTipos.append(funcReturnTipo[0])
+        else:
+            print("La cantidad de parametros de la llamada no coincide con la cantidad de parametros que recibe la funcion: ", t[1])
+            exit(1)
         
 
 def p_validar_id(t):
     'validar_id : ID'
     obj = tablaVariables.buscar(t[1])
     func = tablaFunciones.buscar(t[1])
-    if(obj != None):
+    if(obj != None and obj[0] != 'int' and obj[0] != 'float' and obj[0] != 'string' and obj[0] != 'bool'):
         print("obj");
-        t[0] = 'obj'
+        t[0] = t[1]
     elif(func != None):
         global contCuad, contadorParam
         sem.intermediario("era", None, None, func[3])
         contCuad = contCuad + 1        
         contadorParam = 0
-        t[0] = 'func'
+        t[0] = t[1]
     else:
         print("Function not declared")
         t[0] = 'none'
@@ -333,7 +375,7 @@ def p_llamada1(t):
             global contCuad, contadorParam
             sem.intermediario("era", None, None, classFunc[3])
             contCuad = contCuad + 1
-            #pasar parametros "param", arg1, None, num_param
+            #pasar parametros "param", arg1, None, num_param, checar esta llamada
             sem.intermediario("gosub", None, None, None)
             contCuad = contCuad + 1
             contadorParam = 0
@@ -343,14 +385,20 @@ def p_llamada1(t):
 def p_llamada2(t):
     '''llamada2 : expresion cuad_param llamada3
     | e'''
+  
 
 def p_cuad_param(t):
     'cuad_param : e'
-    param = PilaO.pop()
-    global contCuad, contadorParam
-    contadorParam = contadorParam + 1
-    sem.intermediario("param", param, None, contadorParam)
-    contCuad = contCuad + 1
+    global contCuad, contadorParam, parametros
+    sendParam = PilaO.pop()
+    sendParamType = PilaTipos.pop()
+    if(parametros[contadorParam] == sendParamType):
+        contadorParam = contadorParam + 1
+        sem.intermediario("param", sendParam, None, contadorParam)
+        contCuad = contCuad + 1
+    else:
+        print("Error: Parameter type mismatch in parameter: ", sendParam)
+        exit(1)
 
 def p_llamada3(t):
     '''llamada3 : COMMA expresion cuad_param llamada3
@@ -426,14 +474,14 @@ def p_asign_var(t):
 # guardar valor de expresion en var2
 def p_asign_exp(t):
     'asign_exp : e'
-    expresion = PilaO.pop()
     global contCuad
+    expresion = PilaO.pop()
     variable = "for_" + str(contCuad)
     tipoExpresion = cubo.getTipo(PilaTipos.pop())
     tipoVariable = tipoExpresion
     PilaO.append(variable)
     PilaTipos.append(cubo.getNumeroTipo(tipoVariable))
-    tablaVariables.insertar(variable, tipoExpresion, None)
+    tablaVariables.insertar(variable, tipoExpresion, None, None)
     rechazar = cubo.cubo[tipoVariable, tipoExpresion, 10]
     if(rechazar != 11):
         sem.intermediario('=', expresion, None , variable)
@@ -454,17 +502,11 @@ def p_pop_for(t):
     if(rechazar != 11):
         global cont, contCuad
         sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
-        PilaO.append(left_op)
-        PilaTipos.append(cubo.getNumeroTipo(left_type))
-        PilaO.append(right_op)
-        PilaTipos.append(cubo.getNumeroTipo(right_type))
-        PilaO.append(left_op)
-        PilaTipos.append(cubo.getNumeroTipo(left_type))
         contCuad = contCuad + 1
         PilaO.append("t"+str(cont))
+        cont = cont + 1
         tipo = cubo.getNumeroTipo(rechazar)
         PilaTipos.append(tipo)
-        cont = cont + 1
     else:
         print("Error semantico en expresiones: type mismatch")
         exit(1)
@@ -481,7 +523,7 @@ def p_update_fill_go(t):
     ret = PilaSaltos.pop()
     sem.intermediario("goto", None, None, ret)
     contCuad = contCuad + 1
-    sem.cuadruplos[fill].res = contCuad
+    sem.cuadruplos[fill].res = contCuad    
 
 def p_push1(t):
     'push1 : e'
@@ -504,9 +546,9 @@ def p_pop_operfor(t):
         sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
         contCuad = contCuad + 1
         PilaO.append("t"+str(cont))
+        cont = cont + 1
         tipo = cubo.getNumeroTipo(rechazar)
         PilaTipos.append(tipo)
-        cont = cont + 1
     else:
         print("Error semantico en expresiones: type mismatch")
         exit(1)
@@ -514,7 +556,6 @@ def p_pop_operfor(t):
 #*********** regresar ***********
 def p_regresar(t):
     'regresar : RETURN expresion SEMICOLON'
-    #GOSUB
   
 #*********** expresion ***********
 def p_expresion(t):
@@ -699,3 +740,5 @@ if __name__ == '__main__':
         except ValueError:
             print(ValueError)
     sem.imprimirCuadruplos()
+    print(PilaTipos)
+    print(PilaO)

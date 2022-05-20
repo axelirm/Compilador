@@ -55,7 +55,7 @@ Rule 49    estatutos -> estatuto estatutos
 Rule 50    estatutos -> e
 Rule 51    estatuto -> asignacion
 Rule 52    estatuto -> condicion
-Rule 53    estatuto -> llamada
+Rule 53    estatuto -> llamada SEMICOLON
 Rule 54    estatuto -> leer
 Rule 55    estatuto -> escribir
 Rule 56    estatuto -> ciclo_w
@@ -75,7 +75,7 @@ Rule 69    fill -> e
 Rule 70    condicion1 -> ELSE goto bloque
 Rule 71    condicion1 -> e
 Rule 72    goto -> e
-Rule 73    llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+Rule 73    llamada -> validar_id llamada1 LPAR llamada2 RPAR
 Rule 74    validar_id -> ID
 Rule 75    llamada1 -> DOT ID
 Rule 76    llamada1 -> e
@@ -194,7 +194,7 @@ READ                 : 82
 RETURN               : 102
 RPAR                 : 3 34 67 73 82 84 91 94 134
 RSBRAC               : 26 28 63 65
-SEMICOLON            : 1 24 59 73 82 84 102
+SEMICOLON            : 1 24 53 59 82 84 102
 STRING               : 46
 TO                   : 94
 VAR                  : 20
@@ -1124,7 +1124,7 @@ state 77
     (50) estatutos -> . e
     (51) estatuto -> . asignacion
     (52) estatuto -> . condicion
-    (53) estatuto -> . llamada
+    (53) estatuto -> . llamada SEMICOLON
     (54) estatuto -> . leer
     (55) estatuto -> . escribir
     (56) estatuto -> . ciclo_w
@@ -1133,7 +1133,7 @@ state 77
     (147) e -> .
     (59) asignacion -> . variable EQ expresion SEMICOLON
     (67) condicion -> . IF LPAR expresion RPAR gotoF bloque condicion1 fill
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (82) leer -> . READ LPAR variable add_read generar_cuadr RPAR SEMICOLON
     (84) escribir -> . WRITE LPAR escribir1 RPAR SEMICOLON
     (91) ciclo_w -> . WHILE push_while LPAR expresion RPAR gotoF DO bloque return_while
@@ -1313,7 +1313,7 @@ state 88
     (50) estatutos -> . e
     (51) estatuto -> . asignacion
     (52) estatuto -> . condicion
-    (53) estatuto -> . llamada
+    (53) estatuto -> . llamada SEMICOLON
     (54) estatuto -> . leer
     (55) estatuto -> . escribir
     (56) estatuto -> . ciclo_w
@@ -1322,7 +1322,7 @@ state 88
     (147) e -> .
     (59) asignacion -> . variable EQ expresion SEMICOLON
     (67) condicion -> . IF LPAR expresion RPAR gotoF bloque condicion1 fill
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (82) leer -> . READ LPAR variable add_read generar_cuadr RPAR SEMICOLON
     (84) escribir -> . WRITE LPAR escribir1 RPAR SEMICOLON
     (91) ciclo_w -> . WHILE push_while LPAR expresion RPAR gotoF DO bloque return_while
@@ -1391,16 +1391,9 @@ state 91
 
 state 92
 
-    (53) estatuto -> llamada .
+    (53) estatuto -> llamada . SEMICOLON
 
-    IF              reduce using rule 53 (estatuto -> llamada .)
-    READ            reduce using rule 53 (estatuto -> llamada .)
-    WRITE           reduce using rule 53 (estatuto -> llamada .)
-    WHILE           reduce using rule 53 (estatuto -> llamada .)
-    FROM            reduce using rule 53 (estatuto -> llamada .)
-    RETURN          reduce using rule 53 (estatuto -> llamada .)
-    ID              reduce using rule 53 (estatuto -> llamada .)
-    RCBRAC          reduce using rule 53 (estatuto -> llamada .)
+    SEMICOLON       shift and go to state 121
 
 
 state 93
@@ -1477,41 +1470,41 @@ state 98
 
     (59) asignacion -> variable . EQ expresion SEMICOLON
 
-    EQ              shift and go to state 121
+    EQ              shift and go to state 122
 
 
 state 99
 
     (67) condicion -> IF . LPAR expresion RPAR gotoF bloque condicion1 fill
 
-    LPAR            shift and go to state 122
+    LPAR            shift and go to state 123
 
 
 state 100
 
-    (73) llamada -> validar_id . llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> validar_id . llamada1 LPAR llamada2 RPAR
     (75) llamada1 -> . DOT ID
     (76) llamada1 -> . e
     (147) e -> .
 
-    DOT             shift and go to state 124
+    DOT             shift and go to state 125
     LPAR            reduce using rule 147 (e -> .)
 
-    llamada1                       shift and go to state 123
-    e                              shift and go to state 125
+    llamada1                       shift and go to state 124
+    e                              shift and go to state 126
 
 state 101
 
     (82) leer -> READ . LPAR variable add_read generar_cuadr RPAR SEMICOLON
 
-    LPAR            shift and go to state 126
+    LPAR            shift and go to state 127
 
 
 state 102
 
     (84) escribir -> WRITE . LPAR escribir1 RPAR SEMICOLON
 
-    LPAR            shift and go to state 127
+    LPAR            shift and go to state 128
 
 
 state 103
@@ -1522,14 +1515,14 @@ state 103
 
     LPAR            reduce using rule 147 (e -> .)
 
-    push_while                     shift and go to state 128
-    e                              shift and go to state 129
+    push_while                     shift and go to state 129
+    e                              shift and go to state 130
 
 state 104
 
     (94) ciclo_f -> FROM . LPAR variable EQ expresion asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go
 
-    LPAR            shift and go to state 130
+    LPAR            shift and go to state 131
 
 
 state 105
@@ -1549,25 +1542,25 @@ state 105
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    expresion                      shift and go to state 131
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    expresion                      shift and go to state 132
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
 state 106
@@ -1580,7 +1573,7 @@ state 106
 
   ! shift/reduce conflict for DOT resolved as shift
     LPAR            reduce using rule 74 (validar_id -> ID .)
-    DOT             shift and go to state 146
+    DOT             shift and go to state 147
     LSBRAC          reduce using rule 147 (e -> .)
     EQ              reduce using rule 147 (e -> .)
     MULT            reduce using rule 147 (e -> .)
@@ -1601,8 +1594,8 @@ state 106
 
   ! DOT             [ reduce using rule 74 (validar_id -> ID .) ]
 
-    variable1                      shift and go to state 145
-    e                              shift and go to state 147
+    variable1                      shift and go to state 146
+    e                              shift and go to state 148
 
 state 107
 
@@ -1617,7 +1610,7 @@ state 107
     STRING          shift and go to state 22
     BOOL            shift and go to state 23
 
-    tipo                           shift and go to state 148
+    tipo                           shift and go to state 149
 
 state 108
 
@@ -1626,7 +1619,7 @@ state 108
 
     LCBRAC          shift and go to state 77
 
-    bloque                         shift and go to state 149
+    bloque                         shift and go to state 150
 
 state 109
 
@@ -1683,7 +1676,7 @@ state 111
   ! BOOL            [ reduce using rule 147 (e -> .) ]
 
     funcion                        shift and go to state 111
-    metodos                        shift and go to state 150
+    metodos                        shift and go to state 151
     e                              shift and go to state 113
     funcion1                       shift and go to state 16
     tipo                           shift and go to state 18
@@ -1742,7 +1735,7 @@ state 116
     ID              shift and go to state 118
 
     asignacion                     shift and go to state 116
-    asign                          shift and go to state 151
+    asign                          shift and go to state 152
     e                              shift and go to state 117
     variable                       shift and go to state 98
 
@@ -1761,13 +1754,13 @@ state 118
     (62) variable1 -> . e
     (147) e -> .
 
-    DOT             shift and go to state 146
+    DOT             shift and go to state 147
     LSBRAC          reduce using rule 147 (e -> .)
     EQ              reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
 
-    variable1                      shift and go to state 145
-    e                              shift and go to state 147
+    variable1                      shift and go to state 146
+    e                              shift and go to state 148
 
 state 119
 
@@ -1800,6 +1793,20 @@ state 120
 
 state 121
 
+    (53) estatuto -> llamada SEMICOLON .
+
+    IF              reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    READ            reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    WRITE           reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    WHILE           reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    FROM            reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    RETURN          reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    ID              reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+    RCBRAC          reduce using rule 53 (estatuto -> llamada SEMICOLON .)
+
+
+state 122
+
     (59) asignacion -> variable EQ . expresion SEMICOLON
     (103) expresion -> . a_exp exp1
     (108) a_exp -> . b_exp exp2
@@ -1815,28 +1822,28 @@ state 121
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    variable                       shift and go to state 139
-    expresion                      shift and go to state 152
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    llamada                        shift and go to state 140
+    variable                       shift and go to state 140
+    expresion                      shift and go to state 153
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 122
+state 123
 
     (67) condicion -> IF LPAR . expresion RPAR gotoF bloque condicion1 fill
     (103) expresion -> . a_exp exp1
@@ -1853,58 +1860,58 @@ state 122
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    expresion                      shift and go to state 153
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    expresion                      shift and go to state 154
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
-
-state 123
-
-    (73) llamada -> validar_id llamada1 . LPAR llamada2 RPAR SEMICOLON
-
-    LPAR            shift and go to state 154
-
 
 state 124
 
-    (75) llamada1 -> DOT . ID
+    (73) llamada -> validar_id llamada1 . LPAR llamada2 RPAR
 
-    ID              shift and go to state 155
+    LPAR            shift and go to state 155
 
 
 state 125
+
+    (75) llamada1 -> DOT . ID
+
+    ID              shift and go to state 156
+
+
+state 126
 
     (76) llamada1 -> e .
 
     LPAR            reduce using rule 76 (llamada1 -> e .)
 
 
-state 126
+state 127
 
     (82) leer -> READ LPAR . variable add_read generar_cuadr RPAR SEMICOLON
     (60) variable -> . ID variable1 variable2
 
     ID              shift and go to state 118
 
-    variable                       shift and go to state 156
+    variable                       shift and go to state 157
 
-state 127
+state 128
 
     (84) escribir -> WRITE LPAR . escribir1 RPAR SEMICOLON
     (85) escribir1 -> . texto add_print generar_cuadr escribir2
@@ -1924,84 +1931,84 @@ state 127
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    CTESTR          shift and go to state 160
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTEB            shift and go to state 144
+    CTESTR          shift and go to state 161
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    escribir1                      shift and go to state 157
-    texto                          shift and go to state 158
-    expresion                      shift and go to state 159
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    escribir1                      shift and go to state 158
+    texto                          shift and go to state 159
+    expresion                      shift and go to state 160
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 128
+state 129
 
     (91) ciclo_w -> WHILE push_while . LPAR expresion RPAR gotoF DO bloque return_while
 
-    LPAR            shift and go to state 161
+    LPAR            shift and go to state 162
 
 
-state 129
+state 130
 
     (92) push_while -> e .
 
     LPAR            reduce using rule 92 (push_while -> e .)
 
 
-state 130
+state 131
 
     (94) ciclo_f -> FROM LPAR . variable EQ expresion asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go
     (60) variable -> . ID variable1 variable2
 
     ID              shift and go to state 118
 
-    variable                       shift and go to state 162
+    variable                       shift and go to state 163
 
-state 131
+state 132
 
     (102) regresar -> RETURN expresion . SEMICOLON
 
-    SEMICOLON       shift and go to state 163
+    SEMICOLON       shift and go to state 164
 
 
-state 132
+state 133
 
     (103) expresion -> a_exp . exp1
     (104) exp1 -> . OR push_or a_exp pop_operador exp1
     (105) exp1 -> . e
     (147) e -> .
 
-    OR              shift and go to state 165
+    OR              shift and go to state 166
     SEMICOLON       reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
     COMMA           reduce using rule 147 (e -> .)
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    exp1                           shift and go to state 164
-    e                              shift and go to state 166
+    exp1                           shift and go to state 165
+    e                              shift and go to state 167
 
-state 133
+state 134
 
     (108) a_exp -> b_exp . exp2
     (109) exp2 -> . AND push_and b_exp pop_operador exp2
     (110) exp2 -> . e
     (147) e -> .
 
-    AND             shift and go to state 168
+    AND             shift and go to state 169
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
@@ -2009,10 +2016,10 @@ state 133
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    exp2                           shift and go to state 167
-    e                              shift and go to state 169
+    exp2                           shift and go to state 168
+    e                              shift and go to state 170
 
-state 134
+state 135
 
     (112) b_exp -> c_exp . exp3
     (113) exp3 -> . LT push_lt c_exp pop_operador exp3
@@ -2022,10 +2029,10 @@ state 134
     (117) exp3 -> . e
     (147) e -> .
 
-    LT              shift and go to state 171
-    GT              shift and go to state 172
-    COMP            shift and go to state 173
-    NOTEQ           shift and go to state 174
+    LT              shift and go to state 172
+    GT              shift and go to state 173
+    COMP            shift and go to state 174
+    NOTEQ           shift and go to state 175
     AND             reduce using rule 147 (e -> .)
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
@@ -2034,10 +2041,10 @@ state 134
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    exp3                           shift and go to state 170
-    e                              shift and go to state 175
+    exp3                           shift and go to state 171
+    e                              shift and go to state 176
 
-state 135
+state 136
 
     (122) c_exp -> d_exp . exp4
     (123) exp4 -> . PLUS push_plus d_exp pop_operador exp4
@@ -2045,8 +2052,8 @@ state 135
     (125) exp4 -> . e
     (147) e -> .
 
-    PLUS            shift and go to state 177
-    MINUS           shift and go to state 178
+    PLUS            shift and go to state 178
+    MINUS           shift and go to state 179
     LT              reduce using rule 147 (e -> .)
     GT              reduce using rule 147 (e -> .)
     COMP            reduce using rule 147 (e -> .)
@@ -2059,10 +2066,10 @@ state 135
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    exp4                           shift and go to state 176
-    e                              shift and go to state 179
+    exp4                           shift and go to state 177
+    e                              shift and go to state 180
 
-state 136
+state 137
 
     (128) d_exp -> e_exp . exp5
     (129) exp5 -> . MULT push_mult e_exp pop_operador exp5
@@ -2070,8 +2077,8 @@ state 136
     (131) exp5 -> . e
     (147) e -> .
 
-    MULT            shift and go to state 181
-    DIV             shift and go to state 182
+    MULT            shift and go to state 182
+    DIV             shift and go to state 183
     PLUS            reduce using rule 147 (e -> .)
     MINUS           reduce using rule 147 (e -> .)
     LT              reduce using rule 147 (e -> .)
@@ -2086,10 +2093,10 @@ state 136
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    exp5                           shift and go to state 180
-    e                              shift and go to state 183
+    exp5                           shift and go to state 181
+    e                              shift and go to state 184
 
-state 137
+state 138
 
     (134) e_exp -> LPAR . expresion RPAR
     (103) expresion -> . a_exp exp1
@@ -2106,28 +2113,28 @@ state 137
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    expresion                      shift and go to state 184
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    expresion                      shift and go to state 185
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 138
+state 139
 
     (135) e_exp -> var_cte .
 
@@ -2148,7 +2155,7 @@ state 138
     TO              reduce using rule 135 (e_exp -> var_cte .)
 
 
-state 139
+state 140
 
     (136) e_exp -> variable .
 
@@ -2169,7 +2176,7 @@ state 139
     TO              reduce using rule 136 (e_exp -> variable .)
 
 
-state 140
+state 141
 
     (137) e_exp -> llamada .
 
@@ -2190,7 +2197,7 @@ state 140
     TO              reduce using rule 137 (e_exp -> llamada .)
 
 
-state 141
+state 142
 
     (138) var_cte -> CTEI . ctei
     (142) ctei -> . e
@@ -2212,10 +2219,10 @@ state 141
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    ctei                           shift and go to state 185
-    e                              shift and go to state 186
+    ctei                           shift and go to state 186
+    e                              shift and go to state 187
 
-state 142
+state 143
 
     (139) var_cte -> CTEF . ctef
     (143) ctef -> . e
@@ -2237,10 +2244,10 @@ state 142
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    ctef                           shift and go to state 187
-    e                              shift and go to state 188
+    ctef                           shift and go to state 188
+    e                              shift and go to state 189
 
-state 143
+state 144
 
     (140) var_cte -> CTESTR . ctestr
     (144) ctestr -> . e
@@ -2262,10 +2269,10 @@ state 143
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    ctestr                         shift and go to state 189
-    e                              shift and go to state 190
+    ctestr                         shift and go to state 190
+    e                              shift and go to state 191
 
-state 144
+state 145
 
     (141) var_cte -> CTEB . cteb
     (145) cteb -> . e
@@ -2287,17 +2294,17 @@ state 144
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    cteb                           shift and go to state 191
-    e                              shift and go to state 192
+    cteb                           shift and go to state 192
+    e                              shift and go to state 193
 
-state 145
+state 146
 
     (60) variable -> ID variable1 . variable2
     (63) variable2 -> . LSBRAC expresion RSBRAC variable3
     (64) variable2 -> . e
     (147) e -> .
 
-    LSBRAC          shift and go to state 194
+    LSBRAC          shift and go to state 195
     EQ              reduce using rule 147 (e -> .)
     MULT            reduce using rule 147 (e -> .)
     DIV             reduce using rule 147 (e -> .)
@@ -2315,17 +2322,17 @@ state 145
     RSBRAC          reduce using rule 147 (e -> .)
     TO              reduce using rule 147 (e -> .)
 
-    variable2                      shift and go to state 193
-    e                              shift and go to state 195
+    variable2                      shift and go to state 194
+    e                              shift and go to state 196
 
-state 146
+state 147
 
     (61) variable1 -> DOT . ID
 
-    ID              shift and go to state 196
+    ID              shift and go to state 197
 
 
-state 147
+state 148
 
     (62) variable1 -> e .
 
@@ -2348,20 +2355,20 @@ state 147
     TO              reduce using rule 62 (variable1 -> e .)
 
 
-state 148
+state 149
 
     (40) funcion2 -> ID COLON tipo . funcion3
     (42) funcion3 -> . COMMA ID COLON tipo funcion3
     (43) funcion3 -> . e
     (147) e -> .
 
-    COMMA           shift and go to state 198
+    COMMA           shift and go to state 199
     RPAR            reduce using rule 147 (e -> .)
 
-    funcion3                       shift and go to state 197
-    e                              shift and go to state 199
+    funcion3                       shift and go to state 198
+    e                              shift and go to state 200
 
-state 149
+state 150
 
     (34) funcion -> funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque . funcion
     (34) funcion -> . funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque funcion
@@ -2394,18 +2401,18 @@ state 149
   ! BOOL            [ reduce using rule 147 (e -> .) ]
 
     funcion1                       shift and go to state 16
-    funcion                        shift and go to state 200
+    funcion                        shift and go to state 201
     e                              shift and go to state 17
     tipo                           shift and go to state 18
 
-state 150
+state 151
 
     (18) metodos -> funcion metodos .
 
     RCBRAC          reduce using rule 18 (metodos -> funcion metodos .)
 
 
-state 151
+state 152
 
     (14) asign -> asignacion asign .
 
@@ -2413,23 +2420,23 @@ state 151
     RCBRAC          reduce using rule 14 (asign -> asignacion asign .)
 
 
-state 152
+state 153
 
     (59) asignacion -> variable EQ expresion . SEMICOLON
 
-    SEMICOLON       shift and go to state 201
-
-
-state 153
-
-    (67) condicion -> IF LPAR expresion . RPAR gotoF bloque condicion1 fill
-
-    RPAR            shift and go to state 202
+    SEMICOLON       shift and go to state 202
 
 
 state 154
 
-    (73) llamada -> validar_id llamada1 LPAR . llamada2 RPAR SEMICOLON
+    (67) condicion -> IF LPAR expresion . RPAR gotoF bloque condicion1 fill
+
+    RPAR            shift and go to state 203
+
+
+state 155
+
+    (73) llamada -> validar_id llamada1 LPAR . llamada2 RPAR
     (77) llamada2 -> . expresion cuad_param llamada3
     (78) llamada2 -> . e
     (103) expresion -> . a_exp exp1
@@ -2447,38 +2454,38 @@ state 154
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
     RPAR            reduce using rule 147 (e -> .)
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
     validar_id                     shift and go to state 100
-    llamada2                       shift and go to state 203
-    expresion                      shift and go to state 204
-    e                              shift and go to state 205
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    llamada2                       shift and go to state 204
+    expresion                      shift and go to state 205
+    e                              shift and go to state 206
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
 
-state 155
+state 156
 
     (75) llamada1 -> DOT ID .
 
     LPAR            reduce using rule 75 (llamada1 -> DOT ID .)
 
 
-state 156
+state 157
 
     (82) leer -> READ LPAR variable . add_read generar_cuadr RPAR SEMICOLON
     (83) add_read -> . e
@@ -2486,17 +2493,17 @@ state 156
 
     RPAR            reduce using rule 147 (e -> .)
 
-    add_read                       shift and go to state 206
-    e                              shift and go to state 207
+    add_read                       shift and go to state 207
+    e                              shift and go to state 208
 
-state 157
+state 158
 
     (84) escribir -> WRITE LPAR escribir1 . RPAR SEMICOLON
 
-    RPAR            shift and go to state 208
+    RPAR            shift and go to state 209
 
 
-state 158
+state 159
 
     (85) escribir1 -> texto . add_print generar_cuadr escribir2
     (87) add_print -> . e
@@ -2505,10 +2512,10 @@ state 158
     COMMA           reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
 
-    add_print                      shift and go to state 209
-    e                              shift and go to state 210
+    add_print                      shift and go to state 210
+    e                              shift and go to state 211
 
-state 159
+state 160
 
     (86) escribir1 -> expresion . add_print generar_cuadr escribir2
     (87) add_print -> . e
@@ -2517,10 +2524,10 @@ state 159
     COMMA           reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
 
-    add_print                      shift and go to state 211
-    e                              shift and go to state 210
+    add_print                      shift and go to state 212
+    e                              shift and go to state 211
 
-state 160
+state 161
 
     (90) texto -> CTESTR .
     (140) var_cte -> CTESTR . ctestr
@@ -2545,10 +2552,10 @@ state 160
   ! COMMA           [ reduce using rule 147 (e -> .) ]
   ! RPAR            [ reduce using rule 147 (e -> .) ]
 
-    ctestr                         shift and go to state 189
-    e                              shift and go to state 190
+    ctestr                         shift and go to state 190
+    e                              shift and go to state 191
 
-state 161
+state 162
 
     (91) ciclo_w -> WHILE push_while LPAR . expresion RPAR gotoF DO bloque return_while
     (103) expresion -> . a_exp exp1
@@ -2565,35 +2572,35 @@ state 161
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    expresion                      shift and go to state 212
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    expresion                      shift and go to state 213
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 162
+state 163
 
     (94) ciclo_f -> FROM LPAR variable . EQ expresion asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go
 
-    EQ              shift and go to state 213
+    EQ              shift and go to state 214
 
 
-state 163
+state 164
 
     (102) regresar -> RETURN expresion SEMICOLON .
 
@@ -2607,7 +2614,7 @@ state 163
     RCBRAC          reduce using rule 102 (regresar -> RETURN expresion SEMICOLON .)
 
 
-state 164
+state 165
 
     (103) expresion -> a_exp exp1 .
 
@@ -2618,7 +2625,7 @@ state 164
     TO              reduce using rule 103 (expresion -> a_exp exp1 .)
 
 
-state 165
+state 166
 
     (104) exp1 -> OR . push_or a_exp pop_operador exp1
     (106) push_or -> . e
@@ -2631,10 +2638,10 @@ state 165
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_or                        shift and go to state 214
-    e                              shift and go to state 215
+    push_or                        shift and go to state 215
+    e                              shift and go to state 216
 
-state 166
+state 167
 
     (105) exp1 -> e .
 
@@ -2645,7 +2652,7 @@ state 166
     TO              reduce using rule 105 (exp1 -> e .)
 
 
-state 167
+state 168
 
     (108) a_exp -> b_exp exp2 .
 
@@ -2657,7 +2664,7 @@ state 167
     TO              reduce using rule 108 (a_exp -> b_exp exp2 .)
 
 
-state 168
+state 169
 
     (109) exp2 -> AND . push_and b_exp pop_operador exp2
     (111) push_and -> . e
@@ -2670,10 +2677,10 @@ state 168
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_and                       shift and go to state 216
-    e                              shift and go to state 217
+    push_and                       shift and go to state 217
+    e                              shift and go to state 218
 
-state 169
+state 170
 
     (110) exp2 -> e .
 
@@ -2685,7 +2692,7 @@ state 169
     TO              reduce using rule 110 (exp2 -> e .)
 
 
-state 170
+state 171
 
     (112) b_exp -> c_exp exp3 .
 
@@ -2698,7 +2705,7 @@ state 170
     TO              reduce using rule 112 (b_exp -> c_exp exp3 .)
 
 
-state 171
+state 172
 
     (113) exp3 -> LT . push_lt c_exp pop_operador exp3
     (118) push_lt -> . e
@@ -2711,10 +2718,10 @@ state 171
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_lt                        shift and go to state 218
-    e                              shift and go to state 219
+    push_lt                        shift and go to state 219
+    e                              shift and go to state 220
 
-state 172
+state 173
 
     (114) exp3 -> GT . push_gt c_exp pop_operador exp3
     (119) push_gt -> . e
@@ -2727,10 +2734,10 @@ state 172
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_gt                        shift and go to state 220
-    e                              shift and go to state 221
+    push_gt                        shift and go to state 221
+    e                              shift and go to state 222
 
-state 173
+state 174
 
     (115) exp3 -> COMP . push_comp c_exp pop_operador exp3
     (120) push_comp -> . e
@@ -2743,10 +2750,10 @@ state 173
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_comp                      shift and go to state 222
-    e                              shift and go to state 223
+    push_comp                      shift and go to state 223
+    e                              shift and go to state 224
 
-state 174
+state 175
 
     (116) exp3 -> NOTEQ . push_noteq c_exp pop_operador exp3
     (121) push_noteq -> . e
@@ -2759,10 +2766,10 @@ state 174
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_noteq                     shift and go to state 224
-    e                              shift and go to state 225
+    push_noteq                     shift and go to state 225
+    e                              shift and go to state 226
 
-state 175
+state 176
 
     (117) exp3 -> e .
 
@@ -2775,7 +2782,7 @@ state 175
     TO              reduce using rule 117 (exp3 -> e .)
 
 
-state 176
+state 177
 
     (122) c_exp -> d_exp exp4 .
 
@@ -2792,7 +2799,7 @@ state 176
     TO              reduce using rule 122 (c_exp -> d_exp exp4 .)
 
 
-state 177
+state 178
 
     (123) exp4 -> PLUS . push_plus d_exp pop_operador exp4
     (126) push_plus -> . e
@@ -2805,10 +2812,10 @@ state 177
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_plus                      shift and go to state 226
-    e                              shift and go to state 227
+    push_plus                      shift and go to state 227
+    e                              shift and go to state 228
 
-state 178
+state 179
 
     (124) exp4 -> MINUS . push_minus d_exp pop_operador exp4
     (127) push_minus -> . e
@@ -2821,10 +2828,10 @@ state 178
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_minus                     shift and go to state 228
-    e                              shift and go to state 229
+    push_minus                     shift and go to state 229
+    e                              shift and go to state 230
 
-state 179
+state 180
 
     (125) exp4 -> e .
 
@@ -2841,7 +2848,7 @@ state 179
     TO              reduce using rule 125 (exp4 -> e .)
 
 
-state 180
+state 181
 
     (128) d_exp -> e_exp exp5 .
 
@@ -2860,7 +2867,7 @@ state 180
     TO              reduce using rule 128 (d_exp -> e_exp exp5 .)
 
 
-state 181
+state 182
 
     (129) exp5 -> MULT . push_mult e_exp pop_operador exp5
     (132) push_mult -> . e
@@ -2873,10 +2880,10 @@ state 181
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_mult                      shift and go to state 230
-    e                              shift and go to state 231
+    push_mult                      shift and go to state 231
+    e                              shift and go to state 232
 
-state 182
+state 183
 
     (130) exp5 -> DIV . push_div e_exp pop_operador exp5
     (133) push_div -> . e
@@ -2889,10 +2896,10 @@ state 182
     CTEB            reduce using rule 147 (e -> .)
     ID              reduce using rule 147 (e -> .)
 
-    push_div                       shift and go to state 232
-    e                              shift and go to state 233
+    push_div                       shift and go to state 233
+    e                              shift and go to state 234
 
-state 183
+state 184
 
     (131) exp5 -> e .
 
@@ -2911,14 +2918,14 @@ state 183
     TO              reduce using rule 131 (exp5 -> e .)
 
 
-state 184
+state 185
 
     (134) e_exp -> LPAR expresion . RPAR
 
-    RPAR            shift and go to state 234
+    RPAR            shift and go to state 235
 
 
-state 185
+state 186
 
     (138) var_cte -> CTEI ctei .
 
@@ -2939,7 +2946,7 @@ state 185
     TO              reduce using rule 138 (var_cte -> CTEI ctei .)
 
 
-state 186
+state 187
 
     (142) ctei -> e .
 
@@ -2960,7 +2967,7 @@ state 186
     TO              reduce using rule 142 (ctei -> e .)
 
 
-state 187
+state 188
 
     (139) var_cte -> CTEF ctef .
 
@@ -2981,7 +2988,7 @@ state 187
     TO              reduce using rule 139 (var_cte -> CTEF ctef .)
 
 
-state 188
+state 189
 
     (143) ctef -> e .
 
@@ -3002,7 +3009,7 @@ state 188
     TO              reduce using rule 143 (ctef -> e .)
 
 
-state 189
+state 190
 
     (140) var_cte -> CTESTR ctestr .
 
@@ -3023,7 +3030,7 @@ state 189
     TO              reduce using rule 140 (var_cte -> CTESTR ctestr .)
 
 
-state 190
+state 191
 
     (144) ctestr -> e .
 
@@ -3044,7 +3051,7 @@ state 190
     TO              reduce using rule 144 (ctestr -> e .)
 
 
-state 191
+state 192
 
     (141) var_cte -> CTEB cteb .
 
@@ -3065,7 +3072,7 @@ state 191
     TO              reduce using rule 141 (var_cte -> CTEB cteb .)
 
 
-state 192
+state 193
 
     (145) cteb -> e .
 
@@ -3086,7 +3093,7 @@ state 192
     TO              reduce using rule 145 (cteb -> e .)
 
 
-state 193
+state 194
 
     (60) variable -> ID variable1 variable2 .
 
@@ -3108,7 +3115,7 @@ state 193
     TO              reduce using rule 60 (variable -> ID variable1 variable2 .)
 
 
-state 194
+state 195
 
     (63) variable2 -> LSBRAC . expresion RSBRAC variable3
     (103) expresion -> . a_exp exp1
@@ -3125,28 +3132,28 @@ state 194
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    expresion                      shift and go to state 235
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    expresion                      shift and go to state 236
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 195
+state 196
 
     (64) variable2 -> e .
 
@@ -3168,7 +3175,7 @@ state 195
     TO              reduce using rule 64 (variable2 -> e .)
 
 
-state 196
+state 197
 
     (61) variable1 -> DOT ID .
 
@@ -3191,28 +3198,28 @@ state 196
     TO              reduce using rule 61 (variable1 -> DOT ID .)
 
 
-state 197
+state 198
 
     (40) funcion2 -> ID COLON tipo funcion3 .
 
     RPAR            reduce using rule 40 (funcion2 -> ID COLON tipo funcion3 .)
 
 
-state 198
+state 199
 
     (42) funcion3 -> COMMA . ID COLON tipo funcion3
 
-    ID              shift and go to state 236
+    ID              shift and go to state 237
 
 
-state 199
+state 200
 
     (43) funcion3 -> e .
 
     RPAR            reduce using rule 43 (funcion3 -> e .)
 
 
-state 200
+state 201
 
     (34) funcion -> funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque funcion .
 
@@ -3225,7 +3232,7 @@ state 200
     RCBRAC          reduce using rule 34 (funcion -> funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque funcion .)
 
 
-state 201
+state 202
 
     (59) asignacion -> variable EQ expresion SEMICOLON .
 
@@ -3240,7 +3247,7 @@ state 201
     METHODS         reduce using rule 59 (asignacion -> variable EQ expresion SEMICOLON .)
 
 
-state 202
+state 203
 
     (67) condicion -> IF LPAR expresion RPAR . gotoF bloque condicion1 fill
     (68) gotoF -> . e
@@ -3248,17 +3255,17 @@ state 202
 
     LCBRAC          reduce using rule 147 (e -> .)
 
-    gotoF                          shift and go to state 237
-    e                              shift and go to state 238
-
-state 203
-
-    (73) llamada -> validar_id llamada1 LPAR llamada2 . RPAR SEMICOLON
-
-    RPAR            shift and go to state 239
-
+    gotoF                          shift and go to state 238
+    e                              shift and go to state 239
 
 state 204
+
+    (73) llamada -> validar_id llamada1 LPAR llamada2 . RPAR
+
+    RPAR            shift and go to state 240
+
+
+state 205
 
     (77) llamada2 -> expresion . cuad_param llamada3
     (79) cuad_param -> . e
@@ -3267,17 +3274,17 @@ state 204
     COMMA           reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
 
-    cuad_param                     shift and go to state 240
-    e                              shift and go to state 241
+    cuad_param                     shift and go to state 241
+    e                              shift and go to state 242
 
-state 205
+state 206
 
     (78) llamada2 -> e .
 
     RPAR            reduce using rule 78 (llamada2 -> e .)
 
 
-state 206
+state 207
 
     (82) leer -> READ LPAR variable add_read . generar_cuadr RPAR SEMICOLON
     (146) generar_cuadr -> . e
@@ -3285,24 +3292,24 @@ state 206
 
     RPAR            reduce using rule 147 (e -> .)
 
-    generar_cuadr                  shift and go to state 242
-    e                              shift and go to state 243
+    generar_cuadr                  shift and go to state 243
+    e                              shift and go to state 244
 
-state 207
+state 208
 
     (83) add_read -> e .
 
     RPAR            reduce using rule 83 (add_read -> e .)
 
 
-state 208
+state 209
 
     (84) escribir -> WRITE LPAR escribir1 RPAR . SEMICOLON
 
-    SEMICOLON       shift and go to state 244
+    SEMICOLON       shift and go to state 245
 
 
-state 209
+state 210
 
     (85) escribir1 -> texto add_print . generar_cuadr escribir2
     (146) generar_cuadr -> . e
@@ -3311,10 +3318,10 @@ state 209
     COMMA           reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
 
-    generar_cuadr                  shift and go to state 245
-    e                              shift and go to state 243
+    generar_cuadr                  shift and go to state 246
+    e                              shift and go to state 244
 
-state 210
+state 211
 
     (87) add_print -> e .
 
@@ -3322,7 +3329,7 @@ state 210
     RPAR            reduce using rule 87 (add_print -> e .)
 
 
-state 211
+state 212
 
     (86) escribir1 -> expresion add_print . generar_cuadr escribir2
     (146) generar_cuadr -> . e
@@ -3331,17 +3338,17 @@ state 211
     COMMA           reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
 
-    generar_cuadr                  shift and go to state 246
-    e                              shift and go to state 243
+    generar_cuadr                  shift and go to state 247
+    e                              shift and go to state 244
 
-state 212
+state 213
 
     (91) ciclo_w -> WHILE push_while LPAR expresion . RPAR gotoF DO bloque return_while
 
-    RPAR            shift and go to state 247
+    RPAR            shift and go to state 248
 
 
-state 213
+state 214
 
     (94) ciclo_f -> FROM LPAR variable EQ . expresion asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go
     (103) expresion -> . a_exp exp1
@@ -3358,28 +3365,28 @@ state 213
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    variable                       shift and go to state 139
-    expresion                      shift and go to state 248
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    llamada                        shift and go to state 140
+    variable                       shift and go to state 140
+    expresion                      shift and go to state 249
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 214
+state 215
 
     (104) exp1 -> OR push_or . a_exp pop_operador exp1
     (108) a_exp -> . b_exp exp2
@@ -3395,27 +3402,27 @@ state 214
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    a_exp                          shift and go to state 249
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    a_exp                          shift and go to state 250
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 215
+state 216
 
     (106) push_or -> e .
 
@@ -3427,7 +3434,7 @@ state 215
     ID              reduce using rule 106 (push_or -> e .)
 
 
-state 216
+state 217
 
     (109) exp2 -> AND push_and . b_exp pop_operador exp2
     (112) b_exp -> . c_exp exp3
@@ -3442,26 +3449,26 @@ state 216
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    b_exp                          shift and go to state 250
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    b_exp                          shift and go to state 251
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 217
+state 218
 
     (111) push_and -> e .
 
@@ -3473,7 +3480,7 @@ state 217
     ID              reduce using rule 111 (push_and -> e .)
 
 
-state 218
+state 219
 
     (113) exp3 -> LT push_lt . c_exp pop_operador exp3
     (122) c_exp -> . d_exp exp4
@@ -3487,25 +3494,25 @@ state 218
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    c_exp                          shift and go to state 251
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    c_exp                          shift and go to state 252
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 219
+state 220
 
     (118) push_lt -> e .
 
@@ -3518,7 +3525,7 @@ state 219
     RPAR            reduce using rule 118 (push_lt -> e .)
 
 
-state 220
+state 221
 
     (114) exp3 -> GT push_gt . c_exp pop_operador exp3
     (122) c_exp -> . d_exp exp4
@@ -3532,25 +3539,25 @@ state 220
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    c_exp                          shift and go to state 252
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    c_exp                          shift and go to state 253
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 221
+state 222
 
     (119) push_gt -> e .
 
@@ -3562,7 +3569,7 @@ state 221
     ID              reduce using rule 119 (push_gt -> e .)
 
 
-state 222
+state 223
 
     (115) exp3 -> COMP push_comp . c_exp pop_operador exp3
     (122) c_exp -> . d_exp exp4
@@ -3576,25 +3583,25 @@ state 222
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    c_exp                          shift and go to state 253
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    c_exp                          shift and go to state 254
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 223
+state 224
 
     (120) push_comp -> e .
 
@@ -3606,7 +3613,7 @@ state 223
     ID              reduce using rule 120 (push_comp -> e .)
 
 
-state 224
+state 225
 
     (116) exp3 -> NOTEQ push_noteq . c_exp pop_operador exp3
     (122) c_exp -> . d_exp exp4
@@ -3620,25 +3627,25 @@ state 224
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    c_exp                          shift and go to state 254
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    c_exp                          shift and go to state 255
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 225
+state 226
 
     (121) push_noteq -> e .
 
@@ -3650,7 +3657,7 @@ state 225
     ID              reduce using rule 121 (push_noteq -> e .)
 
 
-state 226
+state 227
 
     (123) exp4 -> PLUS push_plus . d_exp pop_operador exp4
     (128) d_exp -> . e_exp exp5
@@ -3663,24 +3670,24 @@ state 226
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    d_exp                          shift and go to state 255
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    d_exp                          shift and go to state 256
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 227
+state 228
 
     (126) push_plus -> e .
 
@@ -3699,7 +3706,7 @@ state 227
     RCBRAC          reduce using rule 126 (push_plus -> e .)
 
 
-state 228
+state 229
 
     (124) exp4 -> MINUS push_minus . d_exp pop_operador exp4
     (128) d_exp -> . e_exp exp5
@@ -3712,24 +3719,24 @@ state 228
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    d_exp                          shift and go to state 256
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    d_exp                          shift and go to state 257
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 229
+state 230
 
     (127) push_minus -> e .
 
@@ -3741,7 +3748,7 @@ state 229
     ID              reduce using rule 127 (push_minus -> e .)
 
 
-state 230
+state 231
 
     (129) exp5 -> MULT push_mult . e_exp pop_operador exp5
     (134) e_exp -> . LPAR expresion RPAR
@@ -3753,23 +3760,23 @@ state 230
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    e_exp                          shift and go to state 257
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    e_exp                          shift and go to state 258
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 231
+state 232
 
     (132) push_mult -> e .
 
@@ -3781,7 +3788,7 @@ state 231
     ID              reduce using rule 132 (push_mult -> e .)
 
 
-state 232
+state 233
 
     (130) exp5 -> DIV push_div . e_exp pop_operador exp5
     (134) e_exp -> . LPAR expresion RPAR
@@ -3793,23 +3800,23 @@ state 232
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    e_exp                          shift and go to state 258
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    e_exp                          shift and go to state 259
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
-state 233
+state 234
 
     (133) push_div -> e .
 
@@ -3821,7 +3828,7 @@ state 233
     ID              reduce using rule 133 (push_div -> e .)
 
 
-state 234
+state 235
 
     (134) e_exp -> LPAR expresion RPAR .
 
@@ -3842,30 +3849,30 @@ state 234
     TO              reduce using rule 134 (e_exp -> LPAR expresion RPAR .)
 
 
-state 235
+state 236
 
     (63) variable2 -> LSBRAC expresion . RSBRAC variable3
 
-    RSBRAC          shift and go to state 259
-
-
-state 236
-
-    (42) funcion3 -> COMMA ID . COLON tipo funcion3
-
-    COLON           shift and go to state 260
+    RSBRAC          shift and go to state 260
 
 
 state 237
+
+    (42) funcion3 -> COMMA ID . COLON tipo funcion3
+
+    COLON           shift and go to state 261
+
+
+state 238
 
     (67) condicion -> IF LPAR expresion RPAR gotoF . bloque condicion1 fill
     (48) bloque -> . LCBRAC estatutos RCBRAC
 
     LCBRAC          shift and go to state 77
 
-    bloque                         shift and go to state 261
+    bloque                         shift and go to state 262
 
-state 238
+state 239
 
     (68) gotoF -> e .
 
@@ -3874,14 +3881,28 @@ state 238
     RPAR            reduce using rule 68 (gotoF -> e .)
 
 
-state 239
-
-    (73) llamada -> validar_id llamada1 LPAR llamada2 RPAR . SEMICOLON
-
-    SEMICOLON       shift and go to state 262
-
-
 state 240
+
+    (73) llamada -> validar_id llamada1 LPAR llamada2 RPAR .
+
+    SEMICOLON       reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    MULT            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    DIV             reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    PLUS            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    MINUS           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    LT              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    GT              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    COMP            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    NOTEQ           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    AND             reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    OR              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    RPAR            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    COMMA           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    RSBRAC          reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    TO              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+
+
+state 241
 
     (77) llamada2 -> expresion cuad_param . llamada3
     (80) llamada3 -> . COMMA expresion cuad_param llamada3
@@ -3894,7 +3915,7 @@ state 240
     llamada3                       shift and go to state 263
     e                              shift and go to state 265
 
-state 241
+state 242
 
     (79) cuad_param -> e .
 
@@ -3902,14 +3923,14 @@ state 241
     RPAR            reduce using rule 79 (cuad_param -> e .)
 
 
-state 242
+state 243
 
     (82) leer -> READ LPAR variable add_read generar_cuadr . RPAR SEMICOLON
 
     RPAR            shift and go to state 266
 
 
-state 243
+state 244
 
     (146) generar_cuadr -> e .
 
@@ -3917,7 +3938,7 @@ state 243
     COMMA           reduce using rule 146 (generar_cuadr -> e .)
 
 
-state 244
+state 245
 
     (84) escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .
 
@@ -3931,7 +3952,7 @@ state 244
     RCBRAC          reduce using rule 84 (escribir -> WRITE LPAR escribir1 RPAR SEMICOLON .)
 
 
-state 245
+state 246
 
     (85) escribir1 -> texto add_print generar_cuadr . escribir2
     (88) escribir2 -> . COMMA escribir1
@@ -3944,7 +3965,7 @@ state 245
     escribir2                      shift and go to state 267
     e                              shift and go to state 269
 
-state 246
+state 247
 
     (86) escribir1 -> expresion add_print generar_cuadr . escribir2
     (88) escribir2 -> . COMMA escribir1
@@ -3957,7 +3978,7 @@ state 246
     escribir2                      shift and go to state 270
     e                              shift and go to state 269
 
-state 247
+state 248
 
     (91) ciclo_w -> WHILE push_while LPAR expresion RPAR . gotoF DO bloque return_while
     (68) gotoF -> . e
@@ -3966,9 +3987,9 @@ state 247
     DO              reduce using rule 147 (e -> .)
 
     gotoF                          shift and go to state 271
-    e                              shift and go to state 238
+    e                              shift and go to state 239
 
-state 248
+state 249
 
     (94) ciclo_f -> FROM LPAR variable EQ expresion . asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go
     (95) asign_var -> . e
@@ -3979,7 +4000,7 @@ state 248
     asign_var                      shift and go to state 272
     e                              shift and go to state 273
 
-state 249
+state 250
 
     (104) exp1 -> OR push_or a_exp . pop_operador exp1
     (107) pop_operador -> . e
@@ -3995,7 +4016,7 @@ state 249
     pop_operador                   shift and go to state 274
     e                              shift and go to state 275
 
-state 250
+state 251
 
     (109) exp2 -> AND push_and b_exp . pop_operador exp2
     (107) pop_operador -> . e
@@ -4012,7 +4033,7 @@ state 250
     pop_operador                   shift and go to state 276
     e                              shift and go to state 275
 
-state 251
+state 252
 
     (113) exp3 -> LT push_lt c_exp . pop_operador exp3
     (107) pop_operador -> . e
@@ -4033,7 +4054,7 @@ state 251
     pop_operador                   shift and go to state 277
     e                              shift and go to state 275
 
-state 252
+state 253
 
     (114) exp3 -> GT push_gt c_exp . pop_operador exp3
     (107) pop_operador -> . e
@@ -4054,7 +4075,7 @@ state 252
     pop_operador                   shift and go to state 278
     e                              shift and go to state 275
 
-state 253
+state 254
 
     (115) exp3 -> COMP push_comp c_exp . pop_operador exp3
     (107) pop_operador -> . e
@@ -4075,7 +4096,7 @@ state 253
     pop_operador                   shift and go to state 279
     e                              shift and go to state 275
 
-state 254
+state 255
 
     (116) exp3 -> NOTEQ push_noteq c_exp . pop_operador exp3
     (107) pop_operador -> . e
@@ -4096,7 +4117,7 @@ state 254
     pop_operador                   shift and go to state 280
     e                              shift and go to state 275
 
-state 255
+state 256
 
     (123) exp4 -> PLUS push_plus d_exp . pop_operador exp4
     (107) pop_operador -> . e
@@ -4119,7 +4140,7 @@ state 255
     pop_operador                   shift and go to state 281
     e                              shift and go to state 275
 
-state 256
+state 257
 
     (124) exp4 -> MINUS push_minus d_exp . pop_operador exp4
     (107) pop_operador -> . e
@@ -4142,7 +4163,7 @@ state 256
     pop_operador                   shift and go to state 282
     e                              shift and go to state 275
 
-state 257
+state 258
 
     (129) exp5 -> MULT push_mult e_exp . pop_operador exp5
     (107) pop_operador -> . e
@@ -4167,7 +4188,7 @@ state 257
     pop_operador                   shift and go to state 283
     e                              shift and go to state 275
 
-state 258
+state 259
 
     (130) exp5 -> DIV push_div e_exp . pop_operador exp5
     (107) pop_operador -> . e
@@ -4192,7 +4213,7 @@ state 258
     pop_operador                   shift and go to state 284
     e                              shift and go to state 275
 
-state 259
+state 260
 
     (63) variable2 -> LSBRAC expresion RSBRAC . variable3
     (65) variable3 -> . LSBRAC expresion RSBRAC
@@ -4220,7 +4241,7 @@ state 259
     variable3                      shift and go to state 286
     e                              shift and go to state 287
 
-state 260
+state 261
 
     (42) funcion3 -> COMMA ID COLON . tipo funcion3
     (44) tipo -> . INT
@@ -4235,7 +4256,7 @@ state 260
 
     tipo                           shift and go to state 288
 
-state 261
+state 262
 
     (67) condicion -> IF LPAR expresion RPAR gotoF bloque . condicion1 fill
     (70) condicion1 -> . ELSE goto bloque
@@ -4254,35 +4275,6 @@ state 261
 
     condicion1                     shift and go to state 289
     e                              shift and go to state 291
-
-state 262
-
-    (73) llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .
-
-    IF              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    READ            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    WRITE           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    WHILE           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    FROM            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    RETURN          reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    ID              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    RCBRAC          reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    MULT            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    DIV             reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    PLUS            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    MINUS           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    LT              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    GT              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    COMP            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    NOTEQ           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    AND             reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    OR              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    SEMICOLON       reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    RPAR            reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    COMMA           reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    RSBRAC          reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-    TO              reduce using rule 73 (llamada -> validar_id llamada1 LPAR llamada2 RPAR SEMICOLON .)
-
 
 state 263
 
@@ -4308,25 +4300,25 @@ state 264
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
     expresion                      shift and go to state 292
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
 state 265
@@ -4370,27 +4362,27 @@ state 268
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    CTESTR          shift and go to state 160
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTEB            shift and go to state 144
+    CTESTR          shift and go to state 161
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
     escribir1                      shift and go to state 294
-    texto                          shift and go to state 158
-    expresion                      shift and go to state 159
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    texto                          shift and go to state 159
+    expresion                      shift and go to state 160
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
 state 269
@@ -4443,7 +4435,7 @@ state 274
     (105) exp1 -> . e
     (147) e -> .
 
-    OR              shift and go to state 165
+    OR              shift and go to state 166
     SEMICOLON       reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
     COMMA           reduce using rule 147 (e -> .)
@@ -4451,7 +4443,7 @@ state 274
     TO              reduce using rule 147 (e -> .)
 
     exp1                           shift and go to state 297
-    e                              shift and go to state 166
+    e                              shift and go to state 167
 
 state 275
 
@@ -4481,7 +4473,7 @@ state 276
     (110) exp2 -> . e
     (147) e -> .
 
-    AND             shift and go to state 168
+    AND             shift and go to state 169
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
     RPAR            reduce using rule 147 (e -> .)
@@ -4490,7 +4482,7 @@ state 276
     TO              reduce using rule 147 (e -> .)
 
     exp2                           shift and go to state 298
-    e                              shift and go to state 169
+    e                              shift and go to state 170
 
 state 277
 
@@ -4502,10 +4494,10 @@ state 277
     (117) exp3 -> . e
     (147) e -> .
 
-    LT              shift and go to state 171
-    GT              shift and go to state 172
-    COMP            shift and go to state 173
-    NOTEQ           shift and go to state 174
+    LT              shift and go to state 172
+    GT              shift and go to state 173
+    COMP            shift and go to state 174
+    NOTEQ           shift and go to state 175
     AND             reduce using rule 147 (e -> .)
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
@@ -4515,7 +4507,7 @@ state 277
     TO              reduce using rule 147 (e -> .)
 
     exp3                           shift and go to state 299
-    e                              shift and go to state 175
+    e                              shift and go to state 176
 
 state 278
 
@@ -4527,10 +4519,10 @@ state 278
     (117) exp3 -> . e
     (147) e -> .
 
-    LT              shift and go to state 171
-    GT              shift and go to state 172
-    COMP            shift and go to state 173
-    NOTEQ           shift and go to state 174
+    LT              shift and go to state 172
+    GT              shift and go to state 173
+    COMP            shift and go to state 174
+    NOTEQ           shift and go to state 175
     AND             reduce using rule 147 (e -> .)
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
@@ -4540,7 +4532,7 @@ state 278
     TO              reduce using rule 147 (e -> .)
 
     exp3                           shift and go to state 300
-    e                              shift and go to state 175
+    e                              shift and go to state 176
 
 state 279
 
@@ -4552,10 +4544,10 @@ state 279
     (117) exp3 -> . e
     (147) e -> .
 
-    LT              shift and go to state 171
-    GT              shift and go to state 172
-    COMP            shift and go to state 173
-    NOTEQ           shift and go to state 174
+    LT              shift and go to state 172
+    GT              shift and go to state 173
+    COMP            shift and go to state 174
+    NOTEQ           shift and go to state 175
     AND             reduce using rule 147 (e -> .)
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
@@ -4565,7 +4557,7 @@ state 279
     TO              reduce using rule 147 (e -> .)
 
     exp3                           shift and go to state 301
-    e                              shift and go to state 175
+    e                              shift and go to state 176
 
 state 280
 
@@ -4577,10 +4569,10 @@ state 280
     (117) exp3 -> . e
     (147) e -> .
 
-    LT              shift and go to state 171
-    GT              shift and go to state 172
-    COMP            shift and go to state 173
-    NOTEQ           shift and go to state 174
+    LT              shift and go to state 172
+    GT              shift and go to state 173
+    COMP            shift and go to state 174
+    NOTEQ           shift and go to state 175
     AND             reduce using rule 147 (e -> .)
     OR              reduce using rule 147 (e -> .)
     SEMICOLON       reduce using rule 147 (e -> .)
@@ -4590,7 +4582,7 @@ state 280
     TO              reduce using rule 147 (e -> .)
 
     exp3                           shift and go to state 302
-    e                              shift and go to state 175
+    e                              shift and go to state 176
 
 state 281
 
@@ -4600,8 +4592,8 @@ state 281
     (125) exp4 -> . e
     (147) e -> .
 
-    PLUS            shift and go to state 177
-    MINUS           shift and go to state 178
+    PLUS            shift and go to state 178
+    MINUS           shift and go to state 179
     LT              reduce using rule 147 (e -> .)
     GT              reduce using rule 147 (e -> .)
     COMP            reduce using rule 147 (e -> .)
@@ -4615,7 +4607,7 @@ state 281
     TO              reduce using rule 147 (e -> .)
 
     exp4                           shift and go to state 303
-    e                              shift and go to state 179
+    e                              shift and go to state 180
 
 state 282
 
@@ -4625,8 +4617,8 @@ state 282
     (125) exp4 -> . e
     (147) e -> .
 
-    PLUS            shift and go to state 177
-    MINUS           shift and go to state 178
+    PLUS            shift and go to state 178
+    MINUS           shift and go to state 179
     LT              reduce using rule 147 (e -> .)
     GT              reduce using rule 147 (e -> .)
     COMP            reduce using rule 147 (e -> .)
@@ -4640,7 +4632,7 @@ state 282
     TO              reduce using rule 147 (e -> .)
 
     exp4                           shift and go to state 304
-    e                              shift and go to state 179
+    e                              shift and go to state 180
 
 state 283
 
@@ -4650,8 +4642,8 @@ state 283
     (131) exp5 -> . e
     (147) e -> .
 
-    MULT            shift and go to state 181
-    DIV             shift and go to state 182
+    MULT            shift and go to state 182
+    DIV             shift and go to state 183
     PLUS            reduce using rule 147 (e -> .)
     MINUS           reduce using rule 147 (e -> .)
     LT              reduce using rule 147 (e -> .)
@@ -4667,7 +4659,7 @@ state 283
     TO              reduce using rule 147 (e -> .)
 
     exp5                           shift and go to state 305
-    e                              shift and go to state 183
+    e                              shift and go to state 184
 
 state 284
 
@@ -4677,8 +4669,8 @@ state 284
     (131) exp5 -> . e
     (147) e -> .
 
-    MULT            shift and go to state 181
-    DIV             shift and go to state 182
+    MULT            shift and go to state 182
+    DIV             shift and go to state 183
     PLUS            reduce using rule 147 (e -> .)
     MINUS           reduce using rule 147 (e -> .)
     LT              reduce using rule 147 (e -> .)
@@ -4694,7 +4686,7 @@ state 284
     TO              reduce using rule 147 (e -> .)
 
     exp5                           shift and go to state 306
-    e                              shift and go to state 183
+    e                              shift and go to state 184
 
 state 285
 
@@ -4713,25 +4705,25 @@ state 285
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
     expresion                      shift and go to state 307
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    variable                       shift and go to state 139
-    llamada                        shift and go to state 140
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    variable                       shift and go to state 140
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
 state 286
@@ -4785,11 +4777,11 @@ state 288
     (43) funcion3 -> . e
     (147) e -> .
 
-    COMMA           shift and go to state 198
+    COMMA           shift and go to state 199
     RPAR            reduce using rule 147 (e -> .)
 
     funcion3                       shift and go to state 308
-    e                              shift and go to state 199
+    e                              shift and go to state 200
 
 state 289
 
@@ -4844,7 +4836,7 @@ state 292
     RPAR            reduce using rule 147 (e -> .)
 
     cuad_param                     shift and go to state 313
-    e                              shift and go to state 241
+    e                              shift and go to state 242
 
 state 293
 
@@ -4893,25 +4885,25 @@ state 296
     (140) var_cte -> . CTESTR ctestr
     (141) var_cte -> . CTEB cteb
     (60) variable -> . ID variable1 variable2
-    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR SEMICOLON
+    (73) llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (74) validar_id -> . ID
 
-    LPAR            shift and go to state 137
-    CTEI            shift and go to state 141
-    CTEF            shift and go to state 142
-    CTESTR          shift and go to state 143
-    CTEB            shift and go to state 144
+    LPAR            shift and go to state 138
+    CTEI            shift and go to state 142
+    CTEF            shift and go to state 143
+    CTESTR          shift and go to state 144
+    CTEB            shift and go to state 145
     ID              shift and go to state 106
 
-    variable                       shift and go to state 139
+    variable                       shift and go to state 140
     expresion                      shift and go to state 315
-    a_exp                          shift and go to state 132
-    b_exp                          shift and go to state 133
-    c_exp                          shift and go to state 134
-    d_exp                          shift and go to state 135
-    e_exp                          shift and go to state 136
-    var_cte                        shift and go to state 138
-    llamada                        shift and go to state 140
+    a_exp                          shift and go to state 133
+    b_exp                          shift and go to state 134
+    c_exp                          shift and go to state 135
+    d_exp                          shift and go to state 136
+    e_exp                          shift and go to state 137
+    var_cte                        shift and go to state 139
+    llamada                        shift and go to state 141
     validar_id                     shift and go to state 100
 
 state 297
@@ -5259,7 +5251,7 @@ state 323
     RPAR            reduce using rule 147 (e -> .)
 
     push_lt                        shift and go to state 325
-    e                              shift and go to state 219
+    e                              shift and go to state 220
 
 state 324
 
@@ -5288,7 +5280,7 @@ state 326
     RPAR            reduce using rule 147 (e -> .)
 
     gotoF                          shift and go to state 328
-    e                              shift and go to state 238
+    e                              shift and go to state 239
 
 state 327
 
@@ -5338,7 +5330,7 @@ state 331
 
     update_fill_go                 shift and go to state 332
     push_plus                      shift and go to state 333
-    e                              shift and go to state 227
+    e                              shift and go to state 228
 
 state 332
 
@@ -5470,12 +5462,12 @@ WARNING: shift/reduce conflict for INT in state 111 resolved as shift
 WARNING: shift/reduce conflict for FLOAT in state 111 resolved as shift
 WARNING: shift/reduce conflict for STRING in state 111 resolved as shift
 WARNING: shift/reduce conflict for BOOL in state 111 resolved as shift
-WARNING: shift/reduce conflict for VOID in state 149 resolved as shift
-WARNING: shift/reduce conflict for INT in state 149 resolved as shift
-WARNING: shift/reduce conflict for FLOAT in state 149 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 149 resolved as shift
-WARNING: shift/reduce conflict for BOOL in state 149 resolved as shift
+WARNING: shift/reduce conflict for VOID in state 150 resolved as shift
+WARNING: shift/reduce conflict for INT in state 150 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 150 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 150 resolved as shift
+WARNING: shift/reduce conflict for BOOL in state 150 resolved as shift
 WARNING: reduce/reduce conflict in state 113 resolved using rule (metodos -> e)
 WARNING: rejected rule (funcion -> e) in state 113
-WARNING: reduce/reduce conflict in state 160 resolved using rule (texto -> CTESTR)
-WARNING: rejected rule (e -> <empty>) in state 160
+WARNING: reduce/reduce conflict in state 161 resolved using rule (texto -> CTESTR)
+WARNING: rejected rule (e -> <empty>) in state 161
