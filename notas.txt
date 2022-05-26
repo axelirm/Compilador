@@ -26,4 +26,6 @@ eliminar de pila de tipos lo del for y declaracion *ya*
 guardar nombre de función en vars globales si no regresa void *ya*
 nada mas que hay conflicto con objetos porque se guardan en la misma tabla. una llamada puede ser func(); y diria que es un objeto por estar en la tabla de variables globales
 
-cuadruplos de return (y validar que devuelva el mismo tipo que la función)
+cuadruplos de return (y validar que devuelva el mismo tipo que la función)*ya*
+
+pop en for

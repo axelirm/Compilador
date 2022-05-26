@@ -9,11 +9,7 @@ class Cuadruplo:
 
 class Semantica:
   def __init__(self):
-    self.tablaVars = {}
-    self.tablaFunc = {}
-    self.tablaClases = {}
     self.cuadruplos = []
-    self.temporales = 0
 
   def generarCuadruplo(self, op, arg1, arg2, res):
     if(arg1 == None and arg2 == None):

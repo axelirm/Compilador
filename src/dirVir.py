@@ -12,6 +12,10 @@ class varGlobal:
     self.limIBool = 8501
     self.limSBool = 10000
     self.contBool = 0
+    self.limIObjeto = 0
+    self.limSObjeto = 0
+    self.contObjeto = 0
+    # 100
 
 class varLocal:
   def __init__(self):

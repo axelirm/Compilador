@@ -28,8 +28,8 @@ class tabla_simbolos_funcs:
   def __init__(self):
     self.dict = {}
 
-  def insertar(self, nombre, retorno, parametros, inicio, size, vars):
-    dict2 = {nombre : [retorno, parametros, inicio, size, vars] }
+  def insertar(self, nombre, retorno, parametros, inicio, size, tablaVars):
+    dict2 = {nombre : [retorno, parametros, inicio, size, vars, tablaVars] }
     self.dict.update(dict2)
 
   def buscar(self, nombre):
@@ -51,7 +51,7 @@ class tabla_simbolos_clases:
   def herencia(self):
     pass
 
-class tablaMemoriaVars:
+class tabla_memoria_vars:
   def __init__(self):
     self.dict = {}
 

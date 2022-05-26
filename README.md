@@ -10,7 +10,9 @@ _Lo que se tiene hasta el momento son el lexer y parser para identificar
 que el léxico y la sintaxis de un programa sean válidos. Se tiene especificada
 la semántica para todos los diagramas. También se implementó el cubo semántico.
 Se creó la clase general para generar cuadruplos y ya se generan los cuadruplos
-para los condicionales, ciclos, expresiones, imprimir y leer. Se agregó el goto
+para los condicionales, ciclos, expresiones, imprimir y leer. 
+Se estan agregando las direcciones virtuales a las variables, constantes, temporales, etc. 
+Se agregó el goto
 al main, cuadruplos de funciones, llamadas y se comenzaron los de clases._
 
 ## Comenzando 🚀
@@ -18,7 +20,13 @@ al main, cuadruplos de funciones, llamadas y se comenzaron los de clases._
 _Para poder correr el programa se necesita correr el siguiente comando:_
 
 ```
-py parser.py ../test/archivo1.txt.
+python3 parser.py ../test/archivo1.txt
+```
+_Se requiere tener instalado numpy y ply, lo cual se puede realizar con los siguientes comandos:_
+
+```
+pip install numpy
+pip install ply
 ```
 
 ### Pre-requisitos 📋

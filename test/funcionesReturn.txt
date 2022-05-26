@@ -1,0 +1,34 @@
+program id ;
+
+var 
+  str1 , str2 : string ;
+  num1 , num2, num3, i, sum : int ;
+
+void function func2 (par1 : int, num4 : float, str : string) {
+          if ( par1 < 10 ) {
+            i = i + 1 ;
+          }
+          else {
+            i = i + 2 ;
+          }
+  return  ;
+}
+
+int function func3 (par1 : int, num4 : int, str : string) {
+          if ( par1 < 10 ) {
+            i = i + 1 ;
+          }
+          else {
+            i = i + 2 ;
+          }
+  return 12 ;
+}
+      
+
+main ( ) {
+  write ( "escribe un string" ) ;
+  read ( str1 ) ;
+  write ( "string leido: " , str1 ) ;
+  func2(2, 10.0, "hola");
+  num3 = func3(2, 10, "hola");
+}

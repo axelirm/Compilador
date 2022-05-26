@@ -16,8 +16,9 @@ PilaSaltos = []
 cont = 0
 # contador para cuadruplos
 contCuad = 1
-# saber si se esta dentro de declaracion de clase
+# saber si se esta dentro de declaracion de clase o funcion
 dentroClase = False
+dentroFuncion = False
 
 sem = s.Semantica()
 # para saber que estas declarando vars y funcs de una clase
@@ -28,6 +29,8 @@ tablaLocalFuncs = ts.tabla_simbolos_funcs()
 tablaVariables = ts.tabla_simbolos_vars()
 tablaFunciones = ts.tabla_simbolos_funcs()
 tablaClases = ts.tabla_simbolos_clases()
+tablaTemporales = ts.tabla_memoria_vars()
+tablaConstantes = ts.tabla_memoria_vars()
 cubo = cuboS.CuboSemantico()
 contGlobal = dir.varGlobal()
 contLocal = dir.varLocal()
@@ -149,30 +152,57 @@ def p_declaracion5(t):
           else:
             tablaLocalVars.actualizar(pilaVars.pop(), t[1], None)
     else:
+        global contGlobal
         while(len(pilaVars) > 0):
+          # variables globales que son clases
           if(t[1] == None):
             tablaVariables.actualizar(pilaVars.pop(), PilaTipos[-1], None)
           else:
-            tablaVariables.actualizar(pilaVars.pop(), t[1], None, None)
+            # variables globales que no son clases
+            if(t[1] == 'int' and contGlobal.contInt < contGlobal.limSInt):
+              tablaVariables.actualizar(pilaVars.pop(), t[1], None, contGlobal.limIInt + contGlobal.contInt)
+              contGlobal.contInt = contGlobal.contInt + 1
+            elif(t[1] == 'float' and contGlobal.contFloat < contGlobal.limSFloat):
+              tablaVariables.actualizar(pilaVars.pop(), t[1], None, contGlobal.limIFloat + contGlobal.contFloat)
+              contGlobal.contFloat = contGlobal.contFloat + 1
+            elif(t[1] == 'string' and contGlobal.contString < contGlobal.limSString):
+              tablaVariables.actualizar(pilaVars.pop(), t[1], None, contGlobal.limIString + contGlobal.contString)
+              contGlobal.contString = contGlobal.contString + 1
+            elif(t[1] == 'bool' and contGlobal.contBool < contGlobal.limSBool):
+              tablaVariables.actualizar(pilaVars.pop(), t[1], None, contGlobal.limIBool + contGlobal.contBool)
+              contGlobal.contBool = contGlobal.contBool + 1
 
 #*********** funcion ***********
 parametros = []
 vars = [] # (var, dirV)
+idFunc = ""
 def p_funcion(t):
-    '''funcion : funcion1 FUNCTION ID inicio LPAR funcion2 RPAR bloque funcion
+    '''funcion : funcion1 FUNCTION guardar_id LPAR funcion2 RPAR bloque_return reiniciar_func funcion
     | e'''
-    if (t[1] != None):
-        if (tablaFunciones.buscar(t[3]) == None):
-            if(t[1] != 'void'):
-                tablaVariables.insertar(t[3], t[1], None, None)
+
+def  p_guardar_id(t):
+    'guardar_id : ID'
+    global idFunc
+    idFunc = t[1]
+
+def p_reiniciar_func(t):
+    'reiniciar_func : e'
+    global idFunc, parametros
+    tipo = PilaTipos.pop()
+    if (tipo != None):
+        if (tablaFunciones.buscar(idFunc) == None):
+            if(tipo != 'void'):
+                tablaVariables.insertar(idFunc, tipo, None, None)
             global contCuad
-            tablaFunciones.insertar(t[3], PilaTipos.pop(), parametros, t[4], None, vars)
+            tablaFunciones.insertar(idFunc, tipo, parametros, contCuad, None, tablaLocalVars)
             sem.intermediario("endfunc", None, None, None)
             contCuad = contCuad + 1
         else:
            print("Error de semantica: doble declaracion")
            exit(1)
-        tablaLocalVars.inversa()
+    tablaLocalVars.inversa()
+    tablaLocalVars.dict = {}
+    parametros = []
 
 def p_funcion1(t):
     '''funcion1 : tipo
@@ -184,11 +214,6 @@ def p_funcion1(t):
 def p_funcion_void(t):
     'funcion_void : e'
     PilaTipos.append("void")
-
-def p_inicio(t):
-    'inicio : e'
-    global contCuad
-    t[0] = contCuad
 
 def p_funcion2(t):
     '''funcion2 : ID COLON tipo funcion3
@@ -237,6 +262,10 @@ def p_tipo(t):
 def p_bloque(t):
     'bloque : LCBRAC estatutos RCBRAC'
 
+def p_bloque_return(t):
+    '''bloque_return : LCBRAC estatutos regresar RCBRAC 
+    | LCBRAC estatutos regresar_void RCBRAC'''
+
 def p_estatutos(t):
     '''estatutos : estatuto estatutos
     | e '''
@@ -245,16 +274,18 @@ def p_estatutos(t):
 def p_estatuto(t):
     '''estatuto : asignacion
     | condicion
-    | llamada SEMICOLON
+    | llamada_void SEMICOLON
     | leer
     | escribir
     | ciclo_w
-    | ciclo_f
-    | regresar'''
+    | ciclo_f'''
 
 #*********** asignacion ***********
 def p_asignacion(t):
-    'asignacion : variable EQ expresion SEMICOLON'
+    'asignacion : variable EQ expresion SEMICOLON atomic_assign'
+
+def p_atomic_assign(t):
+    'atomic_assign : e'
     expresion = PilaO.pop()
     variable = PilaO.pop()
     tipoExpresion = cubo.getTipo(PilaTipos.pop())
@@ -266,7 +297,7 @@ def p_asignacion(t):
         contCuad = contCuad + 1
         # update tablaVariables
     else:
-        print("Error semantico: error de asignacion type-mismatch: ", variable)
+        print("Error semantico: error de asignacion type-mismatch: ", variable) 
         
 #************ variable ************
 def p_variable(t):
@@ -274,10 +305,10 @@ def p_variable(t):
     existe = tablaVariables.buscar(t[1])
     existeLocal = tablaLocalVars.buscar(t[1])
     if(existe != None):
-        PilaO.append(t[1])
+        PilaO.append(existe[2])
         PilaTipos.append(existe[0])
     elif(existeLocal):
-        PilaO.append(t[1])
+        PilaO.append(existeLocal[2])
         PilaTipos.append(existeLocal[0])
     else:
         print("Error de semantica: variable no declarada: ", t[1])
@@ -335,8 +366,8 @@ contadorParam = 0
 def p_llamada(t):
     'llamada : validar_id llamada1 LPAR llamada2 RPAR'
     if(t[1] != 'none'):
-        global contadorParam, parametros
-        if(contadorParam == len(parametros)):
+        global contadorParam, tipos_param
+        if(contadorParam == len(tipos_param)):
             global contCuad
             funcStart = tablaFunciones.buscar(t[1])
             sem.intermediario("gosub", None, None, funcStart[2])
@@ -347,8 +378,27 @@ def p_llamada(t):
         else:
             print("La cantidad de parametros de la llamada no coincide con la cantidad de parametros que recibe la funcion: ", t[1])
             exit(1)
-        
 
+def p_llamada_void(t):
+    'llamada_void : validar_id llamada1 LPAR llamada2 RPAR'
+    # checar que el tipo de funcion es void
+    if(t[1] != 'none'):
+        funcStart = tablaFunciones.buscar(t[1])
+        tipoFunc = funcStart[0]
+        global contadorParam, tipos_param
+        if(contadorParam == len(tipos_param)):
+            if(tipoFunc == 'void'):
+                global contCuad
+                sem.intermediario("gosub", None, None, funcStart[2])
+                contCuad = contCuad + 1
+            else:
+                print("Error: se esperaba una llamada a una funcion void o asignar un valor a una variable")
+                exit(1)
+        else:
+            print("Error: el numero de parametros no coincide", t[1])
+            exit(1)
+        
+tipos_param = []
 def p_validar_id(t):
     'validar_id : ID'
     obj = tablaVariables.buscar(t[1])
@@ -357,10 +407,12 @@ def p_validar_id(t):
         print("obj");
         t[0] = t[1]
     elif(func != None):
-        global contCuad, contadorParam
+        global contCuad, contadorParam, tipos_param
         sem.intermediario("era", None, None, func[3])
         contCuad = contCuad + 1        
         contadorParam = 0
+        funcStart = tablaFunciones.buscar(t[1])
+        tipos_param = funcStart[1]
         t[0] = t[1]
     else:
         print("Function not declared")
@@ -389,16 +441,20 @@ def p_llamada2(t):
 
 def p_cuad_param(t):
     'cuad_param : e'
-    global contCuad, contadorParam, parametros
+    global contCuad, contadorParam, tipos_param
     sendParam = PilaO.pop()
     sendParamType = PilaTipos.pop()
-    if(parametros[contadorParam] == sendParamType):
-        contadorParam = contadorParam + 1
-        sem.intermediario("param", sendParam, None, contadorParam)
-        contCuad = contCuad + 1
-    else:
-        print("Error: Parameter type mismatch in parameter: ", sendParam)
+    if(contadorParam >= len(tipos_param)):
+        print("Error: el numero de parametros no coincide ")
         exit(1)
+    else:
+        if(tipos_param[contadorParam] == sendParamType):
+            contadorParam = contadorParam + 1
+            sem.intermediario("param", sendParam, None, contadorParam)
+            contCuad = contCuad + 1
+        else:
+            print("Error: type mismatch en parametros: ", sendParam)
+            exit(1)
 
 def p_llamada3(t):
     '''llamada3 : COMMA expresion cuad_param llamada3
@@ -429,9 +485,16 @@ def p_escribir2(t):
     | e '''
 
 def p_texto(t):
-  '''texto : CTESTR '''
-  PilaO.append(t[1])
-  PilaTipos.append("string")
+    '''texto : CTESTR '''
+    global tablaConstantes, contConst
+    if(contConst.contString + contConst.limIString < contConst.limSString):
+      tablaConstantes.insertar(contConst.contString + contConst.limIString, t[1])
+      PilaO.append(contConst.contString + contConst.limIString)
+      PilaTipos.append("string")
+      contConst.contString = contConst.contString + 1
+    else: 
+      print("Limite de memoria excedido para constantes")
+      exit(1)
 
 #*********** ciclo_w ************
 def p_ciclo_w(t):
@@ -452,72 +515,25 @@ def p_return_while(t):
 
 #*********** ciclo_f ************
 def p_ciclo_f(t):
-    'ciclo_f : FROM LPAR variable EQ expresion asign_var TO expresion asign_exp migaja push_lt pop_for gotoF RPAR DO bloque update_fill_go'
+    'ciclo_f : FROM LPAR variable asign_aux EQ expresion atomic_assign save_aux TO for_temp asign_aux2 expresion atomic_assign save_aux2 migaja push_lt pop_operador gotoF RPAR DO save_aux bloque update_fill_go'
 
-# guardar valor de exp en variable
-def p_asign_var(t):
-    'asign_var : e'
-    expresion = PilaO.pop()
-    variable = PilaO.pop()
-    tipoExpresion = cubo.getTipo(PilaTipos.pop())
-    tipoVariable = cubo.getTipo(PilaTipos.pop())
-    rechazar = cubo.cubo[tipoVariable, tipoExpresion, 10]
-    if(rechazar != 11):
-        sem.intermediario('=', expresion, None , variable)
-        global contCuad
-        contCuad = contCuad + 1
-        PilaO.append(variable)
-        PilaTipos.append(cubo.getNumeroTipo(tipoVariable))
-        # update tablaVariables
-    else:
-        print("Error semantico: error de asignacion type-mismatch: ", variable)  
-# guardar valor de expresion en var2
-def p_asign_exp(t):
-    'asign_exp : e'
+#dir virtual temporal
+def p_for_temp(t):
+    'for_temp : e'
     global contCuad
-    expresion = PilaO.pop()
-    variable = "for_" + str(contCuad)
-    tipoExpresion = cubo.getTipo(PilaTipos.pop())
-    tipoVariable = tipoExpresion
-    PilaO.append(variable)
-    PilaTipos.append(cubo.getNumeroTipo(tipoVariable))
-    tablaVariables.insertar(variable, tipoExpresion, None, None)
-    rechazar = cubo.cubo[tipoVariable, tipoExpresion, 10]
-    if(rechazar != 11):
-        sem.intermediario('=', expresion, None , variable)
-        contCuad = contCuad + 1
-        # update tablaVariables
-    else:
-        print("Error semantico: error de asignacion type-mismatch: ", variable)  
-# comparar variable y var2 <
-def p_pop_for(t):
-    'pop_for : e'
-    right_op = PilaO.pop()
-    right_type = cubo.getTipo(PilaTipos.pop())
-    left_op = PilaO.pop()
-    left_type = cubo.getTipo(PilaTipos.pop())
-    operador = POper.pop()
-    num_oper = cubo.getOperando(operador)
-    rechazar = cubo.cubo[left_type, right_type, num_oper]
-    if(rechazar != 11):
-        global cont, contCuad
-        sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
-        contCuad = contCuad + 1
-        PilaO.append("t"+str(cont))
-        cont = cont + 1
-        tipo = cubo.getNumeroTipo(rechazar)
-        PilaTipos.append(tipo)
-    else:
-        print("Error semantico en expresiones: type mismatch")
-        exit(1)
-# migaja y poner gotoF fuera del ciclo
+    temporal = "for_" + str(contCuad)
+    temporalTipo = PilaTipos[-1]
+    PilaO.append(temporal)
+    PilaTipos.append(temporalTipo)
+    tablaVariables.insertar(temporal, temporalTipo, None, None)
+
 def p_migaja(t):
     'migaja : e'
     global contCuad
     PilaSaltos.append(contCuad)
-# final bloque variable+1, fill gotoF y goto
+
 def p_update_fill_go(t):
-    'update_fill_go : push_plus push1 pop_operfor asign_var'
+    'update_fill_go : save_aux push_plus push1 pop_operador  atomic_assign'
     global contCuad
     fill = PilaSaltos.pop() - 1
     ret = PilaSaltos.pop()
@@ -525,37 +541,60 @@ def p_update_fill_go(t):
     contCuad = contCuad + 1
     sem.cuadruplos[fill].res = contCuad    
 
+foraux1 = 0
+foraux1Tipo = ''
+def p_asign_aux(t):
+    'asign_aux : e'
+    global foraux1, foraux1Tipo
+    foraux1 = PilaO[-1]
+    foraux1Tipo = PilaTipos[-1]
+    
+foraux2 = 0
+foraux2Tipo = ''
+def p_asign_aux2(t):
+    'asign_aux2 : e'
+    global foraux2, foraux2Tipo
+    foraux2 = PilaO[-1]
+    foraux2Tipo = PilaTipos[-1]
+
+#dir virtual cte
 def p_push1(t):
     'push1 : e'
     PilaO.append("1")
     PilaTipos.append("int")
+
+def p_save_aux(t):
+    'save_aux : e'
+    global foraux1, foraux1Tipo
+    PilaO.append(foraux1)
+    PilaTipos.append(foraux1Tipo)
     
-def p_pop_operfor(t):
-    'pop_operfor : e'
-    right_op = PilaO.pop()
-    right_type = cubo.getTipo(PilaTipos.pop())
-    left_op = PilaO.pop()
-    left_type = cubo.getTipo(PilaTipos.pop())
-    operador = POper.pop()
-    num_oper = cubo.getOperando(operador)
-    rechazar = cubo.cubo[left_type, right_type, num_oper]
-    if(rechazar != 11):
-        global cont, contCuad
-        PilaO.append(left_op)
-        PilaTipos.append(cubo.getNumeroTipo(left_type))
-        sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
-        contCuad = contCuad + 1
-        PilaO.append("t"+str(cont))
-        cont = cont + 1
-        tipo = cubo.getNumeroTipo(rechazar)
-        PilaTipos.append(tipo)
-    else:
-        print("Error semantico en expresiones: type mismatch")
-        exit(1)
-    
+def p_save_aux2(t):
+    'save_aux2 : e'
+    global foraux2, foraux2Tipo
+    PilaO.append(foraux2)
+    PilaTipos.append(foraux2Tipo)
+
 #*********** regresar ***********
+def p_regresar_void(t):
+    'regresar_void : RETURN SEMICOLON'
+    tipo_func = PilaTipos.pop()
+    if(tipo_func == 'void'):
+        PilaTipos.append(tipo_func)
+      
 def p_regresar(t):
     'regresar : RETURN expresion SEMICOLON'
+    #checar tipo exp vs funcion
+    tipo_exp = PilaTipos.pop()
+    tipo_func = PilaTipos.pop()
+    if(tipo_exp != tipo_func):
+      print("Error de tipo de dato de retorno y funcion")
+      exit(1)
+    else:
+      sem.intermediario('return', None, None, PilaO.pop())
+      PilaTipos.append(tipo_func)
+      global contCuad
+      contCuad = contCuad+1
   
 #*********** expresion ***********
 def p_expresion(t):
@@ -580,14 +619,59 @@ def p_pop_operador(t):
     operador = POper.pop()
     num_oper = cubo.getOperando(operador)
     rechazar = cubo.cubo[left_type, right_type, num_oper]
-    if(rechazar != 11):
-        global cont, contCuad
-        sem.intermediario(str(operador), str(left_op), str(right_op), "t"+str(cont))
+    global cont, contCuad, contTemps, tablaTemporales
+    if(rechazar == 0):
+      if(contTemps.contInt + contTemps.limIInt < contTemps.limSInt):
+        sem.intermediario(str(operador), str(left_op), str(right_op), contTemps.contInt + contTemps.limIInt)
         contCuad = contCuad + 1
-        PilaO.append("t"+str(cont))
+        PilaO.append(contTemps.contInt + contTemps.limIInt)
         tipo = cubo.getNumeroTipo(rechazar)
         PilaTipos.append(tipo)
-        cont = cont + 1
+        tablaTemporales.insertar(contTemps.contInt + contTemps.limIInt, None)
+        contTemps.contInt = contTemps.contInt + 1
+      else:
+          print("Error: limite de memoria excedido")
+          exit(1)
+        
+    elif(rechazar == 1):
+      if(contTemps.contFloat + contTemps.limIFloat < contTemps.limSFloat):
+        sem.intermediario(str(operador), str(left_op), str(right_op), contTemps.contFloat + contTemps.limIFloat)
+        contCuad = contCuad + 1
+        PilaO.append(contTemps.contFloat + contTemps.limIFloat)
+        tipo = cubo.getNumeroTipo(rechazar)
+        PilaTipos.append(tipo)
+        tablaTemporales.insertar(contTemps.contFloat + contTemps.limIFloat, None)
+        contTemps.contFloat = contTemps.contFloat + 1
+      else:
+          print("Error: limite de memoria excedido")
+          exit(1)
+        
+    elif(rechazar == 2):
+      if(contTemps.contString + contTemps.limIString < contTemps.limSString):
+        sem.intermediario(str(operador), str(left_op), str(right_op), contTemps.contString + contTemps.limIString )
+        contCuad = contCuad + 1
+        PilaO.append(contTemps.contString + contTemps.limIString )
+        tipo = cubo.getNumeroTipo(rechazar)
+        PilaTipos.append(tipo)
+        tablaTemporales.insertar(contTemps.contString + contTemps.limIString , None)
+        contTemps.contString = contTemps.conString + 1
+      else:
+          print("Error: limite de memoria excedido")
+          exit(1)
+        
+    elif(rechazar == 3):
+      if(contTemps.contBool + contTemps.limIBool < contTemps.limSBool):
+        sem.intermediario(str(operador), str(left_op), str(right_op), contTemps.contBool + contTemps.limIBool)
+        contCuad = contCuad + 1
+        PilaO.append(contTemps.contBool + contTemps.limIBool)
+        tipo = cubo.getNumeroTipo(rechazar)
+        PilaTipos.append(tipo)
+        tablaTemporales.insertar(contTemps.contBool + contTemps.limIBool, None)
+        contTemps.contBool = contTemps.contBool + 1
+      else:
+          print("Error: limite de memoria excedido")
+          exit(1)  
+        
     else:
         print("Error semantico en expresiones: type mismatch")
         exit(1)
@@ -683,24 +767,65 @@ def p_var_cte(t):
     | CTEF ctef
     | CTESTR ctestr
     | CTEB cteb'''
-    PilaO.append(t[1])
+    global PilaTipos
+    tipo = PilaTipos.pop()
+    if(tipo == 'int'):
+      if(contConst.contInt + contConst.limIInt < contConst.limSInt):
+        tablaConstantes.insertar(contConst.contInt + contConst.limIInt, t[1])
+        PilaO.append(contConst.contInt + contConst.limIInt)
+        PilaTipos.append("int")
+        contConst.contInt = contConst.contInt + 1
+      else: 
+        print("Limite de memoria excedido para constantes")
+        exit(1)
+      
+    elif(tipo == 'float'):
+      if(contConst.contFloat + contConst.limIFloat < contConst.limSFloat):
+        tablaConstantes.insertar(contConst.contFloat + contConst.limIFloat, t[1])
+        PilaO.append(contConst.contFloat + contConst.limIFloat)
+        PilaTipos.append("float")
+        contConst.contFloat = contConst.contFloat + 1
+      else: 
+        print("Limite de memoria excedido para constantes")
+        exit(1)
+
+    elif(tipo == 'string'):
+      if(contConst.contString + contConst.limIString < contConst.limSString):
+        tablaConstantes.insertar(contConst.contString + contConst.limIString, t[1])
+        PilaO.append(contConst.contString + contConst.limIString)
+        PilaTipos.append("string")
+        contConst.contString = contConst.contString + 1
+      else: 
+        print("Limite de memoria excedido para constantes")
+        exit(1)
+
+    elif(tipo == 'bool'):
+      if(contConst.contBool + contConst.limIBool < contConst.limSBool):
+        tablaConstantes.insertar(contConst.contBool + contConst.limIBool, t[1])
+        PilaO.append(contConst.contBool + contConst.limIBool)
+        PilaTipos.append("bool")
+        contConst.contBool = contConst.contBool + 1
+      else: 
+        print("Limite de memoria excedido para constantes")
+        exit(1)
+    
     t[0]=t[1]
 
 def p_ctei(t):
     'ctei : e'
-    PilaTipos.append("int")
+    PilaTipos.append('int')
 
 def p_ctef(t):
     'ctef : e'
-    PilaTipos.append("float")
+    PilaTipos.append('float')
 
 def p_ctestr(t):
     'ctestr : e'
-    PilaTipos.append("string")
+    PilaTipos.append('string')
 
 def p_cteb(t):
     'cteb : e'
-    PilaTipos.append("bool")
+    PilaTipos.append('bool')
 
 def p_generar_cuadr(t):
     'generar_cuadr : e'
@@ -720,6 +845,7 @@ def p_generar_cuadr(t):
 #********* error & pass **********
 def p_error(t):
     print("Error de sintaxis en la linea ", t.lineno, " cerca del caracter \"", t.value, "\"")
+    exit(1)
 
 def p_e(t):
     'e : '
@@ -739,6 +865,17 @@ if __name__ == '__main__':
                 print("Validacion completa")
         except ValueError:
             print(ValueError)
+    
     sem.imprimirCuadruplos()
-    print(PilaTipos)
-    print(PilaO)
+    f = open('intermedio.txt','w')
+    tablaVars = {}
+    for i in tablaVariables.dict:
+      dictAux = {tablaVariables.dict[i][2]: tablaVariables.dict[i][1]}
+      tablaVars.update(dictAux)
+    f.write(str(tablaVars))
+    f.write('\n' + str(tablaConstantes.dict))
+    f.write('\n' + str(tablaTemporales.dict))
+    f.write('\n' + '\n' + "#cuadruplos")
+    for i in sem.cuadruplos:
+      f.write('\n' + str(i.operation) + ', ' + str(i.arg1) + ', ' + str(i.arg2) + ', ' + str(i.res))
+    f.close()

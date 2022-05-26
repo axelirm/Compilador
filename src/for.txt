@@ -7,6 +7,14 @@ var
     str2 : string;
 
 int function func(){
+    from ( i = 3 to sum ) do {
+        if ( sum < 10 ) {
+            i = i + 1 ;
+          }
+          else {
+            i = i + 2 ;
+          }
+    }
     return 5;
 }
 
@@ -23,7 +31,6 @@ main() {
     }
     from ( i = 3 to sum ) do {
     }
-    func();
     sum = 6+5;
     sum = func();
 }
