@@ -28,4 +28,13 @@ nada mas que hay conflicto con objetos porque se guardan en la misma tabla. una 
 
 cuadruplos de return (y validar que devuelva el mismo tipo que la función)*ya*
 
-pop en for
+return func(x-1) no se puede
+
+probar que pasa cuando no hay alguna tabla (como de constantes)
+
+dirVir float lo pone como bool. escribe 19001 en vez de 16001.
+
+se repiten las constantes globales cuando las vuelves a usar. por ejemplo 20001: 2, 20002: 2
+
+arreglos como en c++ no son inclusive
+a[5] --> a[0], a[1], a[2], a[3], a[4]

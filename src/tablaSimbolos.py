@@ -3,17 +3,17 @@ class tabla_simbolos_vars:
     #self.nombre = nombre
     self.dict = {}
 
-  def insertar(self, nombre, tipo, valor, dirV):
+  def insertar(self, nombre, tipo, valor, dirV, dim):
     existe = self.buscar(nombre)
     if(existe == None):
-      dict2 = {nombre : [tipo, valor, dirV] }
+      dict2 = {nombre : [tipo, valor, dirV, dim] }
       self.dict.update(dict2)
       return True
     else:
       return False
 
-  def actualizar(self, nombre, tipo, valor, dirV):
-    dict2 = {nombre : [tipo, valor, dirV] }
+  def actualizar(self, nombre, tipo, valor, dirV, dim):
+    dict2 = {nombre : [tipo, valor, dirV, dim] }
     self.dict.update(dict2)
 
   def buscar(self, nombre):
@@ -28,8 +28,8 @@ class tabla_simbolos_funcs:
   def __init__(self):
     self.dict = {}
 
-  def insertar(self, nombre, retorno, parametros, inicio, size, tablaVars):
-    dict2 = {nombre : [retorno, parametros, inicio, size, vars, tablaVars] }
+  def insertar(self, nombre, retorno, parametros, inicio, size, tablaVars, tablaTemps, tablaConsts):
+    dict2 = {nombre : [retorno, parametros, inicio, size, vars, tablaVars, tablaTemps, tablaConsts] }
     self.dict.update(dict2)
 
   def buscar(self, nombre):
@@ -64,4 +64,18 @@ class tabla_memoria_vars:
     dict2 = {dirVir : valor}
     self.dict.update(dict2)
     
-
+class arreglos:
+    def __init__(self):
+        self.limInfD1 = 0
+        self.limSupD1 = 0
+        self.m1 = 1
+        self.limInfD2 = 0
+        self.limSupD2 = 0
+    
+    def set(self, array):
+        self.limInfD1 = array.limInfD1
+        self.limSupD1 = array.limSupD1
+        self.m1 = array.m1
+        self.limInfD2 = array.limInfD1
+        self.limSupD2 = array.limSupD2
+        

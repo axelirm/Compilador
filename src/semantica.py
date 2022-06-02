@@ -1,5 +1,3 @@
-MAXQUADS = 250
-
 class Cuadruplo:
   def __init__(self, operation, arg1, arg2, res):
     self.operation = operation
@@ -58,17 +56,13 @@ class Semantica:
         self.generarCuadruplo('goto', '', '', res)
     elif op == "era":
         self.generarCuadruplo('era', '', '', res)
-    elif op == "param":
-        self.generarCuadruplo('param', arg1, '', res)
+    elif op == "return":
+        self.generarCuadruplo('return', '', '', res)
     elif op == "gosub":
         self.generarCuadruplo('gosub', '', '', res)
     elif op == "endfunc":
         self.generarCuadruplo('endfunc', '', '', '')
     elif op == "param":
         self.generarCuadruplo('param', arg1, '', res)
-
-    #elif op == '=':
-     # resultado = tablaVars.get(res)[1]
-      #argumento = tablaVars.get(arg1)[1]
-      #tablaVars.get(op)[1]
-      #res = arg
+    elif op == "verifica":
+        self.generarCuadruplo('verifica', arg1, arg2, res)

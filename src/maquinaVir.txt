@@ -1,9 +1,21 @@
 program id ; 
 var
-    a, b : int;
+    a, b, c : int;
+    d : float;
+    e : string;
+    f : bool;
 
 main() {
     a = 5;
     b = a*4;
+    c = 10;
     write(a+b);
+    read(f);
+    write(a+c);
+    if(a>b){
+        write(a);
+    }
+    else{
+        write(b);
+    }
 }

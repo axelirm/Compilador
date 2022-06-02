@@ -1,0 +1,12 @@
+program id ; 
+var
+    a[5] : int;
+    b[3][4] : int;
+    c : int;
+
+main() {
+    a[2] = 8;
+    write(a[2]);
+    b[0][2] = 6;
+    write(a[2] + b[0][2]);
+}

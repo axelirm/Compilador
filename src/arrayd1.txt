@@ -1,0 +1,7 @@
+program id ; 
+var
+    a[5] : int;
+
+main() {
+    
+}
