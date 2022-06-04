@@ -45,6 +45,19 @@ class varLocal:
     self.limSBoolConst = 14000
     self.contBoolConst = 0
 
+    self.limIIntVar = 12001
+    self.limSIntVar = 12500
+    self.contIntVar = 0
+    self.limIFloatVar = 12501
+    self.limSFloatVar = 13000
+    self.contFloatVar = 0
+    self.limIStringVar = 13001
+    self.limSStringVar = 13500
+    self.contStringVar = 0
+    self.limIBoolVar = 13501
+    self.limSBoolVar = 14000
+    self.contBoolVar = 0
+
 class varTemps:
   def __init__(self):
     self.limIInt = 14001

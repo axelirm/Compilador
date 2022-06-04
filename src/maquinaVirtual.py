@@ -26,6 +26,7 @@ def readAndSaveData(table):
         if (dir >= dirs[table].limIInt and dir <= dirs[table].limSInt):
             dataS[table].int.insert(dir-dirs[table].limIInt, value)
         elif (dir >= dirs[table].limIFloat and dir <= dirs[table].limSFloat):
+            print(dir)
             dataS[table].float.insert(dir-dirs[table].limIFloat, value)
         elif (dir >= dirs[table].limIString and dir <= dirs[table].limSString):
             dataS[table].string.insert(dir-dirs[table].limIString, value)
@@ -42,7 +43,8 @@ readAndSaveData(1)
 # leer la tabla de temps pointer
 readAndSaveData(2)
 # leer la tabla de constantes globales
-readAndSaveData(3) # puede ser asi o poner un for
+readAndSaveData(3)
+print(dataS[3].float)
 
 # leer cuadruplos, code segment
 codeS = []
@@ -65,8 +67,12 @@ def fetchDir(dir):
     for i in range(4):
         if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
             if dir > 29500:
-                res = dataS[i].int[dir - dirs[i].limIInt]
-                return int(dataS[0].int[res - dirs[0].limIInt])
+                try:
+                    res = dataS[i].int[dir - dirs[i].limIInt]
+                    return int(dataS[0].int[res - dirs[0].limIInt])
+                except:
+                    print("Error: Variable has no value assigned", dir)
+                exit(1)
             try:
                 return int(dataS[i].int[dir - dirs[i].limIInt])
             except:
@@ -106,12 +112,13 @@ def fetchType(dir):
 def execDir(dir, value, op):
     for i in range(4):
         if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
-            if dir > 29500 and op == '=':
+            if (dir > 29500 and op == '='):
                 res = dataS[i].int[dir - dirs[i].limIInt]
                 dataS[0].int[res - dirs[0].limIInt] = value
             else:
                 dataS[i].int[dir - dirs[i].limIInt] = value
         elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
+            print(dir)
             dataS[i].float[dir - dirs[i].limIFloat] = value
         elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
             dataS[i].string[dir - dirs[i].limIString] = value
@@ -132,10 +139,16 @@ ip = 1
 numCuadruplos = len(codeS)
 while ip < numCuadruplos:
     if codeS[ip][0] == 'goto':
-        ip = codeS[ip][3] - 1
+        try:
+            ip = codeS[ip][3] - 1
+        except:
+            pass
     elif codeS[ip][0] == 'gotoF':    
         if (fetchDir(codeS[ip][1]) == False):
-            ip = codeS[ip][3] - 1
+            try:
+                ip = codeS[ip][3] - 1
+            except:
+                pass
     elif codeS[ip][0] == '=':
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]), codeS[ip][0])
     elif codeS[ip][0] == '*':
@@ -176,4 +189,23 @@ while ip < numCuadruplos:
         except:
             print("Error: Type mismatch of input and variable in read()")
             exit(1)
+    elif codeS[ip][0] == 'verifica':
+        if (fetchDir(codeS[ip][1]) < codeS[ip][2] or fetchDir(codeS[ip][1]) > codeS[ip][3]):
+            print('Error: array index out of bounds')
+            exit(1)
     ip = ip + 1
+
+
+    
+    """ faltan:
+    elif op == "era":
+        self.generarCuadruplo('era', '', '', res)
+    elif op == "return":
+        self.generarCuadruplo('return', '', '', res)
+    elif op == "gosub":
+        self.generarCuadruplo('gosub', '', '', res)
+    elif op == "endfunc":
+        self.generarCuadruplo('endfunc', '', '', '')
+    elif op == "param":
+        self.generarCuadruplo('param', arg1, '', res)
+    """

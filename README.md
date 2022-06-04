@@ -13,7 +13,9 @@ Se creó la clase general para generar cuadruplos y ya se generan los cuadruplos
 para los condicionales, ciclos, expresiones, imprimir y leer. 
 Se estan agregando las direcciones virtuales a las variables, constantes, temporales, etc. 
 Se agregó el goto
-al main, cuadruplos de funciones, llamadas y se comenzaron los de clases._
+al main, cuadruplos de funciones, llamadas y se comenzaron los de clases.
+La maquina virtual ya ejecuta todo a expecion de funciones y objetos.
+Se completó la implementación de arreglos y su ejecución en máquina virtual._
 
 ## Comenzando 🚀
 

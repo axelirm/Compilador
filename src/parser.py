@@ -125,7 +125,6 @@ def p_clase3(t):
     '''clase3 : METHODS funcion metodos
     | e'''
   
-
 def p_metodos(t):
     '''metodos : funcion metodos
     | e'''
@@ -139,9 +138,8 @@ def p_declaraciones(t):
     '''declaraciones : declaracion declaraciones
     | e'''
   
-#********* declaracion 
+#********* declaracion *********
 pilaVars = []
-size = 1
 
 def p_declaracion(t):
     'declaracion : declaracion1 COLON declaracion5 SEMICOLON'
@@ -187,8 +185,6 @@ def p_declaracion3(t):
     nombre = pilaVars[-1]
     tablaVariables.actualizar(nombre, None, None, None, ts.arreglos())
     tablaVariables.buscar(nombre)[3].set(arreglo)
-    global size
-    size = arreglo.limSupD1 * arreglo.m1
     arreglo.__init__()
 
 def p_declaracion4(t):
@@ -199,7 +195,7 @@ def p_declaracion5(t):
     '''declaracion5 : tipo
     | ID'''
     if(dentroClase):
-      global contClase, size
+      global contClase
       while(len(pilaVars) > 0):
           if(t[1] == None):
             tablaVarsClase.actualizar(pilaVars.pop(), PilaTipos[-1], None)
@@ -207,16 +203,16 @@ def p_declaracion5(t):
             # variables globales que no son clases
             if(t[1] == 'int' and contClase.contInt < contClase.limSInt):
               tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIInt + contClase.contInt)
-              contClase.contInt = contClase.contInt + size
+              contClase.contInt = contClase.contInt + 1
             elif(t[1] == 'float' and contClase.contFloat < contClase.limSFloat):
               tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIFloat + contClase.contFloat)
-              contClase.contFloat = contClase.contFloat + size
+              contClase.contFloat = contClase.contFloat + 1
             elif(t[1] == 'string' and contClase.contString < contClase.limSString):
               tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIString + contClase.contString)
-              contClase.contString = contClase.contString + size
+              contClase.contString = contClase.contString + 1
             elif(t[1] == 'bool' and contClase.contBool < contClase.limSBool):
               tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIBool + contClase.contBool)
-              contClase.contBool = contClase.contBool + size
+              contClase.contBool = contClase.contBool + 1
     else:
         global contGlobal
         while(len(pilaVars) > 0):
@@ -231,22 +227,34 @@ def p_declaracion5(t):
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIInt + contGlobal.contInt, valores[3])
-              contGlobal.contInt = contGlobal.contInt + size
+              if(valores[3] != None):
+                contGlobal.contInt = contGlobal.contInt + (valores[3].limSupD1 + 1) * valores[3].m1
+              else:
+                contGlobal.contInt = contGlobal.contInt + 1
             elif(t[1] == 'float' and contGlobal.contFloat < contGlobal.limSFloat):
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIFloat + contGlobal.contFloat, valores[3])
-              contGlobal.contFloat = contGlobal.contFloat + size
+              if(valores[3] != None):
+                contGlobal.contFloat = contGlobal.contFloat + (valores[3].limSupD1 + 1) * valores[3].m1
+              else:
+                contGlobal.contFloat = contGlobal.contFloat + 1
             elif(t[1] == 'string' and contGlobal.contString < contGlobal.limSString):
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIString + contGlobal.contString, valores[3])
-              contGlobal.contString = contGlobal.contString + size
+              if(valores[3] != None):
+                contGlobal.contString = contGlobal.contString + (valores[3].limSupD1 + 1) * valores[3].m1
+              else:
+                contGlobal.contString = contGlobal.contString + 1
             elif(t[1] == 'bool' and contGlobal.contBool < contGlobal.limSBool):
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIBool + contGlobal.contBool, valores[3])
-              contGlobal.contBool = contGlobal.contBool + size
+              if(valores[3] != None):
+                contGlobal.contBool = contGlobal.contBool + (valores[3].limSupD1 + 1) * valores[3].m1
+              else:
+                contGlobal.contBool = contGlobal.contBool + 1
 
 #*********** funcion ***********
 parametros = []
@@ -272,7 +280,7 @@ def p_reiniciar_func(t):
           if (tablaLocalFuncs.buscar(idFunc) == None):
               if(tipo != 'void'):
                   tablaVarsClase.insertar(idFunc, tipo, None, None)
-              tablaLocalFuncs.insertar(idFunc, tipo, parametros, contCuad, None, tablaLocalVars.dict, tablaLocalTemps.dict, tablaLocalConsts.dict)
+              tablaLocalFuncs.insertar(idFunc, tipo, parametros, contCuad, tablaLocalVars.dict, contLocal.contIntVar, contLocal.contFloatVar, contLocal.contStringVar, contLocal.contBoolVar, contLocal.contIntTemp, contLocal.contFloatTemp, contLocal.contStringTemp, contLocal.contBoolTemp, tablaLocalConst.dict)
               sem.intermediario("endfunc", None, None, None)
               contCuad = contCuad + 1
           else:
@@ -283,7 +291,7 @@ def p_reiniciar_func(t):
           if (tablaFunciones.buscar(idFunc) == None):
               if(tipo != 'void'):
                   tablaVariables.insertar(idFunc, tipo, None, None, None)
-              tablaFunciones.insertar(idFunc, tipo, parametros, contCuad, None, tablaLocalVars.dict, tablaLocalTemps.dict, tablaLocalConsts.dict)
+              tablaFunciones.insertar(idFunc, tipo, parametros, contCuad, tablaLocalVars.dict, contLocal.contIntVar, contLocal.contFloatVar, contLocal.contStringVar, contLocal.contBoolVar, contLocal.contIntTemp, contLocal.contFloatTemp, contLocal.contStringTemp, contLocal.contBoolTemp, tablaLocalConsts.dict)
               sem.intermediario("endfunc", None, None, None)
               contCuad = contCuad + 1
           else:
@@ -303,6 +311,10 @@ def p_reiniciar_func(t):
     contLocal.contFloatConst = 0
     contLocal.contStringConst = 0
     contLocal.contBoolConst = 0
+    contLocal.contIntVar = 0
+    contLocal.contFloatVar = 0
+    contLocal.contStringVar = 0
+    contLocal.contBoolVar = 0
 
 def p_funcion1(t):
     '''funcion1 : tipo
@@ -318,32 +330,52 @@ def p_funcion_void(t):
 def p_funcion2(t):
     '''funcion2 : ID COLON tipo funcion3
     | e'''
-    if(dentroClase):
-      if(t[1] != None):
+    if(t[1] != None):
         parametros.insert(0,PilaTipos.pop())
         vars.insert(0,(t[1], None))
         existe = tablaVariables.buscar(t[1])
         if(existe != None):
-          print("Error - variable de clase ya declarada: ", t[1])
+          print("Error - variable global ya declarada: ", t[1])
           exit(1)
+        elif(dentroClase):
+          parametros.insert(0,PilaTipos.pop())
+          vars.insert(0,(t[1], None))
+          existe = tablaVarsClase.buscar(t[1])
+          if(existe != None):
+            print("Error - variable de clase ya declarada: ", t[1])
+            exit(1)
         else:
-          existe = tablaLocalVars.insertar(t[1], t[3], None, None)
+          if(t[3] == 'int'):
+            if(contLocal.contIntVar + contLocal.limIIntVar <= contLocal.limSIntVar):
+              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contIntVar + contLocal.limIIntVar, None)
+              contLocal.contIntVar = contLocal.contIntVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales enteras")
+              exit(1)
+          if(t[3] == 'float'):
+            if(contLocal.contFloatVar +contLocal.limIFloatVar <= contLocal.limSFloatVar):
+              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contFloatVar + contLocal.limIFloatVar, None)
+              contLocal.contFloatVar = contLocal.contFloatVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales flotantes")
+              exit(1)
+          if(t[3] == 'string'):
+            if(contLocal.contStringVar +contLocal.limIStringVar <= contLocal.limSStringVar):
+              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contStringVar + contLocal.limIStringVar, None)
+              contLocal.contStringVar = contLocal.contStringVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales string")
+              exit(1)
+          if(t[3] == 'bool'):
+            if(contLocal.contBoolVar +contLocal.limIBoolVar <= contLocal.limSBoolVar):
+              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contBoolVar + contLocal.limIBoolVar, None)
+              contLocal.contBoolVar = contLocal.contBoolVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales bool")
+              exit(1)
           if(existe == False):
             print("Error - variable ya declarada en parametros: ", t[1])
             exit(1)
-    else:
-      if(t[1] != None):
-          parametros.insert(0,PilaTipos.pop())
-          vars.insert(0,(t[1], None))
-          existe = tablaVariables.buscar(t[1])
-          if(existe != None):
-            print("Error - variable global ya declarada: ", t[1])
-            exit(1)
-          else:
-            existe = tablaLocalVars.insertar(t[1], t[3], None, None)
-            if(existe == False):
-              print("Error - variable ya declarada en parametros: ", t[1])
-              exit(1)
 
 def p_funcion3(t):
     '''funcion3 : COMMA ID COLON tipo funcion3
@@ -355,8 +387,42 @@ def p_funcion3(t):
         if(existe != None):
           print("Error - variable global ya declarada: ", t[2])
           exit(1)
+        elif(dentroClase):
+          parametros.insert(0,PilaTipos.pop())
+          vars.insert(0,(t[2], None))
+          existe = tablaVarsClase.buscar(t[2])
+          if(existe != None):
+            print("Error - variable de clase ya declarada: ", t[2])
+            exit(1)
         else:
-          existe = tablaLocalVars.insertar(t[2], t[4], None, None)
+          if(t[4] == 'int'):
+            if(contLocal.contIntVar + contLocal.limIIntVar <= contLocal.limSIntVar):
+              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contIntVar + contLocal.limIIntVar, None)
+              contLocal.contIntVar = contLocal.contIntVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales enteras")
+              exit(1)
+          if(t[4] == 'float'):
+            if(contLocal.contFloatVar +contLocal.limIFloatVar <= contLocal.limSFloatVar):
+              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contFloatVar + contLocal.limIFloatVar, None)
+              contLocal.contFloatVar = contLocal.contFloatVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales flotantes")
+              exit(1)
+          if(t[4] == 'string'):
+            if(contLocal.contStringVar +contLocal.limIStringVar <= contLocal.limSStringVar):
+              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contStringVar + contLocal.limIStringVar, None)
+              contLocal.contStringVar = contLocal.contStringVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales string")
+              exit(1)
+          if(t[4] == 'bool'):
+            if(contLocal.contBoolVar +contLocal.limIBoolVar <= contLocal.limSBoolVar):
+              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contBoolVar + contLocal.limIBoolVar, None)
+              contLocal.contBoolVar = contLocal.contBoolVar + 1
+            else:
+              print("Error: exceso de memoria en variables locales bool")
+              exit(1)
           if(existe == False):
             print("Error - variable ya declarada en parametros: ", t[2])
             exit(1)
@@ -469,10 +535,12 @@ def p_push_arr(t):
 def p_verifica_d1(t):
     'verifica_d1 : e'
     exp_type = PilaTipos[-1]
+    global contCuad
     if (exp_type == 'int'):
         exp_value = PilaO[-1]
         valores = tablaVariables.buscar(curVar)
         sem.intermediario('verifica', exp_value, valores[3].limInfD1, valores[3].limSupD1)
+        contCuad += 1
         if(contConst.contInt + contConst.limIInt < contConst.limSInt):
           tablaConstantes.insertar(contConst.contInt + contConst.limIInt, valores[3].m1)
           PilaO.append(contConst.contInt + contConst.limIInt)
@@ -498,10 +566,12 @@ def p_variable3(t):
 def p_verifica_d2(t):
     'verifica_d2 : e'
     exp_type = PilaTipos[-1]
+    global contCuad
     if (exp_type == 'int'):
         exp_value = PilaO[-1]
         valores = tablaVariables.buscar(curVar)
         sem.intermediario('verifica', exp_value, valores[3].limInfD1, valores[3].limSupD1)
+        contCuad += 1
         
 #*********** condicion ***********
 def p_condicion(t):
@@ -512,6 +582,7 @@ def p_gotoF(t):
     global contCuad
     exp_tipo = PilaTipos.pop()
     if(exp_tipo == "bool" ):
+      print(contCuad)
       PilaSaltos.append(contCuad)
       sem.intermediario('gotoF', PilaO.pop(), None, None)
       contCuad = contCuad + 1
@@ -705,21 +776,21 @@ def p_return_while(t):
     regreso = PilaSaltos.pop()
     sem.intermediario("goto", None, None, regreso)
     contCuad = contCuad + 1
-    sem.cuadruplos[salida].res = (contCuad + 1)
+    sem.cuadruplos[salida].res = contCuad
 
 #*********** ciclo_f ************
 def p_ciclo_f(t):
     'ciclo_f : FROM LPAR variable asign_aux EQ expresion atomic_assign save_aux TO for_temp asign_aux2 expresion atomic_assign save_aux2 migaja push_lt pop_operador gotoF RPAR DO save_aux bloque update_fill_go'
 
-#dir virtual temporal
 def p_for_temp(t):
     'for_temp : e'
     global contCuad
-    temporal = "for_" + str(contCuad)
+    temporal = contTemps.contInt + contTemps.limIInt
     temporalTipo = PilaTipos[-1]
     PilaO.append(temporal)
     PilaTipos.append(temporalTipo)
-    tablaVariables.insertar(temporal, temporalTipo, None, None, None)
+    tablaTemporales.insertar(temporal, None)
+    contTemps.contInt += 1
 
 def p_migaja(t):
     'migaja : e'
@@ -751,11 +822,13 @@ def p_asign_aux2(t):
     foraux2 = PilaO[-1]
     foraux2Tipo = PilaTipos[-1]
 
-#dir virtual cte
 def p_push1(t):
     'push1 : e'
-    PilaO.append("1")
+    cons = contConst.contInt + contConst.limIInt
+    PilaO.append(cons)
     PilaTipos.append("int")
+    tablaConstantes.insertar(cons, 1)
+    contConst.contInt += 1
 
 def p_save_aux(t):
     'save_aux : e'
@@ -872,7 +945,7 @@ def p_pop_operador(t):
           PilaO.append(contTemps.contFloat + contTemps.limIFloat)
           tipo = cubo.getNumeroTipo(rechazar)
           PilaTipos.append(tipo)
-          tablaLocalTemps.insertar(contTemps.contFloat + contTemps.limIFloat, None)
+          tablaTemporales.insertar(contTemps.contFloat + contTemps.limIFloat, None)
           contTemps.contFloat = contTemps.contFloat + 1
         else:
           print("Error: limite de memoria excedido")
@@ -1168,6 +1241,14 @@ if __name__ == '__main__':
     sem.imprimirCuadruplos()
     print(PilaTipos)
     print(PilaO)
+    # crear directorio de funciones
+    dirFunc = {}
+    for i in tablaFunciones.dict:
+      auxFunc = tablaFunciones.buscar(i)
+      # parametros, inicio, vi, vf, vs, vb, ti, tf, ts, tb,
+      # tablaConst
+      func = {i : [auxFunc[1], auxFunc[2], auxFunc[4], auxFunc[5], auxFunc[6], auxFunc[7], auxFunc[8], auxFunc[9], auxFunc[10], auxFunc[11], auxFunc[12]]}
+      dirFunc.update(func)
     f = open('intermedio.txt','w')
     tablaVars = {}
     for i in tablaVariables.dict:
@@ -1175,7 +1256,7 @@ if __name__ == '__main__':
       dirB = tablaVariables.dict[i][2]
       if tablaVariables.dict[i][3] != None: # es var dimensionada
         tam = tablaVariables.dict[i][3].limSupD1 * tablaVariables.dict[i][3].m1
-        for i in range(tam):
+        for i in range(tam+1):
           dictAux = {dirB + i: None}
           tablaVars.update(dictAux)
       else:

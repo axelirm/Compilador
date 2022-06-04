@@ -5,7 +5,7 @@ var
     c : int;
 
 main() {
-    a[2] = 8;
+    a[13] = 8;
     write(a[2]);
     b[0][2] = 6;
     write(a[2] + b[0][2]);

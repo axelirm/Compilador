@@ -27,9 +27,9 @@ class tabla_simbolos_vars:
 class tabla_simbolos_funcs:
   def __init__(self):
     self.dict = {}
-
-  def insertar(self, nombre, retorno, parametros, inicio, size, tablaVars, tablaTemps, tablaConsts):
-    dict2 = {nombre : [retorno, parametros, inicio, size, vars, tablaVars, tablaTemps, tablaConsts] }
+    
+  def insertar(self, nombre, retorno, parametros, inicio, tablaVars, intVars, floatVars, stringVars, boolVars, intTemp, floatTemp, strTemp, boolTemp, tablaConst):
+    dict2 = {nombre : [retorno, parametros, inicio, tablaVars, intVars, floatVars, stringVars, boolVars, intTemp, floatTemp, strTemp, boolTemp, tablaConst] }
     self.dict.update(dict2)
 
   def buscar(self, nombre):
