@@ -29,7 +29,10 @@ class tabla_simbolos_funcs:
     self.dict = {}
     
   def insertar(self, nombre, retorno, parametros, inicio, tablaVars, intVars, floatVars, stringVars, boolVars, intTemp, floatTemp, strTemp, boolTemp, tablaConst):
-    dict2 = {nombre : [retorno, parametros, inicio, tablaVars, intVars, floatVars, stringVars, boolVars, intTemp, floatTemp, strTemp, boolTemp, tablaConst] }
+    recursos = [intVars, floatVars, stringVars, boolVars, intTemp, floatTemp, strTemp, boolTemp]
+    dict2 = {nombre : [retorno, parametros, inicio, tablaVars, recursos, tablaConst]}
+    """recursos = [intVars, floatVars, stringVars, boolVars, intTemp, floatTemp, strTemp, boolTemp, intConst, floatConst, strConst, boolConst]
+    dict2 = {nombre : [retorno, parametros, inicio, tablaVars, tablaConst, recursos]}"""
     self.dict.update(dict2)
 
   def buscar(self, nombre):
@@ -40,8 +43,8 @@ class tabla_simbolos_clases:
   def __init__(self):
     self.dict = {}
 
-  def insertar(self, nombre, vars, funcs, padre, size, inicio):
-    dict2 = {nombre : [vars, funcs, padre, size, inicio] }
+  def insertar(self, nombre, vars, funcs, padre, varInt, varFloat, varString, varBool, inicio):
+    dict2 = {nombre : [vars, funcs, padre, varInt, varFloat, varString, varBool, inicio] }
     self.dict.update(dict2)
 
   def buscar(self, nombre):
@@ -78,4 +81,7 @@ class arreglos:
         self.m1 = array.m1
         self.limInfD2 = array.limInfD1
         self.limSupD2 = array.limSupD2
-        
+
+class funcionesMV:
+  def __init__(self):
+    self.dict = {}

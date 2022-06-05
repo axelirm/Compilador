@@ -12,9 +12,9 @@ class varGlobal:
     self.limIBool = 8501
     self.limSBool = 10000
     self.contBool = 0
-    self.limIObjeto = 0
-    self.limSObjeto = 0
-    self.contObjeto = 0
+    self.limIObj = 30001
+    self.limSObj = 30100
+    self.contObj = 0
     # 100
 
 class varLocal:
@@ -117,6 +117,9 @@ class varClases:
     self.limIBool = 29001
     self.limSBool = 29500
     self.contBool = 0
+    self.limIObj = 29501
+    self.limSObj = 29550
+    self.contObj = 0
 
 
     

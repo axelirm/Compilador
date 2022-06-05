@@ -2,20 +2,13 @@ program id ;
 
 class id_Clase2 {
   attributes
-    sum , res , ans : int ;
-    mat[2][2] : float ;
-    booleano, booleano2 : bool;
-}
-
-class idClase < inherits id_Clase2 > {
-  attributes
     sum , res , ans, i : int ;
-    mat[2][2] : float ;
     booleano, booleano2 : bool;
+    sum : int
 
   methods
 
-    void function func2 (par1 : int, num4 : float, str : string) {
+      void function func2 (par1 : int, num4 : float, str : string) {
           if ( par1 < 10 ) {
             i = i + 1 ;
           }
@@ -24,6 +17,13 @@ class idClase < inherits id_Clase2 > {
           }
       return  ;
     }
+}
+
+class idClase < inherits id_Clase2 > {
+  attributes
+    a, b, c : int ;
+
+  methods
 
     int function func3 (par1 : int, num4 : int, str : string) {
           if ( par1 < 10 ) {

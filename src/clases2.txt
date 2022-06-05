@@ -1,16 +1,9 @@
 program id ;
 
-class id_Clase2 {
-  attributes
-    sum , res , ans : int ;
-    mat[2][2] : float ;
-    booleano, booleano2 : bool;
-}
 
-class idClase < inherits id_Clase2 > {
+class idClase {
   attributes
     sum , res , ans, i : int ;
-    mat[2][2] : float ;
     booleano, booleano2 : bool;
 
   methods
@@ -36,7 +29,6 @@ class idClase < inherits id_Clase2 > {
     }
 
 } 
-
 
 main ( ) {
 }

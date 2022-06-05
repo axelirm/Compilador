@@ -38,3 +38,6 @@ se repiten las constantes globales cuando las vuelves a usar. por ejemplo 20001:
 
 arreglos como en c++ no son inclusive (tmb el for)
 a[5] --> a[0], a[1], a[2], a[3], a[4]
+
+asigna al reves
+num3 = func3(2, 10, "hola");

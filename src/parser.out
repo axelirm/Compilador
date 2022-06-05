@@ -85,8 +85,8 @@ Rule 79    fill -> e
 Rule 80    condicion1 -> ELSE goto bloque
 Rule 81    condicion1 -> e
 Rule 82    goto -> e
-Rule 83    sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR
-Rule 84    llamada -> sub_llamada atomic_assign
+Rule 83    llamada -> sub_llamada atomic_assign
+Rule 84    sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR
 Rule 85    llamada_void -> validar_id llamada1 LPAR llamada2 RPAR
 Rule 86    validar_id -> ID
 Rule 87    llamada1 -> DOT ID
@@ -192,7 +192,7 @@ IF                   : 77
 INHERITS             : 9
 INT                  : 48
 LCBRAC               : 5 52 53 54
-LPAR                 : 3 37 77 83 85 94 96 103 106 148
+LPAR                 : 3 37 77 84 85 94 96 103 106 148
 LSBRAC               : 28 31 70 74
 LT                   : 9 127
 MAIN                 : 3
@@ -206,7 +206,7 @@ PROGRAM              : 1
 RCBRAC               : 5 52 53 54
 READ                 : 94
 RETURN               : 115 116
-RPAR                 : 3 37 77 83 85 94 96 103 106 148
+RPAR                 : 3 37 77 84 85 94 96 103 106 148
 RSBRAC               : 28 31 70 74
 SEMICOLON            : 1 25 59 64 94 96 115 116
 STRING               : 50
@@ -227,7 +227,7 @@ asign_aux            : 106
 asign_aux2           : 106
 asignacion           : 15 57
 assign_limit         : 28
-atomic_assign        : 64 84 106 106 109
+atomic_assign        : 64 83 106 106 109
 atributos            : 11 13
 b_exp                : 122 123
 bloque               : 3 77 80 103 106
@@ -283,8 +283,8 @@ inicializar_clase    : 5
 inserta_declaracion  : 26
 leer                 : 60
 llamada              : 151
-llamada1             : 83 85
-llamada2             : 83 85
+llamada1             : 84 85
+llamada2             : 84 85
 llamada3             : 89 92
 llamada_void         : 59
 main                 : 1
@@ -313,11 +313,11 @@ reiniciar_func       : 37
 return_while         : 103
 save_aux             : 106 106 109
 save_aux2            : 106
-sub_llamada          : 84
+sub_llamada          : 83
 texto                : 97
 tipo                 : 35 41 44 46
 update_fill_go       : 106
-validar_id           : 83 85
+validar_id           : 84 85
 var_cte              : 149
 var_id               : 66
 variable             : 64 94 106 150
@@ -1901,9 +1901,9 @@ state 125
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -2039,9 +2039,9 @@ state 132
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -2116,9 +2116,9 @@ state 137
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     CTESTR          shift and go to state 175
@@ -2408,9 +2408,9 @@ state 154
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -2577,7 +2577,7 @@ state 160
 
 state 161
 
-    (84) llamada -> sub_llamada . atomic_assign
+    (83) llamada -> sub_llamada . atomic_assign
     (65) atomic_assign -> . e
     (161) e -> .
 
@@ -2630,7 +2630,7 @@ state 162
 
 state 163
 
-    (83) sub_llamada -> validar_id . llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> validar_id . llamada1 LPAR llamada2 RPAR
     (87) llamada1 -> . DOT ID
     (88) llamada1 -> . e
     (161) e -> .
@@ -2680,9 +2680,9 @@ state 165
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -2777,9 +2777,9 @@ state 169
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     RPAR            reduce using rule 161 (e -> .)
@@ -2899,9 +2899,9 @@ state 176
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -2980,9 +2980,9 @@ state 181
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     SEMICOLON       shift and go to state 233
@@ -3513,23 +3513,23 @@ state 212
 
 state 213
 
-    (84) llamada -> sub_llamada atomic_assign .
+    (83) llamada -> sub_llamada atomic_assign .
 
-    MULT            reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    DIV             reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    PLUS            reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    MINUS           reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    LT              reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    GT              reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    COMP            reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    NOTEQ           reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    AND             reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    OR              reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    SEMICOLON       reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    RPAR            reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    COMMA           reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    RSBRAC          reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
-    TO              reduce using rule 84 (llamada -> sub_llamada atomic_assign .)
+    MULT            reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    DIV             reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    PLUS            reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    MINUS           reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    LT              reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    GT              reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    COMP            reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    NOTEQ           reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    AND             reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    OR              reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    SEMICOLON       reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    RPAR            reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    COMMA           reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    RSBRAC          reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
+    TO              reduce using rule 83 (llamada -> sub_llamada atomic_assign .)
 
 
 state 214
@@ -3564,7 +3564,7 @@ state 214
 
 state 215
 
-    (83) sub_llamada -> validar_id llamada1 . LPAR llamada2 RPAR
+    (84) sub_llamada -> validar_id llamada1 . LPAR llamada2 RPAR
 
     LPAR            shift and go to state 257
 
@@ -3781,9 +3781,9 @@ state 236
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -3832,9 +3832,9 @@ state 238
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -3881,9 +3881,9 @@ state 240
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -3930,9 +3930,9 @@ state 242
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -3978,9 +3978,9 @@ state 244
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4026,9 +4026,9 @@ state 246
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4073,9 +4073,9 @@ state 248
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4142,9 +4142,9 @@ state 250
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4187,9 +4187,9 @@ state 252
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4232,9 +4232,9 @@ state 254
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4287,7 +4287,7 @@ state 256
 
 state 257
 
-    (83) sub_llamada -> validar_id llamada1 LPAR . llamada2 RPAR
+    (84) sub_llamada -> validar_id llamada1 LPAR . llamada2 RPAR
     (89) llamada2 -> . expresion cuad_param llamada3
     (90) llamada2 -> . e
     (117) expresion -> . a_exp exp1
@@ -4305,9 +4305,9 @@ state 257
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     RPAR            reduce using rule 161 (e -> .)
@@ -4480,9 +4480,9 @@ state 271
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4740,7 +4740,7 @@ state 283
 
 state 284
 
-    (83) sub_llamada -> validar_id llamada1 LPAR llamada2 . RPAR
+    (84) sub_llamada -> validar_id llamada1 LPAR llamada2 . RPAR
 
     RPAR            shift and go to state 309
 
@@ -4800,9 +4800,9 @@ state 288
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -4866,9 +4866,9 @@ state 292
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     CTESTR          shift and go to state 175
@@ -5203,23 +5203,23 @@ state 308
 
 state 309
 
-    (83) sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .
+    (84) sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .
 
-    MULT            reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    DIV             reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    PLUS            reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    MINUS           reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    LT              reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    GT              reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    COMP            reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    NOTEQ           reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    AND             reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    OR              reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    SEMICOLON       reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    RPAR            reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    COMMA           reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    RSBRAC          reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
-    TO              reduce using rule 83 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    MULT            reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    DIV             reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    PLUS            reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    MINUS           reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    LT              reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    GT              reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    COMP            reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    NOTEQ           reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    AND             reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    OR              reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    SEMICOLON       reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    RPAR            reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    COMMA           reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    RSBRAC          reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
+    TO              reduce using rule 84 (sub_llamada -> validar_id llamada1 LPAR llamada2 RPAR .)
 
 
 state 310
@@ -5615,9 +5615,9 @@ state 338
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154
@@ -5875,9 +5875,9 @@ state 353
     (154) var_cte -> . CTESTR ctestr
     (155) var_cte -> . CTEB cteb
     (66) variable -> . var_id variable1 variable2
-    (84) llamada -> . sub_llamada atomic_assign
+    (83) llamada -> . sub_llamada atomic_assign
     (67) var_id -> . ID
-    (83) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
+    (84) sub_llamada -> . validar_id llamada1 LPAR llamada2 RPAR
     (86) validar_id -> . ID
 
     LPAR            shift and go to state 154

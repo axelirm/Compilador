@@ -12,6 +12,14 @@ class tipos:
         self.bool = []
         self.obj = []
 
+class contFuncs:
+    def __init__(self):
+        self.contInt = 0
+        self.contFloat = 0
+        self.contStr = 0
+        self.contBool = 0
+        self.contFunc = 0
+
 dirs = [dir.varGlobal(), dir.varTemps(), dir.varTempsPointer(), dir.varConst()]
 dataS = [tipos(), tipos(), tipos(), tipos()]
 def readAndSaveData(table):
@@ -26,7 +34,6 @@ def readAndSaveData(table):
         if (dir >= dirs[table].limIInt and dir <= dirs[table].limSInt):
             dataS[table].int.insert(dir-dirs[table].limIInt, value)
         elif (dir >= dirs[table].limIFloat and dir <= dirs[table].limSFloat):
-            print(dir)
             dataS[table].float.insert(dir-dirs[table].limIFloat, value)
         elif (dir >= dirs[table].limIString and dir <= dirs[table].limSString):
             dataS[table].string.insert(dir-dirs[table].limIString, value)
@@ -44,7 +51,6 @@ readAndSaveData(1)
 readAndSaveData(2)
 # leer la tabla de constantes globales
 readAndSaveData(3)
-print(dataS[3].float)
 
 # leer cuadruplos, code segment
 codeS = []
@@ -56,7 +62,7 @@ for line in lines:
     while len(line) > 1:
         pos = line.find(',')
         try:
-            values.append(int(line[:pos])) #cambiamos todo a int?
+            values.append(int(line[:pos]))
         except:
             values.append(line[:pos])
         line = line[pos+2:]
@@ -118,7 +124,6 @@ def execDir(dir, value, op):
             else:
                 dataS[i].int[dir - dirs[i].limIInt] = value
         elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
-            print(dir)
             dataS[i].float[dir - dirs[i].limIFloat] = value
         elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
             dataS[i].string[dir - dirs[i].limIString] = value
@@ -132,48 +137,70 @@ def boolValues(string):
         return False
     else:
         exit(1)
-            
+
+stackS = []
+locales = dir.varLocal()
+def createMem(recursos, constantes):
+    memFunc = []
+    for i in recursos:
+        try:
+            auxList = [None] * int(i)
+            memFunc.append(auxList)
+        except:
+            pass
+    memFunc.append(tipos())
+    for i in constantes:
+        pass
+    stackS.append(memFunc)
+    memFunc = []
+    print(stackS)
+        
 # operaciones
 print("-----maquina virtual-----")
 ip = 1
+saveIP = ip
+contParam = contFuncs()
 numCuadruplos = len(codeS)
 while ip < numCuadruplos:
-    if codeS[ip][0] == 'goto':
+    codigoOperacion = codeS[ip][0]
+    if codigoOperacion == 'goto':
         try:
             ip = codeS[ip][3] - 1
         except:
             pass
-    elif codeS[ip][0] == 'gotoF':    
+    elif codigoOperacion == 'gotoF':    
         if (fetchDir(codeS[ip][1]) == False):
             try:
                 ip = codeS[ip][3] - 1
             except:
                 pass
-    elif codeS[ip][0] == '=':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]), codeS[ip][0])
-    elif codeS[ip][0] == '*':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) * fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '/':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) / fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '+':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) + fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '-':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) - fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '||':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) or fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '&&':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) and fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '<':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) < fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '>':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) > fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '==':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) == fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == '!=':
-        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) != fetchDir(codeS[ip][2]), codeS[ip][0])
-    elif codeS[ip][0] == 'print':
+    elif codigoOperacion == '=':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]), codigoOperacion)
+    elif codigoOperacion == '*':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) * fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '/':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) / fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '+':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) + fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '-':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) - fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '||':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) or fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '&&':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) and fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '<':
+        print(codeS[ip][1])
+        print(fetchDir(codeS[ip][1]))
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) < fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '>':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) > fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '==':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) == fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == '!=':
+        execDir(codeS[ip][3], fetchDir(codeS[ip][1]) != fetchDir(codeS[ip][2]), codigoOperacion)
+    elif codigoOperacion == 'print':
         print(fetchDir(codeS[ip][3]))
-    elif codeS[ip][0] == 'read':
+    elif codigoOperacion == 'read':
         aux = input('read: ')
         try:
             tipo = fetchType(codeS[ip][3])
@@ -185,27 +212,46 @@ while ip < numCuadruplos:
                 aux = str(aux)
             elif tipo == 'bool':
                 aux = boolValues(aux)
-            execDir(codeS[ip][3], aux, codeS[ip][0])
+            execDir(codeS[ip][3], aux, codigoOperacion)
         except:
             print("Error: Type mismatch of input and variable in read()")
             exit(1)
-    elif codeS[ip][0] == 'verifica':
+    elif codigoOperacion == 'verifica':
         if (fetchDir(codeS[ip][1]) < codeS[ip][2] or fetchDir(codeS[ip][1]) > codeS[ip][3]):
             print('Error: array index out of bounds')
             exit(1)
+    elif codigoOperacion == 'era':
+        print(codeS[ip][3])
+        print(codeS[ip][1])
+        stri = str(codeS[ip][3]).replace('3', '12')
+        createMem(stri, codeS[ip][1])
+    elif codigoOperacion == 'gosub':
+        print(stackS)
+        saveIP = ip
+        ip = codeS[ip][3] - 1
+        contParam.contFunc += 1
+    elif codigoOperacion == 'endfunc': # falta eliminar memoria
+        ip = saveIP
+    elif codigoOperacion == 'param':
+        tipo = fetchType(codeS[ip][1])
+        if tipo == 'int':
+            stackS[contParam.contFunc][0][contParam.contInt] = fetchDir(codeS[ip][1])
+            contParam.contInt += 1
+        elif tipo == 'float':
+            stackS[contParam.contFunc][1][contParam.contFloat] = fetchDir(codeS[ip][1])
+            contParam.contFloat += 1
+        elif tipo == 'str':
+            stackS[contParam.contFunc][2][contParam.contStr] = fetchDir(codeS[ip][1])
+            contParam.contStr += 1
+        elif tipo == 'bool':
+            stackS[contParam.contFunc][3][contParam.contBool] = fetchDir(codeS[ip][1])
+            contParam.contBool += 1
+            
     ip = ip + 1
 
 
     
     """ faltan:
-    elif op == "era":
-        self.generarCuadruplo('era', '', '', res)
     elif op == "return":
         self.generarCuadruplo('return', '', '', res)
-    elif op == "gosub":
-        self.generarCuadruplo('gosub', '', '', res)
-    elif op == "endfunc":
-        self.generarCuadruplo('endfunc', '', '', '')
-    elif op == "param":
-        self.generarCuadruplo('param', arg1, '', res)
     """

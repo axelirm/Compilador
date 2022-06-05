@@ -74,9 +74,9 @@ padreClase = None
 def p_clase(t):
     '''clase : CLASS inicializar_clase clase1 LCBRAC clase2 clase3 RCBRAC  reiniciar_clase clase
     | e'''
-    #if(t[1] != None):
-      #if(tablaClases.buscar(t[2]) == None):
-        #tablaClases.insert()
+    if(t[1] == None):
+      global dentroClase
+      dentroClase = False
 
 def p_inicializar_clase(t):
     '''inicializar_clase : ID'''
@@ -88,7 +88,6 @@ def p_inicializar_clase(t):
     contClase.contFloat = 0
     contClase.contString = 0
     contClase.contBool = 0
-    tablaLocalFuncs.dict = {}
     global idClase, padreClase
     idClase = t[1]
     padreClase = None
@@ -98,16 +97,45 @@ def p_reiniciar_clase(t):
     '''reiniciar_clase : e'''
     global padreClase, idClase
     dentroClase = False
-    # insertar contador donde empieza la clase y size
-    tablaClases.insertar(idClase, tablaVarsClase.dict, tablaLocalFuncs.dict, padreClase, None, None)
+    existe = tablaClases.buscar(idClase)
+    if(existe != None):
+      print("Error: doble declaracion de clase ", idClase)
+      exit(1)
+    else:
+      # insertar contador donde empieza la clase
+      tablaClases.insertar(idClase, tablaVarsClase.dict, tablaLocalFuncs.dict, padreClase, contClase.contInt, contClase.contFloat, contClase.contString, contClase.contBool, None)
   
 def p_clase1(t):
     '''clase1 : LT INHERITS ID GT
     | e'''
-    global padreClase
+    global padreClase, idClase
     if(t[1] != None):
       padreClase = t[3]
-    # buscar que el padre exista en las clases ya declaradas
+      existe = tablaClases.buscar(padreClase)
+      if(existe != None):
+        # buscar que el padre no tenga padre
+        if(existe[2] != None):
+          print("Error en herencia de clases: las clases solo pueden tener un padre ", idClase)
+          exit(1)
+        else:
+          # agregar tabla de funciones y variables al hijo
+          tablaVarsPadre = existe[0]
+          tablaFuncsPadre = existe[1]
+          contClase.contInt = existe[3]
+          contClase.contFloat = existe[4]
+          contClase.contString = existe[5]
+          contClase.contBool = existe[6]
+          for i in tablaVarsPadre:
+            valores = tablaVarsPadre.get(i)
+            dict = {i : valores}
+            tablaVarsClase.dict.update(dict)
+          for i in tablaFuncsPadre:
+            valores = tablaFuncsPadre.get(i)
+            dict = {i : valores}
+            tablaLocalFuncs.dict.update(dict)
+      else:
+        print("Error en herencia de clases: el padre no existe ", idClase)
+        exit(1)
 
 def p_clase2(t):
     '''clase2 : ATTRIBUTES declaracion atributos asign
@@ -151,7 +179,7 @@ def p_declaracion1(t):
 def p_inserta_declaracion(t):
     'inserta_declaracion : ID'
     if (dentroClase):
-      existe = tablaVarsClase.insertar(t[1], None, None, None)
+      existe = tablaVarsClase.insertar(t[1], None, None, None, None)
       if(existe):
         pilaVars.append(t[1])
       else:
@@ -202,17 +230,44 @@ def p_declaracion5(t):
           else:
             # variables globales que no son clases
             if(t[1] == 'int' and contClase.contInt < contClase.limSInt):
-              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIInt + contClase.contInt)
+              if(contClase.contInt + contClase.limIInt > contClase.limSInt):
+                print("Exceso de memoria para variables enteras en clases")
+                exit(1)
+              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIInt + contClase.contInt, None)
               contClase.contInt = contClase.contInt + 1
+              
             elif(t[1] == 'float' and contClase.contFloat < contClase.limSFloat):
-              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIFloat + contClase.contFloat)
+              if(contClase.contFloat + contClase.limIFloat > contClase.limSFloat):
+                print("Exceso de memoria para variables flotantes en clases")
+                exit(1)
+              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIFloat + contClase.contFloat, None)
               contClase.contFloat = contClase.contFloat + 1
+              
             elif(t[1] == 'string' and contClase.contString < contClase.limSString):
-              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIString + contClase.contString)
+              if(contClase.contString + contClase.limIString > contClase.limString):
+                print("Exceso de memoria para variables string en clases")
+                exit(1)
+              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIString + contClase.contString, None)
               contClase.contString = contClase.contString + 1
             elif(t[1] == 'bool' and contClase.contBool < contClase.limSBool):
-              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIBool + contClase.contBool)
+              if(contClase.contBool + contClase.limIBool > contClase.limSBool):
+                print("Exceso de memoria para variables booleanas en clases")
+                exit(1)
+              tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIBool + contClase.contBool, None)
               contClase.contBool = contClase.contBool + 1
+            else:
+            #es un objeto, checar que la clase exista
+              existe = tablaClases.buscar(t[1])
+              if(existe != None):
+                if(contClase.contObj + contClase.limIObj > contClase.limSObj):
+                  print("Exceso de memoria para variables de tipo objeto en clases")
+                  exit(1)
+                else:
+                  tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIObj + contClase.contObj, None)
+                  contClase.contObj = contClase.contObj + 1
+              else:
+                print("Error en declaracion de variables - tipo de dato inexistente")
+                exit(1)
     else:
         global contGlobal
         while(len(pilaVars) > 0):
@@ -224,6 +279,9 @@ def p_declaracion5(t):
           else:
             # variables globales que no son clases
             if(t[1] == 'int' and contGlobal.contInt < contGlobal.limSInt):
+              if(contGlobal.contInt + contGlobal.limIInt > contGlobal.limSInt):
+                print("Exceso de memoria para variables enteras globales")
+                exit(1)
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIInt + contGlobal.contInt, valores[3])
@@ -232,6 +290,9 @@ def p_declaracion5(t):
               else:
                 contGlobal.contInt = contGlobal.contInt + 1
             elif(t[1] == 'float' and contGlobal.contFloat < contGlobal.limSFloat):
+              if(contGlobal.contFloat + contGlobal.limIFloat > contGlobal.limSFloat):
+                print("Exceso de memoria para variables flotantes globales")
+                exit(1)
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIFloat + contGlobal.contFloat, valores[3])
@@ -240,6 +301,9 @@ def p_declaracion5(t):
               else:
                 contGlobal.contFloat = contGlobal.contFloat + 1
             elif(t[1] == 'string' and contGlobal.contString < contGlobal.limSString):
+              if(contGlobal.contString + contGlobal.limIString > contGlobal.limSString):
+                print("Exceso de memoria para variables string globales")
+                exit(1)
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIString + contGlobal.contString, valores[3])
@@ -247,7 +311,11 @@ def p_declaracion5(t):
                 contGlobal.contString = contGlobal.contString + (valores[3].limSupD1 + 1) * valores[3].m1
               else:
                 contGlobal.contString = contGlobal.contString + 1
+                
             elif(t[1] == 'bool' and contGlobal.contBool < contGlobal.limSBool):
+              if(contGlobal.contBool + contGlobal.limIBool > contGlobal.limSBool):
+                print("Exceso de memoria para variables booleanas globales")
+                exit(1)
               nombre = pilaVars.pop()
               valores = tablaVariables.buscar(nombre)
               tablaVariables.actualizar(nombre, t[1], None, contGlobal.limIBool + contGlobal.contBool, valores[3])
@@ -255,6 +323,18 @@ def p_declaracion5(t):
                 contGlobal.contBool = contGlobal.contBool + (valores[3].limSupD1 + 1) * valores[3].m1
               else:
                 contGlobal.contBool = contGlobal.contBool + 1
+            else: 
+              existe = tablaClases.buscar(t[1])
+              if(existe != None):
+                if(contGlobal.contObj + contGlobal.limIObj > contGlobal.limSObj):
+                  print("Exceso de memoria para variables de tipo objeto globales")
+                  exit(1)
+                else:
+                  tablaVariables.actualizar(pilaVars.pop(), t[1], None, contGlobal.limIObj + contGlobal.contObj, None)
+                  contGlobal.contObj = contGlobal.contObj + 1
+              else:
+                print("Error en declaracion de variables - tipo de dato inexistente")
+                exit(1)
 
 #*********** funcion ***********
 parametros = []
@@ -272,26 +352,88 @@ def  p_guardar_id(t):
 
 def p_reiniciar_func(t):
     'reiniciar_func : e'
-    global idFunc, parametros, dentroFuncion, contLocal
-    global contCuad
+    global idFunc, parametros, dentroFuncion, contLocal, contCuad
     tipo = PilaTipos.pop()
     if(dentroClase):
       if (tipo != None):
           if (tablaLocalFuncs.buscar(idFunc) == None):
               if(tipo != 'void'):
-                  tablaVarsClase.insertar(idFunc, tipo, None, None)
-              tablaLocalFuncs.insertar(idFunc, tipo, parametros, contCuad, tablaLocalVars.dict, contLocal.contIntVar, contLocal.contFloatVar, contLocal.contStringVar, contLocal.contBoolVar, contLocal.contIntTemp, contLocal.contFloatTemp, contLocal.contStringTemp, contLocal.contBoolTemp, tablaLocalConst.dict)
+                  if(tipo == 'int'):
+                    if(contClase.contInt + contClase.limIInt < contClase.limSInt):
+                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contInt + contClase.limIInt, None)
+                      contClase.contInt = contClase.contInt + 1
+                    else:
+                      print("Memoria excedida por numero de variables enteras para la clase")
+                      exit(1)
+                      
+                  if(tipo == 'float'):
+                    if(contClase.contFloat + contClase.limIFloat < contClase.limSFloat):
+                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contFloat + contClase.limIFloat, None)
+                      contClase.contFloat = contClase.contFloat + 1
+                    else:
+                      print("Memoria excedida por numero de variables flotantes para la clase")
+                      exit(1)
+                  if(tipo == 'string'):
+                    if(contClase.contString + contClase.limIString < contClase.limSString):
+                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contString + contClase.limIString, None)
+                      contClase.contString = contClase.contString + 1
+                    else:
+                      print("Memoria excedida por numero de variables string para la clase")
+                      exit(1)
+                      
+                  if(tipo == 'bool'):
+                    if(contClase.contBool + contClase.limIBool < contClase.limSBool):
+                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contBool + contClase.limIBool, None)
+                      contClase.contBool = contClase.contBool + 1
+                    else:
+                      print("Memoria excedida por numero de variables booleanas para la clase")
+                      exit(1)
+              
+              tablaLocalFuncs.insertar(idFunc, tipo, parametros, PilaSaltos.pop(), tablaLocalVars.dict, contLocal.contIntVar, contLocal.contFloatVar, contLocal.contStringVar, contLocal.contBoolVar, contLocal.contIntTemp, contLocal.contFloatTemp, contLocal.contStringTemp, contLocal.contBoolTemp, tablaLocalConsts.dict)
               sem.intermediario("endfunc", None, None, None)
               contCuad = contCuad + 1
           else:
-            print("Error de semantica: doble declaracion")
+            print("Error de semantica: doble declaracion de funciones")
             exit(1)
-    else:
+    else: # funcion fuera de una clase
       if (tipo != None):
           if (tablaFunciones.buscar(idFunc) == None):
               if(tipo != 'void'):
-                  tablaVariables.insertar(idFunc, tipo, None, None, None)
-              tablaFunciones.insertar(idFunc, tipo, parametros, contCuad, tablaLocalVars.dict, contLocal.contIntVar, contLocal.contFloatVar, contLocal.contStringVar, contLocal.contBoolVar, contLocal.contIntTemp, contLocal.contFloatTemp, contLocal.contStringTemp, contLocal.contBoolTemp, tablaLocalConsts.dict)
+                if(tipo == 'int'):
+                  if(contGlobal.contInt + contGlobal.limIInt < contGlobal.limSInt):
+                    if(tipo == PilaTipos.pop()):
+                      tablaVariables.insertar(idFunc, tipo, PilaO.pop(), contGlobal.contInt + contGlobal.limIInt, None)
+                      contGlobal.contInt = contGlobal.contInt + 1
+                  else:
+                    print("Memoria excedida por numero de variables enteras")
+                    exit(1)
+                if(tipo == 'float'):
+                  if(contGlobal.contFloat + contGlobal.limIFloat < contGlobal.limSFloat):
+                    if(tipo == PilaTipos.pop()):
+                      tablaVariables.insertar(idFunc, tipo, PilaO.pop(), contGlobal.contFloat + contGlobal.limIFloat, None)
+                      contGlobal.contFloat = contGlobal.contFloat + 1
+                  else:
+                    print("Memoria excedida por numero de variables enteras")
+                    exit(1)
+                    
+                if(tipo == 'string'):
+                  if(contGlobal.contString + contGlobal.limIString < contGlobal.limSString):
+                    if(tipo == PilaTipos.pop()):
+                      tablaVariables.insertar(idFunc, tipo, PilaO.pop(), contGlobal.contString + contGlobal.limIString, None)
+                      contGlobal.contString = contGlobal.contString + 1
+                  else:
+                    print("Memoria excedida por numero de variables enteras")
+                    exit(1)
+
+                if(tipo == 'bool'):
+                  if(contGlobal.contBool + contGlobal.limIBool < contGlobal.limSBool):
+                    if(tipo == PilaTipos.pop()):
+                      tablaVariables.insertar(idFunc, tipo, PilaO.pop(), contGlobal.contBool + contGlobal.limIBool, None)
+                      contGlobal.contBool = contGlobal.contBool + 1
+                  else:
+                    print("Memoria excedida por numero de variables enteras")
+                    exit(1)
+              tablaFunciones.insertar(idFunc, tipo, parametros, PilaSaltos.pop(), tablaLocalVars.dict, contLocal.contIntVar, contLocal.contFloatVar, contLocal.contStringVar, contLocal.contBoolVar, contLocal.contIntTemp, contLocal.contFloatTemp, contLocal.contStringTemp, contLocal.contBoolTemp, tablaLocalConsts.dict)
               sem.intermediario("endfunc", None, None, None)
               contCuad = contCuad + 1
           else:
@@ -331,101 +473,99 @@ def p_funcion2(t):
     '''funcion2 : ID COLON tipo funcion3
     | e'''
     if(t[1] != None):
-        parametros.insert(0,PilaTipos.pop())
-        vars.insert(0,(t[1], None))
+        tipo_param = PilaTipos.pop()
+        parametros.insert(0,tipo_param)
+        vars.insert(0,(t[1], None)) #checar: vars nos sirve?
         existe = tablaVariables.buscar(t[1])
         if(existe != None):
           print("Error - variable global ya declarada: ", t[1])
           exit(1)
         elif(dentroClase):
-          parametros.insert(0,PilaTipos.pop())
-          vars.insert(0,(t[1], None))
           existe = tablaVarsClase.buscar(t[1])
           if(existe != None):
             print("Error - variable de clase ya declarada: ", t[1])
             exit(1)
-        else:
-          if(t[3] == 'int'):
-            if(contLocal.contIntVar + contLocal.limIIntVar <= contLocal.limSIntVar):
-              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contIntVar + contLocal.limIIntVar, None)
-              contLocal.contIntVar = contLocal.contIntVar + 1
-            else:
+
+        if(t[3] == 'int'):
+          if(contLocal.contIntVar + contLocal.limIIntVar <= contLocal.limSIntVar):
+            existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contIntVar + contLocal.limIIntVar, None)
+            contLocal.contIntVar = contLocal.contIntVar + 1
+          else:
               print("Error: exceso de memoria en variables locales enteras")
               exit(1)
-          if(t[3] == 'float'):
-            if(contLocal.contFloatVar +contLocal.limIFloatVar <= contLocal.limSFloatVar):
-              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contFloatVar + contLocal.limIFloatVar, None)
-              contLocal.contFloatVar = contLocal.contFloatVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales flotantes")
-              exit(1)
-          if(t[3] == 'string'):
-            if(contLocal.contStringVar +contLocal.limIStringVar <= contLocal.limSStringVar):
-              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contStringVar + contLocal.limIStringVar, None)
-              contLocal.contStringVar = contLocal.contStringVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales string")
-              exit(1)
-          if(t[3] == 'bool'):
-            if(contLocal.contBoolVar +contLocal.limIBoolVar <= contLocal.limSBoolVar):
-              existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contBoolVar + contLocal.limIBoolVar, None)
-              contLocal.contBoolVar = contLocal.contBoolVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales bool")
-              exit(1)
-          if(existe == False):
-            print("Error - variable ya declarada en parametros: ", t[1])
+        if(t[3] == 'float'):
+          if(contLocal.contFloatVar +contLocal.limIFloatVar <= contLocal.limSFloatVar):
+            existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contFloatVar + contLocal.limIFloatVar, None)
+            contLocal.contFloatVar = contLocal.contFloatVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales flotantes")
             exit(1)
+        if(t[3] == 'string'):
+          if(contLocal.contStringVar +contLocal.limIStringVar <= contLocal.limSStringVar):
+            existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contStringVar + contLocal.limIStringVar, None)
+            contLocal.contStringVar = contLocal.contStringVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales string")
+            exit(1)
+        if(t[3] == 'bool'):
+          if(contLocal.contBoolVar +contLocal.limIBoolVar <= contLocal.limSBoolVar):
+            existe = tablaLocalVars.insertar(t[1], t[3], None, contLocal.contBoolVar + contLocal.limIBoolVar, None)
+            contLocal.contBoolVar = contLocal.contBoolVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales bool")
+            exit(1)
+        if(existe == False):
+          print("Error - variable ya declarada en parametros: ", t[1])
+          exit(1)
 
 def p_funcion3(t):
     '''funcion3 : COMMA ID COLON tipo funcion3
     | e'''
     if(t[1] != None):
-        parametros.insert(0,PilaTipos.pop())
+        tipo_param = PilaTipos.pop()
+        parametros.insert(0,tipo_param)
         vars.insert(0,(t[2], None))
         existe = tablaVariables.buscar(t[2])
         if(existe != None):
           print("Error - variable global ya declarada: ", t[2])
           exit(1)
         elif(dentroClase):
-          parametros.insert(0,PilaTipos.pop())
-          vars.insert(0,(t[2], None))
           existe = tablaVarsClase.buscar(t[2])
           if(existe != None):
             print("Error - variable de clase ya declarada: ", t[2])
             exit(1)
-        else:
-          if(t[4] == 'int'):
-            if(contLocal.contIntVar + contLocal.limIIntVar <= contLocal.limSIntVar):
-              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contIntVar + contLocal.limIIntVar, None)
-              contLocal.contIntVar = contLocal.contIntVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales enteras")
-              exit(1)
-          if(t[4] == 'float'):
-            if(contLocal.contFloatVar +contLocal.limIFloatVar <= contLocal.limSFloatVar):
-              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contFloatVar + contLocal.limIFloatVar, None)
-              contLocal.contFloatVar = contLocal.contFloatVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales flotantes")
-              exit(1)
-          if(t[4] == 'string'):
-            if(contLocal.contStringVar +contLocal.limIStringVar <= contLocal.limSStringVar):
-              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contStringVar + contLocal.limIStringVar, None)
-              contLocal.contStringVar = contLocal.contStringVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales string")
-              exit(1)
-          if(t[4] == 'bool'):
-            if(contLocal.contBoolVar +contLocal.limIBoolVar <= contLocal.limSBoolVar):
-              existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contBoolVar + contLocal.limIBoolVar, None)
-              contLocal.contBoolVar = contLocal.contBoolVar + 1
-            else:
-              print("Error: exceso de memoria en variables locales bool")
-              exit(1)
-          if(existe == False):
-            print("Error - variable ya declarada en parametros: ", t[2])
+
+        if(t[4] == 'int'):
+          if(contLocal.contIntVar + contLocal.limIIntVar <= contLocal.limSIntVar):
+            existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contIntVar + contLocal.limIIntVar, None)
+            contLocal.contIntVar = contLocal.contIntVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales enteras")
             exit(1)
+        if(t[4] == 'float'):
+          if(contLocal.contFloatVar +contLocal.limIFloatVar <= contLocal.limSFloatVar):
+            existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contFloatVar + contLocal.limIFloatVar, None)
+            contLocal.contFloatVar = contLocal.contFloatVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales flotantes")
+            exit(1)
+        if(t[4] == 'string'):
+          if(contLocal.contStringVar +contLocal.limIStringVar <= contLocal.limSStringVar):
+            existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contStringVar + contLocal.limIStringVar, None)
+            contLocal.contStringVar = contLocal.contStringVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales string")
+            exit(1)
+        if(t[4] == 'bool'):
+          if(contLocal.contBoolVar +contLocal.limIBoolVar <= contLocal.limSBoolVar):
+            existe = tablaLocalVars.insertar(t[2], t[4], None, contLocal.contBoolVar + contLocal.limIBoolVar, None)
+            contLocal.contBoolVar = contLocal.contBoolVar + 1
+          else:
+            print("Error: exceso de memoria en variables locales bool")
+            exit(1)
+        if(existe == False):
+          print("Error - variable ya declarada en parametros: ", t[2])
+          exit(1)
       
         
   
@@ -582,7 +722,6 @@ def p_gotoF(t):
     global contCuad
     exp_tipo = PilaTipos.pop()
     if(exp_tipo == "bool" ):
-      print(contCuad)
       PilaSaltos.append(contCuad)
       sem.intermediario('gotoF', PilaO.pop(), None, None)
       contCuad = contCuad + 1
@@ -611,6 +750,12 @@ def p_goto(t):
 #*********** llamada ************
 contadorParam = 0
 
+def p_llamada(t):
+    'llamada : sub_llamada atomic_assign'
+    PilaO.append(t[1][0])
+    print(PilaO)
+    PilaTipos.append(t[1][1])
+
 def p_sub_llamada(t):
     'sub_llamada : validar_id llamada1 LPAR llamada2 RPAR'
     if(t[1] != 'none'):
@@ -621,18 +766,12 @@ def p_sub_llamada(t):
             sem.intermediario("gosub", None, None, funcStart[2])
             contCuad = contCuad + 1
             funcReturnTipo = tablaVariables.buscar(t[1])
-            PilaO.insert(len(PilaO)-1, t[1])
-            funcTipo = funcReturnTipo[0]
-            PilaTipos.insert(len(PilaTipos)-1, funcTipo)
-            t[0] = [t[1], funcTipo]
+            PilaO.insert(len(PilaO)-1, funcReturnTipo[2])
+            PilaTipos.insert(len(PilaTipos)-1, funcReturnTipo[0])
+            t[0] = [funcReturnTipo[2], funcReturnTipo[0]]
         else:
             print("La cantidad de parametros de la llamada no coincide con la cantidad de parametros que recibe la funcion: ", t[1])
             exit(1)
-
-def p_llamada(t):
-    'llamada : sub_llamada atomic_assign'
-    PilaO.append(t[1][0])
-    PilaTipos.append(t[1][1])
 
 def p_llamada_void(t):
     'llamada_void : validar_id llamada1 LPAR llamada2 RPAR'
@@ -663,11 +802,20 @@ def p_validar_id(t):
         t[0] = t[1]
     elif(func != None):
         global contCuad, contadorParam, tipos_param
-        sem.intermediario("era", None, None, func[3])
+        resources = str(func[4]).replace( ',' , '' )
+        constants = str(func[5]).replace( ',' , '' )
+        constants = str(constants).replace( ': ' , ' : ' )
+        sem.intermediario("era", constants, None, resources)
         contCuad = contCuad + 1        
         contadorParam = 0
         funcStart = tablaFunciones.buscar(t[1])
         tipos_param = funcStart[1]
+        try:
+          valores = tablaVariables.buscar(t[1])
+          PilaO.append(valores[1])
+          PilaTipos.append(valores[0])
+        except:
+          pass
         t[0] = t[1]
     else:
         print("Function not declared")
@@ -680,7 +828,10 @@ def p_llamada1(t):
         classFunc = tablaLocalFuncs.buscar(t[2])
         if(classFunc != None):
             global contCuad, contadorParam
-            sem.intermediario("era", None, None, classFunc[3])
+            resources = str(func[4]).replace( ',' , '' )
+            constants = str(func[5]).replace( ',' , '' )
+            constants = str(constants).replace( ': ' , ' : ' )
+            sem.intermediario("era", constants, None, resources)
             contCuad = contCuad + 1
             #pasar parametros "param", arg1, None, num_param, checar esta llamada
             sem.intermediario("gosub", None, None, None)
@@ -744,7 +895,8 @@ def p_texto(t):
     global tablaConstantes, contConst, tablaLocalConst, contLocal
     if(dentroFuncion):
       if(contLocal.contStringConst + contLocal.limIStringConst < contLocal.limSStringConst):
-        tablaLocalConst.insertar(contLocal.contStringConst + contLocal.limIStringConst, t[1])
+        cteStr = str(t[1]).replace('"', '')
+        tablaLocalConst.insertar(contLocal.contStringConst + contLocal.limIStringConst, cteStr)
         PilaO.append(contLocal.contStringConst + contLocal.limIStringConst)
         PilaTipos.append("string")
         contLocal.contStringConst = contLocal.contStringConst + 1
@@ -753,7 +905,8 @@ def p_texto(t):
         exit(1)
     else:
       if(contConst.contString + contConst.limIString < contConst.limSString):
-        tablaConstantes.insertar(contConst.contString + contConst.limIString, t[1])
+        cteStr = str(t[1]).replace('"', '')
+        tablaConstantes.insertar(contConst.contString + contConst.limIString, cteStr)
         PilaO.append(contConst.contString + contConst.limIString)
         PilaTipos.append("string")
         contConst.contString = contConst.contString + 1
@@ -1153,7 +1306,8 @@ def p_var_cte(t):
           exit(1)
       else:
         if(contConst.contString + contConst.limIString < contConst.limSString):
-          tablaConstantes.insertar(contConst.contString + contConst.limIString, t[1])
+          cteStr = str(t[1]).replace('"', '')
+          tablaConstantes.insertar(contConst.contString + contConst.limIString, cteStr)
           PilaO.append(contConst.contString + contConst.limIString)
           PilaTipos.append("string")
           contConst.contString = contConst.contString + 1
@@ -1239,15 +1393,15 @@ if __name__ == '__main__':
             print(ValueError)
     
     sem.imprimirCuadruplos()
-    print(PilaTipos)
     print(PilaO)
+    print(PilaTipos)
+    print(PilaSaltos)
     # crear directorio de funciones
     dirFunc = {}
     for i in tablaFunciones.dict:
       auxFunc = tablaFunciones.buscar(i)
-      # parametros, inicio, vi, vf, vs, vb, ti, tf, ts, tb,
-      # tablaConst
-      func = {i : [auxFunc[1], auxFunc[2], auxFunc[4], auxFunc[5], auxFunc[6], auxFunc[7], auxFunc[8], auxFunc[9], auxFunc[10], auxFunc[11], auxFunc[12]]}
+      # parametros, inicio, [vi, vf, vs, vb, ti, tf, ts, tb], tablaConst
+      func = {i : [auxFunc[1], auxFunc[2], auxFunc[4], auxFunc[5]]}
       dirFunc.update(func)
     f = open('intermedio.txt','w')
     tablaVars = {}
@@ -1262,7 +1416,6 @@ if __name__ == '__main__':
       else:
           dictAux = {dirB: None}
           tablaVars.update(dictAux)
-        
     f.write(str(tablaVars)[:-1] + ',')
     f.write('\n' + str(tablaTemporales.dict)[:-1] + ',')
     f.write('\n' + str(tablaTempPointers.dict)[:-1] + ',')

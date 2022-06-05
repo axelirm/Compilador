@@ -11,6 +11,7 @@ void function func2 (par1 : int, num4 : float, str : string) {
           else {
             i = i + 2 ;
           }
+        sum = 5 * 2;
   return  ;
 }
 
@@ -21,14 +22,15 @@ int function func3 (par1 : int, num4 : int, str : string) {
           else {
             i = i + 2 ;
           }
-  return 12 ;
+    return 12 + 5;
 }
       
 
 main ( ) {
-  write ( "escribe un string" ) ;
+  write ("escribe un string") ;
   read ( str1 ) ;
   write ( "string leido: " , str1 ) ;
   func2(2, 10.0, "hola");
+  num3 = func3(2, 10, "hola");
   num3 = func3(2, 10, "hola");
 }
