@@ -221,14 +221,22 @@ def p_declaracion2(t):
 
 def p_assign_limit(t):
     'assign_limit : CTEI'
-    arreglo.limSupD1 = t[1] - 1
+    if(t[1] > 0):
+        arreglo.limSupD1 = t[1] - 1
+    else:
+        print("Los arreglos deben tener dimension de al menos 1")
+        exit(1)
     
 def p_declaracion3(t):
     '''declaracion3 : LSBRAC CTEI RSBRAC
     | e'''
     if (t[1] != None):
-        arreglo.limSupD2 = t[2] - 1
-        arreglo.m1 = t[2]
+        if(t[2] > 0):
+            arreglo.limSupD2 = t[2] - 1
+            arreglo.m1 = t[2]
+        else:
+            print("Los arreglos deben tener dimension de al menos 1")
+            exit(1)
     nombre = pilaVars[-1]
     tablaVariables.actualizar(nombre, None, None, None, ts.arreglos())
     tablaVariables.buscar(nombre)[3].set(arreglo)
@@ -244,10 +252,11 @@ def p_declaracion5(t):
     if(dentroClase):
       global contClase, clase
       while(len(pilaVars) > 0):
-          if(t[1] == None):
-            tablaVarsClase.actualizar(pilaVars.pop(), PilaTipos[-1], None)
+          if(t[1] == None): 
+            print("Error: Las variables declaradas no tienen tipo")
+            exit(1)
           else:
-            # variables globales que no son clases
+            # variables globales que tienen tipo
             if(t[1] == 'int' and contClase.contInt < contClase.limSInt):
               if(contClase.contInt + contClase.limIInt > contClase.limSInt):
                 print("Exceso de memoria para variables enteras en clases")
@@ -297,17 +306,15 @@ def p_declaracion5(t):
               else:
                 print("Error en declaracion de variables - tipo de dato inexistente")
                 exit(1)
-    else:
+    else: # afuera de clase
         global contGlobal
         while(len(pilaVars) > 0):
-          # variables globales que son clases
+          # checar que tenga tipo
           if(t[1] == None):
-            nombre = pilaVars.pop()
-            valores = tablaVariables.buscar(nombre)
-            tablaVariables.actualizar(nombre, PilaTipos[-1], None, None, valores[3])
-            print(tablaVariables)
+            print("Error: Las variables declaradas no tienen tipo")
+            exit(1)
           else:
-            # variables globales que no son clases
+            # si tiene un tipo
             if(t[1] == 'int' and contGlobal.contInt < contGlobal.limSInt):
               if(contGlobal.contInt + contGlobal.limIInt > contGlobal.limSInt):
                 print("Exceso de memoria para variables enteras globales")
@@ -658,9 +665,9 @@ def p_atomic_assign(t):
         sem.intermediario('=', expresion, None , variable)
         global contCuad
         contCuad = contCuad + 1
-        # update tablaVariables
     else:
-        print("Error semantico: error de asignacion type-mismatch: ", variable) 
+        print("Error semantico: error de asignacion type-mismatch: ", variable)
+        exit(1)
 
 #*********** condicion ***********
 def p_condicion(t):
@@ -747,25 +754,30 @@ def p_variable1(t):
 def p_variable2(t):
     '''variable2 : LSBRAC expresion verifica_d1 push_mult pop_operador RSBRAC variable3 push_plus pop_operador push_plus push_arr pop_operador
     | e'''
-    # multiplicar valD1 m1 temp1
-    # sumar temp1 valD2 temp2
-    # sumar temp2 dirBase temp3
+    # multiplicar valorD1 m1 temp1
+    # sumar temp1 valorD2 temp2
+    # sumar temp2 dirBase(constante) tempPointer1
 
 def p_push_arr(t):
     'push_arr : e'
     global isArr
     isArr = True
     v1 = PilaO.pop()
+    v1T = PilaTipos.pop()
     v2 = PilaO.pop()
+    v2T = PilaTipos.pop()
     PilaO.append(contTPointers.contInt + contTPointers.limIInt)
+    PilaTipos.append(v2T)
     if(contConst.contInt + contConst.limIInt < contConst.limSInt):
         tablaConstantes.insertar(contConst.contInt + contConst.limIInt, v2)
         PilaO.append(contConst.contInt + contConst.limIInt)
+        PilaTipos.append('int')
         contConst.contInt = contConst.contInt + 1
     else: 
         print("Limite de memoria excedido para constantes")
         exit(1)
     PilaO.append(v1)
+    PilaTipos.append(v1T)
 
 def p_verifica_d1(t):
     'verifica_d1 : e'
@@ -784,6 +796,9 @@ def p_verifica_d1(t):
         else: 
           print("Limite de memoria excedido para constantes")
           exit(1)
+    else:
+        print("Solamete se pueden indexar variables enteras")
+        exit(1)
 
 def p_variable3(t):
     '''variable3 : LSBRAC expresion verifica_d2 RSBRAC
@@ -807,6 +822,9 @@ def p_verifica_d2(t):
         valores = tablaVariables.buscar(curVar)
         sem.intermediario('verifica', exp_value, valores[3].limInfD1, valores[3].limSupD1)
         contCuad += 1
+    else:
+        print("Solamete se pueden indexar variables enteras")
+        exit(1)
 
 #*********** llamada ************
 contadorParam = 0
@@ -889,7 +907,7 @@ def p_validar_id(t):
         tipos_param = funcStart[1]
         try:
           valores = tablaVariables.buscar(t[1])
-          PilaO.append(valores[1])
+          PilaO.append(valores[2])
           PilaTipos.append(valores[0])
         except:
           pass
@@ -919,7 +937,7 @@ def p_llamada1(t):
             tipos_param = existe[1]
             try:
               valores = objeto[1].get(t[2])
-              PilaO.append(valores[1])
+              PilaO.append(valores[2])
               PilaTipos.append(valores[0])
             except:
               pass
@@ -981,11 +999,11 @@ def p_escribir2(t):
 
 def p_texto(t):
     '''texto : CTESTR '''
-    global tablaConstantes, contConst, tablaLocalConst, contLocal
+    global tablaConstantes, contConst, tablaLocalConsts, contLocal
     if(dentroFuncion):
       if(contLocal.contStringConst + contLocal.limIStringConst < contLocal.limSStringConst):
         cteStr = str(t[1]).replace('"', '')
-        tablaLocalConst.insertar(contLocal.contStringConst + contLocal.limIStringConst, cteStr)
+        tablaLocalConsts.insertar(contLocal.contStringConst + contLocal.limIStringConst, cteStr)
         PilaO.append(contLocal.contStringConst + contLocal.limIStringConst)
         PilaTipos.append("string")
         contLocal.contStringConst = contLocal.contStringConst + 1
@@ -1165,8 +1183,6 @@ def p_pop_operador(t):
           isArr = False
           sem.intermediario(str(operador), str(left_op), str(right_op), contTPointers.contInt + contTPointers.limIInt)
           contCuad = contCuad + 1
-          tipo = cubo.getNumeroTipo(rechazar)
-          PilaTipos.append(tipo)
           tablaTempPointers.insertar(contTPointers.contInt + contTPointers.limIInt, None)
           contTPointers.contInt += 1
       else:
@@ -1356,7 +1372,7 @@ def p_var_cte(t):
     | CTEF ctef
     | CTESTR ctestr
     | CTEB cteb'''
-    global PilaTipos, tablaLocalConst
+    global PilaTipos, tablaLocalConsts
     tipo = PilaTipos.pop()
     if(tipo == 'int'):
       if(dentroFuncion):
@@ -1501,16 +1517,38 @@ if __name__ == '__main__':
     print(PilaTipos)
     print(PilaSaltos)
     
-    # crear directorio de funciones y lo guarda
+    # crear directorio de funciones globales y guardarlo
     dirFunc = {}
     for i in tablaFunciones.dict:
       auxFunc = tablaFunciones.buscar(i)
+      auxVar = tablaVariables.buscar(i)
       # parametros, inicio, [vi, vf, vs, vb, ti, tf, ts, tb], tablaConst
-      # nuevo {nombreFunc: [[recursos], [constantes]]}
-      func = {i : [auxFunc[4], auxFunc[5]]}
-      dirFunc.update(func)
+      # nuevo {dirVFunc: [[recursos], [constantes]]}
+      if(auxVar != None):
+        func = {i : [auxFunc[4], auxFunc[5], auxVar[2]]}
+        dirFunc.update(func)
+      else:
+          func = {i : [auxFunc[4], auxFunc[5], None]}
+          dirFunc.update(func)
     f = open('dirF.txt','w')
     f.write(str(dirFunc))
+    f.close()
+    
+    # crear directorio de vars Objeto y guardarlo
+    dirObj = {}
+    for i in tablaObjetos.dict:
+      dictAux = {}
+      auxObj = tablaObjetos.buscar(i)
+      for j in auxObj[1]:
+        valores = auxObj[1].get(j)
+        if(valores[2] != None):
+          curDict = {valores[2] : None}
+          dictAux.update(curDict)
+      # {dirVObj: [claseObj, tablaVars(solo dirV y valor), [nombresFuncs]]}
+      obj = {auxObj[3] : [auxObj[0], dictAux, auxObj[2]]}
+      dirObj.update(obj)
+    f = open('dirObj.txt','w')
+    f.write(str(dirObj))
     f.close()
 
     # codigo intermedio (objeto)
@@ -1519,14 +1557,15 @@ if __name__ == '__main__':
     for i in tablaVariables.dict:
       dictAux = {}
       dirB = tablaVariables.dict[i][2]
-      if tablaVariables.dict[i][3] != None: # es var dimensionada
-        tam = tablaVariables.dict[i][3].limSupD1 * tablaVariables.dict[i][3].m1
-        for i in range(tam+1):
-          dictAux = {dirB + i: None}
-          tablaVars.update(dictAux)
-      else:
-          dictAux = {dirB: None}
-          tablaVars.update(dictAux)
+      if (dirB != None):
+          if tablaVariables.dict[i][3] != None: # es var dimensionada
+            tam = tablaVariables.dict[i][3].limSupD1 * tablaVariables.dict[i][3].m1
+            for i in range(tam+1):
+              dictAux = {dirB + i: None}
+              tablaVars.update(dictAux)
+          else:
+              dictAux = {dirB: None}
+              tablaVars.update(dictAux)
     f.write(str(tablaVars)[:-1] + ',')
     f.write('\n' + str(tablaTemporales.dict)[:-1] + ',')
     f.write('\n' + str(tablaTempPointers.dict)[:-1] + ',')

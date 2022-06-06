@@ -20,8 +20,13 @@ class contFuncs:
         self.contStr = 0
         self.contBool = 0
         self.contFunc = 0
+    def reset(self):
+        self.contInt = 0
+        self.contFloat = 0
+        self.contStr = 0
+        self.contBool = 0        
 
-dirs = [dir.varGlobal(), dir.varTemps(), dir.varTempsPointer(), dir.varConst(), dir.varLocal()]
+dirs = [dir.varGlobal(), dir.varTemps(), dir.varTempsPointer(), dir.varConst(), dir.varLocal(), dir.varClases()]
 dataS = [tipos(), tipos(), tipos(), tipos()]
 def readAndSaveData(table):
     line = f.readline()
@@ -37,6 +42,8 @@ def readAndSaveData(table):
         elif (dir >= dirs[table].limIFloat and dir <= dirs[table].limSFloat):
             dataS[table].float.insert(dir-dirs[table].limIFloat, value)
         elif (dir >= dirs[table].limIString and dir <= dirs[table].limSString):
+            if(table == 3):
+                value = value[1:-1]
             dataS[table].string.insert(dir-dirs[table].limIString, value)
         elif (dir >= dirs[table].limIBool and dir <= dirs[table].limSBool):
             dataS[table].bool.insert(dir-dirs[table].limIBool, value)
@@ -105,35 +112,55 @@ def fetchDir(dir):
     else: # no es local
         for i in range(4):            
             if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
-                if dir > 29550:
+                if (dir > 29550):
+                    res = dataS[i].int[dir - dirs[i].limIInt]
+                    if(res >= dirs[0].limIInt and res <= dirs[0].limSInt):
+                        try:
+                            return int(dataS[0].int[res - dirs[0].limIInt])
+                        except:
+                            print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
+                    elif(res >= dirs[0].limIFloat and res <= dirs[0].limSFloat):
+                        try:
+                            return float(dataS[0].float[res - dirs[0].limIFloat])
+                        except:
+                            print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
+                    elif(res >= dirs[0].limIString and res <= dirs[0].limSString):
+                        try:
+                            return str(dataS[0].string[res - dirs[0].limIString])
+                        except:
+                            print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
+                    elif(res >= dirs[0].limIBool and res <= dirs[0].limSBool):
+                        try:
+                            return bool(dataS[0].bool[res - dirs[0].limIBool])
+                        except:
+                            print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
+                else:
                     try:
-                        res = dataS[i].int[dir - dirs[i].limIInt]
-                        return int(dataS[0].int[res - dirs[0].limIInt])
+                        return int(dataS[i].int[dir - dirs[i].limIInt])
                     except:
-                        print("Error: Variable has no value assigned", dir)
-                    exit(1)
-                try:
-                    return int(dataS[i].int[dir - dirs[i].limIInt])
-                except:
-                    print("Error: Variable has no value assigned", dir)
-                    exit(1)
+                        print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
             elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
                 try:
                     return float(dataS[i].float[dir - dirs[i].limIFloat])
                 except:
-                    print("Error: Variable has no value assigned")
+                    print("Error: Se usa variable que aun no ha sido asignada")
                     exit(1)
             elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
                 try:
                     return str(dataS[i].string[dir - dirs[i].limIString])
                 except:
-                    print("Error: Variable has no value assigned")
+                    print("Error: Se usa variable que aun no ha sido asignada")
                     exit(1)
             elif (dir >= dirs[i].limIBool and dir <= dirs[i].limSBool):
                 try:
                     return bool(dataS[i].bool[dir - dirs[i].limIBool])
                 except:
-                    print("Error: Variable has no value assigned")
+                    print("Error: Se usa variable que aun no ha sido asignada")
                     exit(1)
 
 def fetchType(dir):
@@ -183,7 +210,14 @@ def execDir(dir, value, op):
             if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
                 if (dir > 29550 and op == '='):
                     res = dataS[i].int[dir - dirs[i].limIInt]
-                    dataS[0].int[res - dirs[0].limIInt] = value
+                    if(res >= dirs[0].limIInt and res <= dirs[0].limSInt):
+                        dataS[0].int[res - dirs[0].limIInt] = value
+                    elif(res >= dirs[0].limIFloat and res <= dirs[0].limSFloat):
+                        dataS[0].float[res - dirs[0].limIFloat] = value
+                    elif(res >= dirs[0].limIString and res <= dirs[0].limSString):
+                        dataS[0].string[res - dirs[0].limIString] = value
+                    elif(res >= dirs[0].limIBool and res <= dirs[0].limSBool):
+                        dataS[0].bool[res - dirs[0].limIBool] = value
                 else:
                     dataS[i].int[dir - dirs[i].limIInt] = value
             elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
@@ -203,10 +237,9 @@ def boolValues(string):
 
 # asignar recursos de funcion dentro del stack segment
 stackS = []
-def createMem(recursos, constantes):
-    memFunc = [tipos(), tipos(), tipos()]
+def createMem(recursos, constantes, dirV):
+    memFunc = [tipos(), tipos(), tipos(), dirV]
     contador = 0
-    print(recursos)
     for i in recursos: # variables (parametros) y temporales
         if (contador < 4):
             if (contador == 0):
@@ -228,14 +261,15 @@ def createMem(recursos, constantes):
                 memFunc[1].bool = [None] * int(i)
         contador += 1
     for i in constantes: # constantes
+        valor = constantes.get(i)
         if (i >= dirs[4].limIIntConst and i <= dirs[4].limSIntConst):
-            memFunc[2].int.insert(i-dirs[4].limIIntConst, 0)
+            memFunc[2].int.insert(i-dirs[4].limIIntConst, valor)
         elif (i >= dirs[4].limIFloatConst and i <= dirs[4].limSFloatConst):
-            memFunc[2].float.insert(i-dirs[4].limIFloatConst, 0)
+            memFunc[2].float.insert(i-dirs[4].limIFloatConst, valor)
         elif (i >= dirs[4].limIStringConst and i <= dirs[4].limSStringConst):
-            memFunc[2].string.insert(i-dirs[4].limIStringConst, 0)
+            memFunc[2].string.insert(i-dirs[4].limIStringConst, valor)
         elif (i >= dirs[4].limIBoolConst and i <= dirs[4].limSBoolConst):
-            memFunc[2].bool.insert(i-dirs[4].limIBoolConst, 0)
+            memFunc[2].bool.insert(i-dirs[4].limIBoolConst, valor)
     stackS.append(memFunc)
 
 # read dirFunc
@@ -253,17 +287,12 @@ numCuadruplos = len(codeS)
 while ip < numCuadruplos:
     codigoOperacion = codeS[ip][0]
     if codigoOperacion == 'goto':
-        try:
-            ip = codeS[ip][3] - 1
-        except:
-            pass
+        ip = codeS[ip][3] - 1
     elif codigoOperacion == 'gotoF':    
         if (fetchDir(codeS[ip][1]) == False):
-            try:
-                ip = codeS[ip][3] - 1
-            except:
-                pass
+            ip = codeS[ip][3] - 1
     elif codigoOperacion == '=':
+        
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]), codigoOperacion)
     elif codigoOperacion == '*':
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]) * fetchDir(codeS[ip][2]), codigoOperacion)
@@ -278,8 +307,6 @@ while ip < numCuadruplos:
     elif codigoOperacion == '&&':
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]) and fetchDir(codeS[ip][2]), codigoOperacion)
     elif codigoOperacion == '<':
-        print(codeS[ip][1])
-        print(fetchDir(codeS[ip][1]))
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]) < fetchDir(codeS[ip][2]), codigoOperacion)
     elif codigoOperacion == '>':
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]) > fetchDir(codeS[ip][2]), codigoOperacion)
@@ -303,23 +330,28 @@ while ip < numCuadruplos:
                 aux = boolValues(aux)
             execDir(codeS[ip][3], aux, codigoOperacion)
         except:
-            print("Error: Type mismatch of input and variable in read()")
+            print("Error: El tipo de dato del input y de la variable en read() no coinciden")
             exit(1)
     elif codigoOperacion == 'verifica':
         if (fetchDir(codeS[ip][1]) < codeS[ip][2] or fetchDir(codeS[ip][1]) > codeS[ip][3]):
-            print('Error: array index out of bounds')
+            print('Error: Indice de arreglo fuera de limites')
             exit(1)
     elif codigoOperacion == 'era':
         recursos = dirFunc.get(codeS[ip][3])
-        createMem(recursos[0], recursos[1])
+        createMem(recursos[0], recursos[1], recursos[2])
+    elif codigoOperacion == 'return':
+        execDir(stackS[contParam.contFunc-1][3], fetchDir(codeS[ip][3]), '=')
     elif codigoOperacion == 'gosub':
-        print(stackS)
         saveIP = ip
         ip = codeS[ip][3] - 1
         contParam.contFunc += 1
     elif codigoOperacion == 'endfunc':
         ip = saveIP
         stackS.pop()
+        contParam.contFunc -= 1
+        contParam.reset()
+    elif codigoOperacion == 'endProgram':
+        print("-----maquina virtual-----\nEjecucion finalizada.")
     elif codigoOperacion == 'param':
         tipo = fetchType(codeS[ip][1])
         if tipo == 'int':
@@ -340,6 +372,6 @@ while ip < numCuadruplos:
 
     
     """ faltan:
-    elif op == "return":
-        self.generarCuadruplo('return', '', '', res)
+    elif op == "eraObjeto":
+        self.generarCuadruplo('eraObjeto', '', '', res)
     """

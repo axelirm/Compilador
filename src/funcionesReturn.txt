@@ -8,7 +8,7 @@ class idClase {
 
 var 
   str1 , str2 : string ;
-  num1 , num2, num3, i, sum, a : int ;
+  num1 , num2, num3, i, sum, a, b[3] : int ;
   obj : idClase;
 
 void function func2 (par1 : int, num4 : float, str : string) {
@@ -30,9 +30,11 @@ int function func3 (par1 : int, num4 : int, str : string) {
         i = i + 2 ;
     }
 
+    write("for adentro de funcion");
     from(a = 2 to 5) do {
         write(a);
     }
+    write("fin del for adentro de funcion");
 
     return 12 + 5;
 }
@@ -45,10 +47,12 @@ main ( ) {
   i = 0;
   sum = 0;
   a = 4;
+  b[1] = 5;
+  write(b[1]);
   func2(2, 10.0, "hola");
   num3 = func3(2, 10, "hola");
   num3 = func3(2, 10, "hola");
-  write("-------------------");
+  write(num3, "-------------------");
   from(a = 2 to 5) do {
         write(a);
     }

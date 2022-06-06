@@ -41,3 +41,15 @@ a[5] --> a[0], a[1], a[2], a[3], a[4]
 
 asigna al reves
 num3 = func3(2, 10, "hola");
+
+imprimir arreglo sin indice devuelve el primero
+
+arreglos dentro de funciones y clases crean constantes globales
+
+no guardar strings constantes con coma
+
+en maquina virtual, qué se hace con el cuadruplo de return?
+
+checar objetos en param de funciones
+
+si pones un arreglo en una funcion se hacen mal en main

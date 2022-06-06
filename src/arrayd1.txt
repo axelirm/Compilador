@@ -1,7 +1,23 @@
 program id ; 
+
+class idClase {
+  attributes
+    a, b, c, i : int ;
+
+} 
+
 var
-    a[5] : int;
+    a[5], b[5][2] : int;
+    c[2], t : string;
+    obj, obj2 : idClase;
+    
 
 main() {
-    
+    t = "hola";
+    a[0] = 10;
+    c[1] = t;
+    write(a[0]);
+    write(c[1]);
+    obj?a = 2;
+    write(obj?a);
 }
