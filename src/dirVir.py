@@ -33,28 +33,28 @@ class varLocal:
     self.contBoolTemp = 0
 
     self.limIIntConst = 12001
-    self.limSIntConst = 12500
+    self.limSIntConst = 12250
     self.contIntConst = 0
-    self.limIFloatConst = 12501
-    self.limSFloatConst = 13000
+    self.limIFloatConst = 12251
+    self.limSFloatConst = 12500
     self.contFloatConst = 0
-    self.limIStringConst = 13001
-    self.limSStringConst = 13500
+    self.limIStringConst = 12501
+    self.limSStringConst = 12750
     self.contStringConst = 0
-    self.limIBoolConst = 13501
-    self.limSBoolConst = 14000
+    self.limIBoolConst = 12751
+    self.limSBoolConst = 13000
     self.contBoolConst = 0
 
-    self.limIIntVar = 12001
-    self.limSIntVar = 12500
+    self.limIIntVar = 13001
+    self.limSIntVar = 13250
     self.contIntVar = 0
-    self.limIFloatVar = 12501
-    self.limSFloatVar = 13000
+    self.limIFloatVar = 13251
+    self.limSFloatVar = 13500
     self.contFloatVar = 0
-    self.limIStringVar = 13001
-    self.limSStringVar = 13500
+    self.limIStringVar = 13501
+    self.limSStringVar = 13750
     self.contStringVar = 0
-    self.limIBoolVar = 13501
+    self.limIBoolVar = 13751
     self.limSBoolVar = 14000
     self.contBoolVar = 0
 
@@ -75,7 +75,7 @@ class varTemps:
       
 class varTempsPointer:
   def __init__(self):
-    self.limIInt = 29501
+    self.limIInt = 29551
     self.limSInt = 31000
     self.contInt = 0
     self.limIFloat = 0

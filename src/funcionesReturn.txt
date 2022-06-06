@@ -1,8 +1,15 @@
 program id ;
 
+class idClase {
+  attributes
+    a, b, c, i : int ;
+
+} 
+
 var 
   str1 , str2 : string ;
-  num1 , num2, num3, i, sum : int ;
+  num1 , num2, num3, i, sum, a : int ;
+  obj : idClase;
 
 void function func2 (par1 : int, num4 : float, str : string) {
           if ( par1 < 10 ) {
@@ -16,12 +23,17 @@ void function func2 (par1 : int, num4 : float, str : string) {
 }
 
 int function func3 (par1 : int, num4 : int, str : string) {
-          if ( par1 < 10 ) {
-            i = i + 1 ;
-          }
-          else {
-            i = i + 2 ;
-          }
+    if ( par1 < 10 ) {
+        i = i + 1 ;
+    }
+    else {
+        i = i + 2 ;
+    }
+
+    from(a = 2 to 5) do {
+        write(a);
+    }
+
     return 12 + 5;
 }
       
@@ -30,7 +42,14 @@ main ( ) {
   write ("escribe un string") ;
   read ( str1 ) ;
   write ( "string leido: " , str1 ) ;
+  i = 0;
+  sum = 0;
+  a = 4;
   func2(2, 10.0, "hola");
   num3 = func3(2, 10, "hola");
   num3 = func3(2, 10, "hola");
+  write("-------------------");
+  from(a = 2 to 5) do {
+        write(a);
+    }
 }

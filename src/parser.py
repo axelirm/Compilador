@@ -27,6 +27,7 @@ tablaLocalFuncs = ts.tabla_simbolos_funcs()
 tablaLocalConsts = ts.tabla_memoria_vars()
 tablaLocalTemps = ts.tabla_memoria_vars()
 tablaVarsClase = ts.tabla_simbolos_vars()
+tablaObjClase = ts.tabla_memoria_objetos()
 
 # tablas globales
 tablaVariables = ts.tabla_simbolos_vars()
@@ -35,6 +36,7 @@ tablaClases = ts.tabla_simbolos_clases()
 tablaTemporales = ts.tabla_memoria_vars()
 tablaConstantes = ts.tabla_memoria_vars()
 tablaTempPointers = ts.tabla_memoria_vars()
+tablaObjetos = ts.tabla_memoria_objetos()
 cubo = cuboS.CuboSemantico()
 contGlobal = dir.varGlobal()
 contLocal = dir.varLocal()
@@ -51,6 +53,9 @@ arreglo = ts.arreglos()
 def p_programa(t):
     'programa : PROGRAM ID SEMICOLON goto_main clase vars funcion main'
     t[0] = "COMPILADO"
+    sem.intermediario("endProgram", None, None, None)
+    global contCuad
+    contCuad = contCuad + 1
 
 def p_goto_main(t):
     'goto_main : e'
@@ -83,6 +88,7 @@ def p_inicializar_clase(t):
     global dentroClase, contClase
     dentroClase = True
     tablaVarsClase.dict = {}
+    tablaObjClase.dict = {}
     tablaLocalFuncs.dict = {}
     contClase.contInt = 0
     contClase.contFloat = 0
@@ -103,7 +109,7 @@ def p_reiniciar_clase(t):
       exit(1)
     else:
       # insertar contador donde empieza la clase
-      tablaClases.insertar(idClase, tablaVarsClase.dict, tablaLocalFuncs.dict, padreClase, contClase.contInt, contClase.contFloat, contClase.contString, contClase.contBool, None)
+      tablaClases.insertar(idClase, tablaVarsClase.dict, tablaLocalFuncs.dict, padreClase, contClase.contInt, contClase.contFloat, contClase.contString, contClase.contBool, None, tablaObjClase.dict)
   
 def p_clase1(t):
     '''clase1 : LT INHERITS ID GT
@@ -121,6 +127,7 @@ def p_clase1(t):
           # agregar tabla de funciones y variables al hijo
           tablaVarsPadre = existe[0]
           tablaFuncsPadre = existe[1]
+          tablaObjPadre = existe[8]
           contClase.contInt = existe[3]
           contClase.contFloat = existe[4]
           contClase.contString = existe[5]
@@ -133,6 +140,12 @@ def p_clase1(t):
             valores = tablaFuncsPadre.get(i)
             dict = {i : valores}
             tablaLocalFuncs.dict.update(dict)
+          for i in tablaObjPadre:
+            valores = tablaObjPadre.get(i)
+            ditct = {i : valores}
+            tablaObjClase.dict.update(dict)
+            contClase.contObj = contClase.contObj + 1
+            
       else:
         print("Error en herencia de clases: el padre no existe ", idClase)
         exit(1)
@@ -168,10 +181,14 @@ def p_declaraciones(t):
   
 #********* declaracion *********
 pilaVars = []
+clase = False
 
 def p_declaracion(t):
     'declaracion : declaracion1 COLON declaracion5 SEMICOLON'
-    PilaTipos.pop()
+    global clase
+    if(clase == False):
+      PilaTipos.pop()
+    clase = False
   
 def p_declaracion1(t):
     'declaracion1 : inserta_declaracion declaracion2 declaracion4'
@@ -180,14 +197,16 @@ def p_inserta_declaracion(t):
     'inserta_declaracion : ID'
     if (dentroClase):
       existe = tablaVarsClase.insertar(t[1], None, None, None, None)
-      if(existe):
+      existe2 = tablaObjClase.buscar(t[1])
+      if(existe and existe2 == None):
         pilaVars.append(t[1])
       else:
         print("Variable ya declarada: ", t[1])
         exit(1)
     else:
       existe = tablaVariables.insertar(t[1], None, None, None, None)
-      if(existe):
+      existe2 = tablaObjetos.buscar(t[1])
+      if(existe and existe2 == None):
         pilaVars.append(t[1])
       else:
         print("Variable ya declarada: ", t[1])
@@ -223,7 +242,7 @@ def p_declaracion5(t):
     '''declaracion5 : tipo
     | ID'''
     if(dentroClase):
-      global contClase
+      global contClase, clase
       while(len(pilaVars) > 0):
           if(t[1] == None):
             tablaVarsClase.actualizar(pilaVars.pop(), PilaTipos[-1], None)
@@ -263,8 +282,18 @@ def p_declaracion5(t):
                   print("Exceso de memoria para variables de tipo objeto en clases")
                   exit(1)
                 else:
-                  tablaVarsClase.actualizar(pilaVars.pop(), t[1], None, contClase.limIObj + contClase.contObj, None)
-                  contClase.contObj = contClase.contObj + 1
+                  nombre = pilaVars.pop()
+                  existe2 = tablaObjClase.buscar(nombre)
+                  if(existe2 != None):
+                    print("Variable ya declarada: ", nombre)
+                    exit(1)
+                  else:
+                    nombresFuncs = []
+                    for i in existe[1]:
+                      nombresFuncs.append(i)
+                    tablaObjClase.insertar(nombre, t[1], existe[0], nombresFuncs, contClase.limIObj + contClase.contObj)
+                    contClase.contObj = contClase.contObj + 1
+                    clase = True
               else:
                 print("Error en declaracion de variables - tipo de dato inexistente")
                 exit(1)
@@ -276,6 +305,7 @@ def p_declaracion5(t):
             nombre = pilaVars.pop()
             valores = tablaVariables.buscar(nombre)
             tablaVariables.actualizar(nombre, PilaTipos[-1], None, None, valores[3])
+            print(tablaVariables)
           else:
             # variables globales que no son clases
             if(t[1] == 'int' and contGlobal.contInt < contGlobal.limSInt):
@@ -324,14 +354,23 @@ def p_declaracion5(t):
               else:
                 contGlobal.contBool = contGlobal.contBool + 1
             else: 
+              # variables de tipo objeto
               existe = tablaClases.buscar(t[1])
               if(existe != None):
                 if(contGlobal.contObj + contGlobal.limIObj > contGlobal.limSObj):
                   print("Exceso de memoria para variables de tipo objeto globales")
                   exit(1)
                 else:
-                  tablaVariables.actualizar(pilaVars.pop(), t[1], None, contGlobal.limIObj + contGlobal.contObj, None)
+                  # checar que el objeto no exista en la tabla 
+                  nombre = pilaVars.pop()
+                  
+                  existe2 = tablaObjetos.buscar(nombre)
+                  nombresFuncs = []
+                  for i in existe[1]:
+                    nombresFuncs.append(i)
+                  tablaObjetos.insertar(nombre, t[1], existe[0], nombresFuncs, contGlobal.limIObj + contGlobal.contObj)
                   contGlobal.contObj = contGlobal.contObj + 1
+                  clase = True
               else:
                 print("Error en declaracion de variables - tipo de dato inexistente")
                 exit(1)
@@ -360,31 +399,35 @@ def p_reiniciar_func(t):
               if(tipo != 'void'):
                   if(tipo == 'int'):
                     if(contClase.contInt + contClase.limIInt < contClase.limSInt):
-                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contInt + contClase.limIInt, None)
-                      contClase.contInt = contClase.contInt + 1
+                      if(tipo == PilaTipos.pop()):
+                        tablaVarsClase.insertar(idFunc, tipo, PilaO.pop(), contClase.contInt + contClase.limIInt, None)
+                        contClase.contInt = contClase.contInt + 1
                     else:
                       print("Memoria excedida por numero de variables enteras para la clase")
                       exit(1)
                       
                   if(tipo == 'float'):
                     if(contClase.contFloat + contClase.limIFloat < contClase.limSFloat):
-                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contFloat + contClase.limIFloat, None)
-                      contClase.contFloat = contClase.contFloat + 1
+                      if(tipo == PilaTipos.pop()):
+                        tablaVarsClase.insertar(idFunc, tipo, PilaO.pop(), contClase.contFloat + contClase.limIFloat, None)
+                        contClase.contFloat = contClase.contFloat + 1
                     else:
                       print("Memoria excedida por numero de variables flotantes para la clase")
                       exit(1)
                   if(tipo == 'string'):
                     if(contClase.contString + contClase.limIString < contClase.limSString):
-                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contString + contClase.limIString, None)
-                      contClase.contString = contClase.contString + 1
+                      if(tipo == PilaTipos.pop()):
+                        tablaVarsClase.insertar(idFunc, tipo, PilaO.pop(), contClase.contString + contClase.limIString, None)
+                        contClase.contString = contClase.contString + 1
                     else:
                       print("Memoria excedida por numero de variables string para la clase")
                       exit(1)
                       
                   if(tipo == 'bool'):
                     if(contClase.contBool + contClase.limIBool < contClase.limSBool):
-                      tablaVarsClase.insertar(idFunc, tipo, None, contClase.contBool + contClase.limIBool, None)
-                      contClase.contBool = contClase.contBool + 1
+                      if(tipo == PilaTipos.pop()):
+                        tablaVarsClase.insertar(idFunc, tipo, PilaO.pop(), contClase.contBool + contClase.limIBool, None)
+                        contClase.contBool = contClase.contBool + 1
                     else:
                       print("Memoria excedida por numero de variables booleanas para la clase")
                       exit(1)
@@ -401,7 +444,7 @@ def p_reiniciar_func(t):
               if(tipo != 'void'):
                 if(tipo == 'int'):
                   if(contGlobal.contInt + contGlobal.limIInt < contGlobal.limSInt):
-                    if(tipo == PilaTipos.pop()):
+                    if(tipo == PilaTipos.pop()): # checa que regrese un tipo correcto
                       tablaVariables.insertar(idFunc, tipo, PilaO.pop(), contGlobal.contInt + contGlobal.limIInt, None)
                       contGlobal.contInt = contGlobal.contInt + 1
                   else:
@@ -618,6 +661,40 @@ def p_atomic_assign(t):
         # update tablaVariables
     else:
         print("Error semantico: error de asignacion type-mismatch: ", variable) 
+
+#*********** condicion ***********
+def p_condicion(t):
+    'condicion : IF LPAR expresion RPAR gotoF bloque condicion1 fill'
+
+def p_gotoF(t):
+    'gotoF : e'
+    global contCuad
+    exp_tipo = PilaTipos.pop()
+    if(exp_tipo == "bool" ):
+      PilaSaltos.append(contCuad)
+      sem.intermediario('gotoF', PilaO.pop(), None, None)
+      contCuad = contCuad + 1
+    else:
+      print("Error semantico: type-mismatch")
+
+def p_fill(t):
+    'fill : e'
+    global contCuad
+    ret = PilaSaltos.pop() - 1
+    sem.cuadruplos[ret].res = contCuad
+
+def p_condicion1(t):
+    '''condicion1 : ELSE goto bloque
+    | e'''
+
+def p_goto(t):
+    '''goto : e'''
+    global contCuad
+    sem.intermediario('goto', None, None, None)
+    false = PilaSaltos.pop() - 1
+    PilaSaltos.append(contCuad)
+    contCuad = contCuad + 1
+    sem.cuadruplos[false].res = contCuad
         
 #************ variable ************
 curVar = None
@@ -646,8 +723,26 @@ def p_var_id(t):
         exit(1)
 
 def p_variable1(t):
-    '''variable1 : DOT ID
+    '''variable1 : QUESTION ID 
     | e'''
+    if (t[1] == '?'):
+        existe = tablaObjetos.buscar(curVar)
+        if(existe != None):
+            existeVar = existe[1].get(t[2])
+            if(existeVar != None):
+                PilaO.pop() # saca el append anterior en caso de que sea una variable de objeto
+                PilaTipos.pop()
+                PilaO.append(existeVar[2])
+                PilaTipos.append(existeVar[0])
+                sem.intermediario('eraObjeto', None, None, existe[3])
+                global contCuad
+                contCuad += 1
+            else:
+                print("Error de semantica: variable de clase no declarada: ", t[2])
+                exit(1)
+        else:
+            print("Error de semantica: variable no declarada: ", t[2])
+            exit(1)
 
 def p_variable2(t):
     '''variable2 : LSBRAC expresion verifica_d1 push_mult pop_operador RSBRAC variable3 push_plus pop_operador push_plus push_arr pop_operador
@@ -712,100 +807,212 @@ def p_verifica_d2(t):
         valores = tablaVariables.buscar(curVar)
         sem.intermediario('verifica', exp_value, valores[3].limInfD1, valores[3].limSupD1)
         contCuad += 1
-        
-#*********** condicion ***********
-def p_condicion(t):
-    'condicion : IF LPAR expresion RPAR gotoF bloque condicion1 fill'
-
-def p_gotoF(t):
-    'gotoF : e'
-    global contCuad
-    exp_tipo = PilaTipos.pop()
-    if(exp_tipo == "bool" ):
-      PilaSaltos.append(contCuad)
-      sem.intermediario('gotoF', PilaO.pop(), None, None)
-      contCuad = contCuad + 1
-    else:
-      print("Error semantico: type-mismatch")
-
-def p_fill(t):
-    'fill : e'
-    global contCuad
-    ret = PilaSaltos.pop() - 1
-    sem.cuadruplos[ret].res = contCuad
-
-def p_condicion1(t):
-    '''condicion1 : ELSE goto bloque
-    | e'''
-
-def p_goto(t):
-    '''goto : e'''
-    global contCuad
-    sem.intermediario('goto', None, None, None)
-    false = PilaSaltos.pop() - 1
-    PilaSaltos.append(contCuad)
-    contCuad = contCuad + 1
-    sem.cuadruplos[false].res = contCuad
 
 #*********** llamada ************
 contadorParam = 0
 
 def p_llamada(t):
-    'llamada : sub_llamada atomic_assign'
-    PilaO.append(t[1][0])
-    print(PilaO)
-    PilaTipos.append(t[1][1])
+    'llamada : sub_llamada parche atomic_assign'
+
+def p_parche(t):
+    'parche : atomic_assign'
+    dirVFunc = PilaO.pop()
+    tipoFunc = PilaTipos.pop()
+    # agrega temporal para guardar resultado
+    if(dentroFuncion):
+        if(tipoFunc == 'int'):
+            if(contLocal.contIntTemp + contLocal.limIIntTemp < contLocal.limSIntTemp):
+                temporal = contLocal.contIntTemp + contLocal.limIIntTemp
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaLocalTemps.insertar(temporal, None)
+                contLocal.contIntTemp += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+        elif(tipoFunc == 'float'):
+            if(contLocal.contFloatTemp + contLocal.limIFloatTemp < contLocal.limSFloatTemp):
+                temporal = contLocal.contFloatTemp + contLocal.limIFloatTemp
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaLocalTemps.insertar(temporal, None)
+                contLocal.contFloatTemp += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+        elif(tipoFunc == 'string'):
+            if(contLocal.contStringTemp + contLocal.limIStringTemp < contLocal.limSStringTemp):
+                temporal = contLocal.contStringTemp + contLocal.limIStringTemp
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaLocalTemps.insertar(temporal, None)
+                contLocal.contStringTemp += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+        elif(tipoFunc == 'bool'):
+            if(contLocal.contBoolTemp + contLocal.limIBoolTemp < contLocal.limSBoolTemp):
+                temporal = contLocal.contBoolTemp + contLocal.limIBoolTemp
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaLocalTemps.insertar(temporal, None)
+                contLocal.contBoolTemp += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+    else: # afuera de funcion
+        if(tipoFunc == 'int'):
+            if(contTemps.contInt + contTemps.limIInt < contTemps.limSInt):
+                temporal = contTemps.contInt + contTemps.limIInt
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaTemporales.insertar(temporal, None)
+                contTemps.contInt += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+        elif(tipoFunc == 'float'):
+            if(contTemps.contFloat + contTemps.limIFloat < contTemps.limSFloat):
+                temporal = contTemps.contFloat + contTemps.limIFloat
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaTemporales.insertar(temporal, None)
+                contTemps.contFloat += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+        elif(tipoFunc == 'string'):
+            if(contTemps.contString + contTemps.limIString < contTemps.limSString):
+                temporal = contTemps.contString + contTemps.limIString
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaTemporales.insertar(temporal, None)
+                contTemps.contString += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+        elif(tipoFunc == 'bool'):
+            if(contTemps.contBool + contTemps.limIBool < contTemps.limSBool):
+                temporal = contTemps.contBool + contTemps.limIBool
+                temporalTipo = PilaTipos[-1]
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                PilaO.append(temporal)
+                PilaTipos.append(temporalTipo)
+                tablaTemporales.insertar(temporal, None)
+                contTemps.contBool += 1
+            else:
+                print("Error: limite de memoria excedido")
+                exit(1)
+            
+    PilaO.append(dirVFunc)
+    PilaTipos.append(tipoFunc)
 
 def p_sub_llamada(t):
     'sub_llamada : validar_id llamada1 LPAR llamada2 RPAR'
-    if(t[1] != 'none'):
-        global contadorParam, tipos_param
-        if(contadorParam == len(tipos_param)):
-            global contCuad
-            funcStart = tablaFunciones.buscar(t[1])
-            sem.intermediario("gosub", None, None, funcStart[2])
-            contCuad = contCuad + 1
-            funcReturnTipo = tablaVariables.buscar(t[1])
-            PilaO.insert(len(PilaO)-1, funcReturnTipo[2])
-            PilaTipos.insert(len(PilaTipos)-1, funcReturnTipo[0])
-            t[0] = [funcReturnTipo[2], funcReturnTipo[0]]
+    if(t[1][0] != 'none'):
+        global contadorParam, tipos_param, contCuad
+        if(t[1][0] == 'iter objeto'):
+            obj = tablaObjetos.buscar(t[1][1])
+            claseNom = obj[0]
+            clase = tablaClases.buscar(claseNom)
+            func = clase[1].get(t[2])
+            if(contadorParam == len(tipos_param)):
+                sem.intermediario("gosub", None, None, func[2])
+                contCuad = contCuad + 1
+                funcOtra = clase[0].get(t[2])
+                PilaO.insert(len(PilaO)-1, funcOtra[2])
+                PilaTipos.insert(len(PilaTipos)-1, func[0])
+                PilaO.insert(len(PilaO)-1, funcOtra[2])
+                PilaTipos.insert(len(PilaTipos)-1, func[0])
+                t[0] = [funcOtra[2], func[0]]
+            else:
+                print("Error: el numero de parametros no coincide", t[2])
+                exit(1)
         else:
-            print("La cantidad de parametros de la llamada no coincide con la cantidad de parametros que recibe la funcion: ", t[1])
-            exit(1)
+            if(contadorParam == len(tipos_param)):
+                funcStart = tablaFunciones.buscar(t[1][0])
+                sem.intermediario("gosub", None, None, funcStart[2])
+                contCuad = contCuad + 1
+                funcReturnTipo = tablaVariables.buscar(t[1][0])
+                PilaO.insert(len(PilaO)-1, funcReturnTipo[2])
+                PilaTipos.insert(len(PilaTipos)-1, funcReturnTipo[0])
+                PilaO.insert(len(PilaO)-1, funcReturnTipo[2])
+                PilaTipos.insert(len(PilaTipos)-1, funcReturnTipo[0])
+                t[0] = [funcReturnTipo[2], funcReturnTipo[0]]
+            else:
+                print("La cantidad de parametros de la llamada no coincide con la cantidad de parametros que recibe la funcion: ", t[1][0])
+                exit(1)
 
 def p_llamada_void(t):
     'llamada_void : validar_id llamada1 LPAR llamada2 RPAR'
     # checar que el tipo de funcion es void
-    if(t[1] != 'none'):
-        funcStart = tablaFunciones.buscar(t[1])
-        tipoFunc = funcStart[0]
-        global contadorParam, tipos_param
-        if(contadorParam == len(tipos_param)):
-            if(tipoFunc == 'void'):
-                global contCuad
-                sem.intermediario("gosub", None, None, funcStart[2])
-                contCuad = contCuad + 1
+    if(t[1][0] != 'none'):
+        global contadorParam, tipos_param, contCuad
+        if(t[1][0] == 'iter objeto'):
+            obj = tablaObjetos.buscar(t[1][1])
+            claseNom = obj[0]
+            clase = tablaClases.buscar(claseNom)
+            func = clase[1].get(t[2])
+            tipoFunc = func[0]
+            if(contadorParam == len(tipos_param)):
+                if(tipoFunc == 'void'):
+                    sem.intermediario("gosub", None, None, func[2])
+                    contCuad = contCuad + 1
+                else:
+                    print("Error: se esperaba una llamada a una funcion void o asignar un valor a una variable")
+                    exit(1)
             else:
-                print("Error: se esperaba una llamada a una funcion void o asignar un valor a una variable")
+                print("Error: el numero de parametros no coincide", t[2])
                 exit(1)
         else:
-            print("Error: el numero de parametros no coincide", t[1])
-            exit(1)
+            funcStart = tablaFunciones.buscar(t[1][0])
+            tipoFunc = funcStart[0]
+            if(contadorParam == len(tipos_param)):
+                if(tipoFunc == 'void'):
+                    sem.intermediario("gosub", None, None, funcStart[2])
+                    contCuad = contCuad + 1
+                else:
+                    print("Error: se esperaba una llamada a una funcion void o asignar un valor a una variable")
+                    exit(1)
+            else:
+                print("Error: el numero de parametros no coincide", t[1][0])
+                exit(1)
         
 tipos_param = []
 def p_validar_id(t):
     'validar_id : ID'
-    obj = tablaVariables.buscar(t[1])
+    obj = tablaObjetos.buscar(t[1])
     func = tablaFunciones.buscar(t[1])
-    if(obj != None and obj[0] != 'int' and obj[0] != 'float' and obj[0] != 'string' and obj[0] != 'bool'):
-        print("obj");
-        t[0] = t[1]
+    if(obj != None):
+        PilaO.append(t[1])
+        PilaO.append(obj)
+        PilaO.append(obj[0])
+        t[0] = ['iter objeto', t[1]]
     elif(func != None):
         global contCuad, contadorParam, tipos_param
-        resources = str(func[4]).replace( ',' , '' )
-        constants = str(func[5]).replace( ',' , '' )
-        constants = str(constants).replace( ': ' , ' : ' )
-        sem.intermediario("era", constants, None, resources)
+        sem.intermediario("era", None, None, t[1])
         contCuad = contCuad + 1        
         contadorParam = 0
         funcStart = tablaFunciones.buscar(t[1])
@@ -816,29 +1023,39 @@ def p_validar_id(t):
           PilaTipos.append(valores[0])
         except:
           pass
-        t[0] = t[1]
+        t[0] = [t[1], None]
     else:
         print("Function not declared")
-        t[0] = 'none'
+        t[0] = ['none', None]
 
 def p_llamada1(t):
     '''llamada1 : DOT ID
     | e'''
     if(t[1] == '.'):
-        classFunc = tablaLocalFuncs.buscar(t[2])
-        if(classFunc != None):
-            global contCuad, contadorParam
-            resources = str(func[4]).replace( ',' , '' )
-            constants = str(func[5]).replace( ',' , '' )
-            constants = str(constants).replace( ': ' , ' : ' )
-            sem.intermediario("era", constants, None, resources)
+        clase = PilaO.pop()
+        objeto = PilaO.pop()
+        objetoNom = PilaO.pop()
+        dirVObj = tablaObjetos.buscar(objetoNom)[3]
+        valoresClase = tablaClases.buscar(clase)
+        funciones = valoresClase[1]
+        existe = funciones.get(t[2])
+        if(existe != None):
+            global contCuad, contadorParam, tipos_param
+            sem.intermediario("eraObjeto", None, None, dirVObj )
             contCuad = contCuad + 1
-            #pasar parametros "param", arg1, None, num_param, checar esta llamada
-            sem.intermediario("gosub", None, None, None)
+            sem.intermediario("era", None, None, t[2])
             contCuad = contCuad + 1
             contadorParam = 0
+            tipos_param = existe[1]
+            try:
+              valores = objeto[1].get(t[2])
+              PilaO.append(valores[1])
+              PilaTipos.append(valores[0])
+            except:
+              pass
+            t[0] = t[2]
         else:
-            print("Function not declared")
+          print("Function not declared")
 
 def p_llamada2(t):
     '''llamada2 : expresion cuad_param llamada3
@@ -850,6 +1067,8 @@ def p_cuad_param(t):
     global contCuad, contadorParam, tipos_param
     sendParam = PilaO.pop()
     sendParamType = PilaTipos.pop()
+    if(sendParam == None):
+        sendParam = 'Array'
     if(contadorParam >= len(tipos_param)):
         print("Error: el numero de parametros no coincide ")
         exit(1)
@@ -865,7 +1084,7 @@ def p_cuad_param(t):
 def p_llamada3(t):
     '''llamada3 : COMMA expresion cuad_param llamada3
     | e'''
-
+        
 #************ leer *************
 def p_leer(t):
     'leer : READ LPAR variable add_read generar_cuadr RPAR SEMICOLON'
@@ -937,13 +1156,28 @@ def p_ciclo_f(t):
 
 def p_for_temp(t):
     'for_temp : e'
-    global contCuad
-    temporal = contTemps.contInt + contTemps.limIInt
-    temporalTipo = PilaTipos[-1]
-    PilaO.append(temporal)
-    PilaTipos.append(temporalTipo)
-    tablaTemporales.insertar(temporal, None)
-    contTemps.contInt += 1
+    if(dentroFuncion):
+        if(contLocal.contIntTemp + contLocal.limIIntTemp < contLocal.limSIntTemp):
+            temporal = contLocal.contIntTemp + contLocal.limIIntTemp
+            temporalTipo = PilaTipos[-1]
+            PilaO.append(temporal)
+            PilaTipos.append(temporalTipo)
+            tablaLocalTemps.insertar(temporal, None)
+            contLocal.contIntTemp += 1
+        else:
+            print("Error: limite de memoria excedido")
+            exit(1)
+    else: # for afuera de funcion
+        if(contTemps.contInt + contTemps.limIInt < contTemps.limSInt):
+            temporal = contTemps.contInt + contTemps.limIInt
+            temporalTipo = PilaTipos[-1]
+            PilaO.append(temporal)
+            PilaTipos.append(temporalTipo)
+            tablaTemporales.insertar(temporal, None)
+            contTemps.contInt += 1
+        else:
+            print("Error: limite de memoria excedido")
+            exit(1)
 
 def p_migaja(t):
     'migaja : e'
@@ -1396,13 +1630,20 @@ if __name__ == '__main__':
     print(PilaO)
     print(PilaTipos)
     print(PilaSaltos)
-    # crear directorio de funciones
+    
+    # crear directorio de funciones y lo guarda
     dirFunc = {}
     for i in tablaFunciones.dict:
       auxFunc = tablaFunciones.buscar(i)
       # parametros, inicio, [vi, vf, vs, vb, ti, tf, ts, tb], tablaConst
-      func = {i : [auxFunc[1], auxFunc[2], auxFunc[4], auxFunc[5]]}
+      # nuevo {nombreFunc: [[recursos], [constantes]]}
+      func = {i : [auxFunc[4], auxFunc[5]]}
       dirFunc.update(func)
+    f = open('dirF.txt','w')
+    f.write(str(dirFunc))
+    f.close()
+
+    # codigo intermedio (objeto)
     f = open('intermedio.txt','w')
     tablaVars = {}
     for i in tablaVariables.dict:

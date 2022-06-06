@@ -43,8 +43,8 @@ class tabla_simbolos_clases:
   def __init__(self):
     self.dict = {}
 
-  def insertar(self, nombre, vars, funcs, padre, varInt, varFloat, varString, varBool, inicio):
-    dict2 = {nombre : [vars, funcs, padre, varInt, varFloat, varString, varBool, inicio] }
+  def insertar(self, nombre, vars, funcs, padre, varInt, varFloat, varString, varBool, inicio, objetos):
+    dict2 = {nombre : [vars, funcs, padre, varInt, varFloat, varString, varBool, inicio, objetos] }
     self.dict.update(dict2)
 
   def buscar(self, nombre):
@@ -82,6 +82,15 @@ class arreglos:
         self.limInfD2 = array.limInfD1
         self.limSupD2 = array.limSupD2
 
-class funcionesMV:
-  def __init__(self):
-    self.dict = {}
+class tabla_memoria_objetos:
+    def __init__(self):
+      self.dict = {}
+
+    def insertar(self, nombreObjeto, nombreClase, tablaVars, nombreFuncs, dirV):
+      dict2 = {nombreObjeto : [nombreClase, tablaVars, nombreFuncs, dirV]}
+      self.dict.update(dict2)
+
+    def buscar(self, nombre):
+      valores = self.dict.get(nombre)
+      return valores
+  

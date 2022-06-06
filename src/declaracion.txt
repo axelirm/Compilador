@@ -1,0 +1,16 @@
+program id ; 
+
+class idClase {
+  attributes
+    a, b, c, i : int ;
+
+} 
+
+var 
+  str1 , str2 : string ;
+  num1 , num2, num3 : int ;
+  obj1, obj2, obj3 : idClase ;
+  
+
+main() {
+}

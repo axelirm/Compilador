@@ -10,7 +10,7 @@ tokens = (
     'RCBRAC', 'LSBRAC', 'RSBRAC', 'SEMICOLON',
     'COLON', 'COMMA', 'DOT', 'LT', 'GT', 'PLUS',
     'MINUS', 'MULT', 'DIV', 'AND', 'OR', 'COMP',
-    'NOTEQ', 'EQ'
+    'NOTEQ', 'EQ', 'QUESTION'
     )
 
 # Tokens
@@ -37,6 +37,7 @@ t_NOTEQ     =   r'\!\='
 t_EQ        =   r'\='
 t_CTESTR    =   r'["].*?["]'
 t_ignore    =   " \t"
+t_QUESTION  =    r'\?'
 
 keywords = {
     'int'           :   'INT',

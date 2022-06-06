@@ -56,12 +56,16 @@ class Semantica:
         self.generarCuadruplo('goto', '', '', res)
     elif op == "era":
         self.generarCuadruplo('era', '', '', res)
+    elif op == "eraObjeto":
+        self.generarCuadruplo('eraObjeto', '', '', res)
     elif op == "return":
         self.generarCuadruplo('return', '', '', res)
     elif op == "gosub":
         self.generarCuadruplo('gosub', '', '', res)
     elif op == "endfunc":
         self.generarCuadruplo('endfunc', '', '', '')
+    elif op == "endProgram":
+        self.generarCuadruplo('endProgram', '', '', '')
     elif op == "param":
         self.generarCuadruplo('param', arg1, '', res)
     elif op == "verifica":

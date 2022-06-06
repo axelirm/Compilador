@@ -4,7 +4,6 @@ class id_Clase2 {
   attributes
     sum , res , ans, i : int ;
     booleano, booleano2 : bool;
-    sum : int
 
   methods
 
@@ -22,6 +21,7 @@ class id_Clase2 {
 class idClase < inherits id_Clase2 > {
   attributes
     a, b, c : int ;
+    obj1, obj2 : id_Clase2 ;
 
   methods
 
