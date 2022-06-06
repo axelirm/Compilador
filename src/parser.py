@@ -812,125 +812,7 @@ def p_verifica_d2(t):
 contadorParam = 0
 
 def p_llamada(t):
-    'llamada : sub_llamada parche atomic_assign'
-
-def p_parche(t):
-    'parche : atomic_assign'
-    dirVFunc = PilaO.pop()
-    tipoFunc = PilaTipos.pop()
-    # agrega temporal para guardar resultado
-    if(dentroFuncion):
-        if(tipoFunc == 'int'):
-            if(contLocal.contIntTemp + contLocal.limIIntTemp < contLocal.limSIntTemp):
-                temporal = contLocal.contIntTemp + contLocal.limIIntTemp
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaLocalTemps.insertar(temporal, None)
-                contLocal.contIntTemp += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-        elif(tipoFunc == 'float'):
-            if(contLocal.contFloatTemp + contLocal.limIFloatTemp < contLocal.limSFloatTemp):
-                temporal = contLocal.contFloatTemp + contLocal.limIFloatTemp
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaLocalTemps.insertar(temporal, None)
-                contLocal.contFloatTemp += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-        elif(tipoFunc == 'string'):
-            if(contLocal.contStringTemp + contLocal.limIStringTemp < contLocal.limSStringTemp):
-                temporal = contLocal.contStringTemp + contLocal.limIStringTemp
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaLocalTemps.insertar(temporal, None)
-                contLocal.contStringTemp += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-        elif(tipoFunc == 'bool'):
-            if(contLocal.contBoolTemp + contLocal.limIBoolTemp < contLocal.limSBoolTemp):
-                temporal = contLocal.contBoolTemp + contLocal.limIBoolTemp
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaLocalTemps.insertar(temporal, None)
-                contLocal.contBoolTemp += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-    else: # afuera de funcion
-        if(tipoFunc == 'int'):
-            if(contTemps.contInt + contTemps.limIInt < contTemps.limSInt):
-                temporal = contTemps.contInt + contTemps.limIInt
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaTemporales.insertar(temporal, None)
-                contTemps.contInt += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-        elif(tipoFunc == 'float'):
-            if(contTemps.contFloat + contTemps.limIFloat < contTemps.limSFloat):
-                temporal = contTemps.contFloat + contTemps.limIFloat
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaTemporales.insertar(temporal, None)
-                contTemps.contFloat += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-        elif(tipoFunc == 'string'):
-            if(contTemps.contString + contTemps.limIString < contTemps.limSString):
-                temporal = contTemps.contString + contTemps.limIString
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaTemporales.insertar(temporal, None)
-                contTemps.contString += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-        elif(tipoFunc == 'bool'):
-            if(contTemps.contBool + contTemps.limIBool < contTemps.limSBool):
-                temporal = contTemps.contBool + contTemps.limIBool
-                temporalTipo = PilaTipos[-1]
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                PilaO.append(temporal)
-                PilaTipos.append(temporalTipo)
-                tablaTemporales.insertar(temporal, None)
-                contTemps.contBool += 1
-            else:
-                print("Error: limite de memoria excedido")
-                exit(1)
-            
-    PilaO.append(dirVFunc)
-    PilaTipos.append(tipoFunc)
-
-def p_sub_llamada(t):
-    'sub_llamada : validar_id llamada1 LPAR llamada2 RPAR'
+    'llamada : validar_id llamada1 LPAR llamada2 RPAR'
     if(t[1][0] != 'none'):
         global contadorParam, tipos_param, contCuad
         if(t[1][0] == 'iter objeto'):
@@ -941,12 +823,6 @@ def p_sub_llamada(t):
             if(contadorParam == len(tipos_param)):
                 sem.intermediario("gosub", None, None, func[2])
                 contCuad = contCuad + 1
-                funcOtra = clase[0].get(t[2])
-                PilaO.insert(len(PilaO)-1, funcOtra[2])
-                PilaTipos.insert(len(PilaTipos)-1, func[0])
-                PilaO.insert(len(PilaO)-1, funcOtra[2])
-                PilaTipos.insert(len(PilaTipos)-1, func[0])
-                t[0] = [funcOtra[2], func[0]]
             else:
                 print("Error: el numero de parametros no coincide", t[2])
                 exit(1)
@@ -955,12 +831,6 @@ def p_sub_llamada(t):
                 funcStart = tablaFunciones.buscar(t[1][0])
                 sem.intermediario("gosub", None, None, funcStart[2])
                 contCuad = contCuad + 1
-                funcReturnTipo = tablaVariables.buscar(t[1][0])
-                PilaO.insert(len(PilaO)-1, funcReturnTipo[2])
-                PilaTipos.insert(len(PilaTipos)-1, funcReturnTipo[0])
-                PilaO.insert(len(PilaO)-1, funcReturnTipo[2])
-                PilaTipos.insert(len(PilaTipos)-1, funcReturnTipo[0])
-                t[0] = [funcReturnTipo[2], funcReturnTipo[0]]
             else:
                 print("La cantidad de parametros de la llamada no coincide con la cantidad de parametros que recibe la funcion: ", t[1][0])
                 exit(1)
