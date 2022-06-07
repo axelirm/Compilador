@@ -4,7 +4,7 @@ var
   A , B , C , D : int ;
 
 main() {
-  A = 0;
+  A = 20;
   B = 2;
   C = 3;
   D = 4;

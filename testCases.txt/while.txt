@@ -4,9 +4,14 @@ var
   A , B , C , D : int ;
 
 main() {
+  A = 10;
+  B = 1;
+  C = 2;
+  D = 1;
   while ( A > B * C ) do {
     A = A - D ;
-    print( A ) ;
+    write(A);
   }
   B = C + A ;
+  write("B", B);
 }

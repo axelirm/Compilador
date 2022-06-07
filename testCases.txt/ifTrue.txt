@@ -1,0 +1,21 @@
+program id;
+
+var
+  var1, var2 : int;
+  str1 : string;
+  var3 : int;
+
+main() {
+  if(true || true && false && true) {
+    var1 = 5 + 5 - 6;
+    var2 = 4 -5 * 8 * (5 + 1);
+    str1 = "hola";
+    var3 = 5;
+    write(str1, var1, var2, var3, "adios");
+  }
+
+  var1 = 1;
+  var2 = 10;
+  var3 = 100;
+  write(var1, var2);
+}

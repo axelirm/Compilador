@@ -31,4 +31,5 @@ main ( ) {
   write ( "string leido: " , str1 ) ;
   func2(2, 10.0, "hola");
   num3 = func3(2, 10, "hola");
+  print(num3);
 }

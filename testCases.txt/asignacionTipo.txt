@@ -1,0 +1,16 @@
+program id ;
+
+var 
+  str1 , str2 : string ;
+  num1 , num2, num3 : int ;
+
+main ( ) {
+  str1 = "hola";
+  write(str1) ;
+  num1 = true;
+  str2 = "adios";
+  num2 = 2;
+  num3 = 3;
+  str1 = "hi";
+  write(num1, str2, num2, num3, str1) ;
+}

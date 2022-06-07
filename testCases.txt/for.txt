@@ -19,6 +19,11 @@ int function func(){
 }
 
 main() {
+    A = 15;
+    B = 3;
+    C = 4;
+    D = 27;
+    sum = 10;
     from ( i = 3 to sum ) do {
         write(A, B);
         C = D;

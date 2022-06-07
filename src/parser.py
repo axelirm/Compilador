@@ -759,6 +759,7 @@ def p_gotoF(t):
       contCuad = contCuad + 1
     else:
       print("Error semantico: type-mismatch")
+      exit(1)
 
 def p_fill(t):
     'fill : e'
@@ -1220,7 +1221,7 @@ def p_texto(t):
 
 #*********** ciclo_w ************
 def p_ciclo_w(t):
-    'ciclo_w : WHILE push_while LPAR expresion RPAR  gotoF DO bloque return_while'
+    'ciclo_w : WHILE push_while LPAR expresion RPAR gotoF DO bloque return_while'
 
 def p_push_while(t):
     'push_while : e'
