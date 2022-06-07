@@ -26,6 +26,12 @@ class contFuncs:
         self.contStr = 0
         self.contBool = 0        
 
+def boolValues(string):
+    if string.lower() in ('true'):
+        return True
+    elif string.lower() in ('false'):
+        return False
+
 dirs = [dir.varGlobal(), dir.varTemps(), dir.varTempsPointer(), dir.varConst(), dir.varLocal(), dir.varClases()]
 dataS = [tipos(), tipos(), tipos(), tipos()]
 def readAndSaveData(table):
@@ -46,7 +52,8 @@ def readAndSaveData(table):
                 value = value[1:-1]
             dataS[table].string.insert(dir-dirs[table].limIString, value)
         elif (dir >= dirs[table].limIBool and dir <= dirs[table].limSBool):
-            dataS[table].bool.insert(dir-dirs[table].limIBool, value)
+            value1 = boolValues(value[1:-1])
+            dataS[table].bool.insert(dir-dirs[table].limIBool, value1)
         elif (table == 0 and dir >= dirs[table].limIObj and dir <= dirs[table].limSObj):
             dataS[table].obj.insert(dir-dirs[table].limIObj, value)
         pos = line.find(':')
@@ -347,14 +354,6 @@ def execDir(dir, value, op):
         print("Variable no puede ser asignada")
         exit(1)
 
-def boolValues(string):
-    if string.lower() in ('true'):
-        return True
-    elif string.lower() in ('false'):
-        return False
-    else:
-        exit(1)
-
 # asignar recursos de funcion dentro del stack segment
 stackS = []
 def createMem(recursos, constantes, dirV):
@@ -389,7 +388,8 @@ def createMem(recursos, constantes, dirV):
         elif (i >= dirs[4].limIStringConst and i <= dirs[4].limSStringConst):
             memFunc[2].string.insert(i-dirs[4].limIStringConst, valor)
         elif (i >= dirs[4].limIBoolConst and i <= dirs[4].limSBoolConst):
-            memFunc[2].bool.insert(i-dirs[4].limIBoolConst, valor)
+            valor1 = boolValues(valor[1:-1])
+            memFunc[2].bool.insert(i-dirs[4].limIBoolConst, valor1)
     stackS.append(memFunc)
 
 # asignar recursos de objetos dentro del object segment
@@ -435,7 +435,7 @@ while ip < numCuadruplos:
     codigoOperacion = codeS[ip][0]
     if codigoOperacion == 'goto':
         ip = codeS[ip][3] - 1
-    elif codigoOperacion == 'gotoF':    
+    elif codigoOperacion == 'gotoF':
         if (fetchDir(codeS[ip][1]) == False):
             ip = codeS[ip][3] - 1
     elif codigoOperacion == '=':

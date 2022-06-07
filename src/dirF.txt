@@ -1,2 +1,2 @@
 {}
-{'func2': [[0, 0, 0, 0, 0, 0, 0, 0], {12501: 'holaaaaaaaaaaaaaaaa'}, None]}
+{}
