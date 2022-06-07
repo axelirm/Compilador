@@ -50,6 +50,8 @@ arreglo = ts.arreglos()
 
 
 #*********** programa ***********
+"""Checar que se siga la estructura de la sintaxis que se definió para el programa. Este módulo está compuesto por main y programa."""
+
 def p_programa(t):
     'programa : PROGRAM ID SEMICOLON goto_main clase vars funcion main'
     t[0] = "COMPILADO"
@@ -73,6 +75,9 @@ def p_main_start(t):
     sem.cuadruplos[0].res = contCuad
 
 #*********** clase **************
+"""Lo que se realiza aquí es agregar las clases declaradas a la tabla de clases después de haber comprobado que no existan clases en la tabla con el mismo nombre que la que se quiere agregar. Aquí se crean las tablas de variables, objetos y funciones de cada clase. 
+En este módulo se comprueba que en caso de que se requiera hacer uso de la herencia, esta sea simple. 
+"""
 idClase = None
 padreClase = None
 
@@ -383,6 +388,8 @@ def p_declaracion5(t):
                 exit(1)
 
 #*********** funcion ***********
+"""Este módulo consiste de función y regresar. Lo que hace es agregar funciones a la tabla de funciones en la que se está trabajando después de haber verificado que el nombre de la función no se haya registrado antes. Si el retorno de la función es distinto a void, añade a la tabla de variables una variable con el mismo nombre de la función y el mismo tipo de dato que retorna. Verifica que las constantes y temporales usadas no excedan su límite de memoria y añade los cuádruplos para que estos se puedan ejecutar después en la máquina virtual. Finalmente, verifica que los nombres de sus parámetros no se repitan."""
+
 parametros = []
 vars = [] # (var, dirV)
 idFunc = ""
@@ -705,6 +712,8 @@ def p_tipo(t):
     t[0] = t[1]
 
 #*********** bloque ***********
+"""Este módulo está compuesto por los dos bloques que se definieron en el lenguaje, el bloque que se utiliza para main y el que se utiliza para funciones con el fin de retornar un valor. También en este tenemos los estatutos como ciclos, condicionales, asignaciones, etc. que podemos encontrar dentro del main o las funciones. """
+
 def p_bloque(t):
     'bloque : LCBRAC estatutos RCBRAC'
 
@@ -727,6 +736,8 @@ def p_estatuto(t):
     | ciclo_f'''
 
 #*********** asignacion ***********
+"""Lo primero que se realiza aquí es una comprobación de tipos de datos con el fin de saber si el valor y la variable a la que se quiere asignar el valor son del mismo tipo. Después de esto, si no se arroja algún error se realiza el cuádruplo de asignación."""
+  
 def p_asignacion(t):
     'asignacion : variable EQ expresion SEMICOLON atomic_assign'
 
@@ -746,6 +757,8 @@ def p_atomic_assign(t):
         exit(1)
 
 #*********** condicion ***********
+"""En este módulo se evalúa una condición y se tienen los cuádruplos para ir a otros cuádruplo en caso de que la condición se cumpla o no. """
+      
 def p_condicion(t):
     'condicion : IF LPAR expresion RPAR gotoF bloque condicion1 fill'
 
@@ -781,6 +794,8 @@ def p_goto(t):
     sem.cuadruplos[false].res = contCuad
         
 #************ variable ************
+"""Su fin es comprobar que el nombre de la variable que se requiere si exista dentro de la tabla de variables. También comprueba si dicha variable es un objeto o un arreglo o matriz. Si la variable es un arreglo o matriz, devuelve la casilla deseada. Si la variable es un objeto, comprueba que el atributo al que se desea acceder exista y después obtiene la dirección de dicho atributo."""
+  
 curVar = None
 isArr = False
 def p_variable(t):
@@ -863,6 +878,7 @@ def p_verifica_d1(t):
     if (exp_type == 'int'):
         exp_value = PilaO[-1]
         valores = tablaVariables.buscar(curVar)
+        print(valores)
         sem.intermediario('verifica', exp_value, valores[3].limInfD1, valores[3].limSupD1)
         contCuad += 1
         if(contConst.contInt + contConst.limIInt < contConst.limSInt):
@@ -904,6 +920,8 @@ def p_verifica_d2(t):
         exit(1)
 
 #*********** llamada ************
+"""Las llamadas son a funciones, por lo que lo primero que se hace es que ya sea una función global o de un objeto, se comprueba que dicha función exista. Después, se verifica que tanto el número de parámetros envíados como sus tipos coincidan con los de la función. En caso de que la función retorne un valor, este se guardará en un temporal para después ser utilizado. """
+      
 contadorParam = 0
 
 def p_llamada(t):
@@ -1172,6 +1190,8 @@ def p_llamada3(t):
     | e'''
         
 #************ leer *************
+"""Tanto en leer como en escribir se crean los cuádruplos para poder leer valores o escribirlos en la pantalla."""
+  
 def p_leer(t):
     'leer : READ LPAR variable add_read generar_cuadr RPAR SEMICOLON'
 
@@ -1220,6 +1240,8 @@ def p_texto(t):
         exit(1)
 
 #*********** ciclo_w ************
+"""En este módulo se encuentran los ciclos while y for. Lo que se hace aquí es que se evalúa una expresión, donde en caso de ser cierta, se ejecuta un bloque de estatutos hasta que la expresión a evaluar sea falsa."""
+
 def p_ciclo_w(t):
     'ciclo_w : WHILE push_while LPAR expresion RPAR gotoF DO bloque return_while'
 
@@ -1340,6 +1362,8 @@ def p_regresar_void(t):
         PilaTipos.append(tipo_func)
   
 #*********** expresion ***********
+"""Lo que hace aquí es que verifica que los tipos de datos a los cuales se les aplicará una operación tengan tipos de datos compatibles. En caso de que la operación sea aprobada, se realizan las respectivas operaciones de las expresiones. También se verifica aquí que los temporales no excedan su límite de memoria."""
+      
 def p_expresion(t):
     'expresion : a_exp exp1'
     t[0]=t[1]
@@ -1565,6 +1589,8 @@ def p_e_exp(t):
     else: t[0] = t[1]
 
 #*********** var_cte ***********
+"""Este sirve para identificar si los datos son enteros, flotantes, string o bool. Es utilizado por la declaración de variables. La varcte ayuda a construir las tablas de constantes y verificar que su límite de memoria no sea excedido."""
+
 def p_var_cte(t):
     '''var_cte : CTEI ctei
     | CTEF ctef
@@ -1711,9 +1737,9 @@ if __name__ == '__main__':
             print(ValueError)
     
     sem.imprimirCuadruplos()
-    print(PilaO)
+    """print(PilaO)
     print(PilaTipos)
-    print(PilaSaltos)
+    print(PilaSaltos)"""
     
     # crear directorio de funciones globales y guardarlo
     dirFunc = {}

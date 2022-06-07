@@ -14,8 +14,9 @@ para los condicionales, ciclos, expresiones, imprimir y leer.
 Se estan agregando las direcciones virtuales a las variables, constantes, temporales, etc. 
 Se agregó el goto
 al main, cuadruplos de funciones, llamadas y se comenzaron los de clases.
-La maquina virtual ya ejecuta todo a expecion de funciones y objetos.
-Se completó la implementación de arreglos y su ejecución en máquina virtual._
+La maquina virtual ya ejecuta funciones y objetos.
+Se completó la implementación de arreglos y su ejecución en máquina virtual.
+No se pudo implementar por completo tener objetos dentro de clases._
 
 ## Comenzando 🚀
 
@@ -23,6 +24,7 @@ _Para poder correr el programa se necesita correr el siguiente comando:_
 
 ```
 python3 parser.py ../test/archivo1.txt
+python3 maquinaVirtual.py
 ```
 _Se requiere tener instalado numpy y ply, lo cual se puede realizar con los siguientes comandos:_
 

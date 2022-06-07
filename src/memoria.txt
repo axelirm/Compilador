@@ -1,6 +1,0 @@
-#funcion1
-tablaVariables
-
-#clase1
-#tablaVariables
-#tablaFunciones
