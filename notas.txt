@@ -53,3 +53,11 @@ en maquina virtual, qué se hace con el cuadruplo de return?
 checar objetos en param de funciones
 
 si pones un arreglo en una funcion se hacen mal en main
+
+cuando es recursivo es una llamada menos
+
+pone objeto como int en clase en tablavarsclase, nvm las constantes tmb son variables
+
+las func void necesitan un return
+
+creo que jala funciones

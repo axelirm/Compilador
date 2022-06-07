@@ -102,13 +102,77 @@ def fetchDir(dir):
                 return bool(stackS[curFunc][2].bool[dir - dirs[4].limIBoolConst])
         elif(dir > 13000 and dir < 14001): # es variable local
             if(dir >= dirs[4].limIIntVar and dir <= dirs[4].limSIntVar):
-                return int(stackS[curFunc][0].int[dir - dirs[4].limIIntVar])
+                res = stackS[curFunc][0].int[dir - dirs[4].limIIntVar]
+                if(res != None):
+                    return int(res)
+                else:
+                    try:
+                        return int(stackS[curFunc-1][0].int[dir - dirs[4].limIIntVar])
+                    except:
+                        print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
             elif(dir >= dirs[4].limIFloatVar and dir <= dirs[4].limSFloatVar):
-                return float(stackS[curFunc][0].float[dir - dirs[4].limIFloatVar])
+                res = stackS[curFunc][0].float[dir - dirs[4].limIFloatVar]
+                if(res != None):
+                    return float(res)
+                else:
+                    try:
+                        return float(stackS[curFunc-1][0].float[dir - dirs[4].limIFloatVar])                        
+                    except:
+                        print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
             elif(dir >= dirs[4].limIStringVar and dir <= dirs[4].limSStringVar):
-                return str(stackS[curFunc][0].string[dir - dirs[4].limIStringVar])
+                res = stackS[curFunc][0].string[dir - dirs[4].limIStringVar]
+                if(res != None):
+                    return str(res)
+                else:
+                    try:
+                        return str(stackS[curFunc-1][0].string[dir - dirs[4].limIStringVar])                        
+                    except:
+                        print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
             elif(dir >= dirs[4].limIBoolVar and dir <= dirs[4].limSBoolVar):
-                return bool(stackS[curFunc][0].bool[dir - dirs[4].limIBoolVar])
+                res = stackS[curFunc][0].bool[dir - dirs[4].limIBoolVar]
+                if(res != None):
+                    return bool(res)
+                else:
+                    try:
+                        return bool(stackS[curFunc-1][0].bool[dir - dirs[4].limIBoolVar])
+                    except:
+                        print("Error: Se usa variable que aun no ha sido asignada", dir)
+                        exit(1)
+    elif(dir > 26000 and dir < 29551 ): # es var de clase
+        global curObj
+        if(dir >= dirs[5].limIInt and dir <= dirs[5].limSInt):
+            try:
+                return int(objS[curObj][1].int[dir - dirs[5].limIInt])
+            except:
+                print("Error: Se usa variable que aun no ha sido asignada", dir)
+                exit(1)
+        elif(dir >= dirs[5].limIFloat and dir <= dirs[5].limSFloat):
+            try:
+                return float(objS[curObj][1].float[dir - dirs[5].limIFloat])
+            except:
+                print("Error: Se usa variable que aun no ha sido asignada", dir)
+                exit(1)
+        elif(dir >= dirs[5].limIString and dir <= dirs[5].limSString):
+            try:
+                return str(objS[curObj][1].string[dir - dirs[5].limIString])
+            except:
+                print("Error: Se usa variable que aun no ha sido asignada", dir)
+                exit(1)
+        elif(dir >= dirs[5].limIBool and dir <= dirs[5].limSBool):
+            try:
+                return bool(objS[curObj][1].bool[dir - dirs[5].limIBool])
+            except:
+                print("Error: Se usa variable que aun no ha sido asignada", dir)
+                exit(1)
+        elif(dir >= dirs[5].limIObj and dir <= dirs[5].limSObj):
+            try:
+                return int(objS[curObj][1].obj[dir - dirs[5].limIObj])
+            except:
+                print("Error: Se usa variable que aun no ha sido asignada", dir)
+                exit(1)
     else: # no es local
         for i in range(4):            
             if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
@@ -164,68 +228,124 @@ def fetchDir(dir):
                     exit(1)
 
 def fetchType(dir):
-    for i in range(4):
-        if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
+    if(dir > 10000 and dir < 14001): # es local
+        if(dir > 10000 and dir < 12001): # es temporal local
+            if(dir >= dirs[4].limIIntTemp and dir <= dirs[4].limSIntTemp):
+                return 'int'
+            elif(dir >= dirs[4].limIFloatTemp and dir <= dirs[4].limSFloatTemp):
+                return 'float'
+            elif(dir >= dirs[4].limIStringTemp and dir <= dirs[4].limSStringTemp):
+                return 'str'
+            elif(dir >= dirs[4].limIBoolTemp and dir <= dirs[4].limSBoolTemp):
+                return 'bool'
+        elif(dir > 12000 and dir < 13001): # es constante local
+            if(dir >= dirs[4].limIIntConst and dir <= dirs[4].limSIntConst):
+                return 'int'
+            elif(dir >= dirs[4].limIFloatConst and dir <= dirs[4].limSFloatConst):
+                return 'float'
+            elif(dir >= dirs[4].limIStringConst and dir <= dirs[4].limSStringConst):
+                return 'str'
+            elif(dir >= dirs[4].limIBoolConst and dir <= dirs[4].limSBoolConst):
+                return 'bool'
+        elif(dir > 13000 and dir < 14001): # es variable local
+            if(dir >= dirs[4].limIIntVar and dir <= dirs[4].limSIntVar):
+                return 'int'
+            elif(dir >= dirs[4].limIFloatVar and dir <= dirs[4].limSFloatVar):
+                return 'float'
+            elif(dir >= dirs[4].limIStringVar and dir <= dirs[4].limSStringVar):
+                return 'str'
+            elif(dir >= dirs[4].limIBoolVar and dir <= dirs[4].limSBoolVar):
+                return 'bool'
+    elif(dir > 26000 and dir < 29551 ): # es var de clase
+        if(dir >= dirs[5].limIInt and dir <= dirs[5].limSInt):
             return 'int'
-        elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
+        elif(dir >= dirs[5].limIFloat and dir <= dirs[5].limSFloat):
             return 'float'
-        elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
+        elif(dir >= dirs[5].limIString and dir <= dirs[5].limSString):
             return 'str'
-        elif (dir >= dirs[i].limIBool and dir <= dirs[i].limSBool):
+        elif(dir >= dirs[5].limIBool and dir <= dirs[5].limSBool):
             return 'bool'
+        elif(dir >= dirs[5].limIObj and dir <= dirs[5].limSObj):
+            return 'obj'
+    else: # es var global
+        for i in range(4):
+            if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
+                return 'int'
+            elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
+                return 'float'
+            elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
+                return 'str'
+            elif (dir >= dirs[i].limIBool and dir <= dirs[i].limSBool):
+                return 'bool'
 
 # escribe valor, faltan los objetos
 def execDir(dir, value, op):
-    if(dir > 10000 and dir < 14001): # es local
-        curFunc = len(stackS) - 1
-        if(dir > 10000 and dir < 12001): # es temporal local
-            if(dir >= dirs[4].limIIntTemp and dir <= dirs[4].limSIntTemp):
-                stackS[curFunc][1].int[dir - dirs[4].limIIntTemp] = value
-            elif(dir >= dirs[4].limIFloatTemp and dir <= dirs[4].limSFloatTemp):
-                stackS[curFunc][1].float[dir - dirs[4].limIFloatTemp] = value
-            elif(dir >= dirs[4].limIStringTemp and dir <= dirs[4].limSStringTemp):
-                stackS[curFunc][1].string[dir - dirs[4].limIStringTemp] = value
-            elif(dir >= dirs[4].limIBoolTemp and dir <= dirs[4].limSBoolTemp):
-                stackS[curFunc][1].bool[dir - dirs[4].limIBoolTemp] = value
-        elif(dir > 12000 and dir < 13001): # es constante local
-            if(dir >= dirs[4].limIIntConst and dir <= dirs[4].limSIntConst):
-                stackS[curFunc][2].int[dir - dirs[4].limIIntConst] = value
-            elif(dir >= dirs[4].limIFloatConst and dir <= dirs[4].limSFloatConst):
-                stackS[curFunc][2].float[dir - dirs[4].limIFloatConst] = value
-            elif(dir >= dirs[4].limIStringConst and dir <= dirs[4].limSStringConst):
-                stackS[curFunc][2].string[dir - dirs[4].limIStringConst] = value
-            elif(dir >= dirs[4].limIBoolConst and dir <= dirs[4].limSBoolConst):
-                stackS[curFunc][2].bool[dir - dirs[4].limIBoolConst] = value
-        elif(dir > 13000 and dir < 14001): # es variable local
-            if(dir >= dirs[4].limIIntVar and dir <= dirs[4].limSIntVar):
-                stackS[curFunc][0].int[dir - dirs[4].limIIntVar] = value
-            elif(dir >= dirs[4].limIFloatVar and dir <= dirs[4].limSFloatVar):
-                stackS[curFunc][0].float[dir - dirs[4].limIFloatVar] = value
-            elif(dir >= dirs[4].limIStringVar and dir <= dirs[4].limSStringVar):
-                stackS[curFunc][0].string[dir - dirs[4].limIStringVar] = value
-            elif(dir >= dirs[4].limIBoolVar and dir <= dirs[4].limSBoolVar):
-                stackS[curFunc][0].bool[dir - dirs[4].limIBoolVar] = value
-    else: # no es local
-        for i in range(4):
-            if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
-                if (dir > 29550 and op == '='):
-                    res = dataS[i].int[dir - dirs[i].limIInt]
-                    if(res >= dirs[0].limIInt and res <= dirs[0].limSInt):
-                        dataS[0].int[res - dirs[0].limIInt] = value
-                    elif(res >= dirs[0].limIFloat and res <= dirs[0].limSFloat):
-                        dataS[0].float[res - dirs[0].limIFloat] = value
-                    elif(res >= dirs[0].limIString and res <= dirs[0].limSString):
-                        dataS[0].string[res - dirs[0].limIString] = value
-                    elif(res >= dirs[0].limIBool and res <= dirs[0].limSBool):
-                        dataS[0].bool[res - dirs[0].limIBool] = value
-                else:
-                    dataS[i].int[dir - dirs[i].limIInt] = value
-            elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
-                dataS[i].float[dir - dirs[i].limIFloat] = value
-            elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
-                dataS[i].string[dir - dirs[i].limIString] = value
-            elif (dir >= dirs[i].limIBool and dir <= dirs[i].limSBool):
-                dataS[i].bool[dir - dirs[i].limIBool] = value
+    try:
+        if(dir > 10000 and dir < 14001): # es local
+            curFunc = len(stackS) - 1
+            if(dir > 10000 and dir < 12001): # es temporal local
+                if(dir >= dirs[4].limIIntTemp and dir <= dirs[4].limSIntTemp):
+                    stackS[curFunc][1].int[dir - dirs[4].limIIntTemp] = value
+                elif(dir >= dirs[4].limIFloatTemp and dir <= dirs[4].limSFloatTemp):
+                    stackS[curFunc][1].float[dir - dirs[4].limIFloatTemp] = value
+                elif(dir >= dirs[4].limIStringTemp and dir <= dirs[4].limSStringTemp):
+                    stackS[curFunc][1].string[dir - dirs[4].limIStringTemp] = value
+                elif(dir >= dirs[4].limIBoolTemp and dir <= dirs[4].limSBoolTemp):
+                    stackS[curFunc][1].bool[dir - dirs[4].limIBoolTemp] = value
+            elif(dir > 12000 and dir < 13001): # es constante local
+                if(dir >= dirs[4].limIIntConst and dir <= dirs[4].limSIntConst):
+                    stackS[curFunc][2].int[dir - dirs[4].limIIntConst] = value
+                elif(dir >= dirs[4].limIFloatConst and dir <= dirs[4].limSFloatConst):
+                    stackS[curFunc][2].float[dir - dirs[4].limIFloatConst] = value
+                elif(dir >= dirs[4].limIStringConst and dir <= dirs[4].limSStringConst):
+                    stackS[curFunc][2].string[dir - dirs[4].limIStringConst] = value
+                elif(dir >= dirs[4].limIBoolConst and dir <= dirs[4].limSBoolConst):
+                    stackS[curFunc][2].bool[dir - dirs[4].limIBoolConst] = value
+            elif(dir > 13000 and dir < 14001): # es variable local
+                if(dir >= dirs[4].limIIntVar and dir <= dirs[4].limSIntVar):
+                    stackS[curFunc][0].int[dir - dirs[4].limIIntVar] = value
+                elif(dir >= dirs[4].limIFloatVar and dir <= dirs[4].limSFloatVar):
+                    stackS[curFunc][0].float[dir - dirs[4].limIFloatVar] = value
+                elif(dir >= dirs[4].limIStringVar and dir <= dirs[4].limSStringVar):
+                    stackS[curFunc][0].string[dir - dirs[4].limIStringVar] = value
+                elif(dir >= dirs[4].limIBoolVar and dir <= dirs[4].limSBoolVar):
+                    stackS[curFunc][0].bool[dir - dirs[4].limIBoolVar] = value
+        elif(dir > 26000 and dir < 29551 ): # es var de clase
+            global curObj
+            if(dir >= dirs[5].limIInt and dir <= dirs[5].limSInt):
+                objS[curObj][1].int[dir - dirs[5].limIInt] = value
+            elif(dir >= dirs[5].limIFloat and dir <= dirs[5].limSFloat):
+                objS[curObj][1].float[dir - dirs[5].limIFloat] = value
+            elif(dir >= dirs[5].limIString and dir <= dirs[5].limSString):
+                objS[curObj][1].string[dir - dirs[5].limIString] = value
+            elif(dir >= dirs[5].limIBool and dir <= dirs[5].limSBool):
+                objS[curObj][1].bool[dir - dirs[5].limIBool] = value
+            elif(dir >= dirs[5].limIObj and dir <= dirs[5].limSObj):
+                objS[curObj][1].obj[dir - dirs[5].limIObj] = value
+        else: # no es local
+            for i in range(4):
+                if (dir >= dirs[i].limIInt and dir <= dirs[i].limSInt):
+                    if (dir > 29550 and op == '='):
+                        res = dataS[i].int[dir - dirs[i].limIInt]
+                        if(res >= dirs[0].limIInt and res <= dirs[0].limSInt):
+                            dataS[0].int[res - dirs[0].limIInt] = value
+                        elif(res >= dirs[0].limIFloat and res <= dirs[0].limSFloat):
+                            dataS[0].float[res - dirs[0].limIFloat] = value
+                        elif(res >= dirs[0].limIString and res <= dirs[0].limSString):
+                            dataS[0].string[res - dirs[0].limIString] = value
+                        elif(res >= dirs[0].limIBool and res <= dirs[0].limSBool):
+                            dataS[0].bool[res - dirs[0].limIBool] = value
+                    else:
+                        dataS[i].int[dir - dirs[i].limIInt] = value
+                elif (dir >= dirs[i].limIFloat and dir <= dirs[i].limSFloat):
+                    dataS[i].float[dir - dirs[i].limIFloat] = value
+                elif (dir >= dirs[i].limIString and dir <= dirs[i].limSString):
+                    dataS[i].string[dir - dirs[i].limIString] = value
+                elif (dir >= dirs[i].limIBool and dir <= dirs[i].limSBool):
+                    dataS[i].bool[dir - dirs[i].limIBool] = value
+    except:
+        print("Variable no puede ser asignada")
+        exit(1)
 
 def boolValues(string):
     if string.lower() in ('true'):
@@ -272,16 +392,43 @@ def createMem(recursos, constantes, dirV):
             memFunc[2].bool.insert(i-dirs[4].limIBoolConst, valor)
     stackS.append(memFunc)
 
-# read dirFunc
+# asignar recursos de objetos dentro del object segment
+objS = {}
+def createMemObj(dirV, clase, atributos, funciones):
+    memObj = [clase, tipos(), funciones]
+    contador = 0
+    for i in atributos: # variables del objeto
+        if (contador == 0):
+            memObj[1].int = [None] * int(i)
+        elif (contador == 1):
+            memObj[1].float = [None] * int(i)
+        elif (contador == 2):
+            memObj[1].string = [None] * int(i)
+        elif (contador == 3):
+            memObj[1].bool = [None] * int(i)
+        contador += 1
+    objAux = {dirV : memObj}
+    objS.update(objAux)
+
+# read dirFuncs
 f = open('dirF.txt','r')
 dirFuncStr = f.readline()
+dirFuncClasesStr = f.readline()
 f.close()
 dirFunc = ast.literal_eval(dirFuncStr)
+dirFuncClases = ast.literal_eval(dirFuncClasesStr)
+
+# read dirObj
+f = open('dirObj.txt','r')
+dirObjStr = f.readline()
+f.close()
+dirObj = ast.literal_eval(dirObjStr)
     
 # operaciones
 print("-----maquina virtual-----")
 ip = 1
-saveIP = ip
+saveIP = [ip]
+curObj = 0
 contParam = contFuncs()
 numCuadruplos = len(codeS)
 while ip < numCuadruplos:
@@ -292,7 +439,6 @@ while ip < numCuadruplos:
         if (fetchDir(codeS[ip][1]) == False):
             ip = codeS[ip][3] - 1
     elif codigoOperacion == '=':
-        
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]), codigoOperacion)
     elif codigoOperacion == '*':
         execDir(codeS[ip][3], fetchDir(codeS[ip][1]) * fetchDir(codeS[ip][2]), codigoOperacion)
@@ -338,18 +484,29 @@ while ip < numCuadruplos:
             exit(1)
     elif codigoOperacion == 'era':
         recursos = dirFunc.get(codeS[ip][3])
-        createMem(recursos[0], recursos[1], recursos[2])
+        recursos2 = dirFuncClases.get(codeS[ip][3])
+        if(recursos != None):
+            createMem(recursos[0], recursos[1], recursos[2])
+        else:
+            createMem(recursos2[0], recursos2[1], recursos2[2])
+        contParam.reset()
+    elif codigoOperacion == 'eraObjeto':
+        curObj = codeS[ip][3]
+        recursos = dirObj.get(curObj)
+        verifica = objS.get(curObj)
+        if (verifica == None):
+            createMemObj(curObj, recursos[0], recursos[1], recursos[2])
+        contParam.reset()
     elif codigoOperacion == 'return':
         execDir(stackS[contParam.contFunc-1][3], fetchDir(codeS[ip][3]), '=')
     elif codigoOperacion == 'gosub':
-        saveIP = ip
+        saveIP.append(ip)
         ip = codeS[ip][3] - 1
         contParam.contFunc += 1
     elif codigoOperacion == 'endfunc':
-        ip = saveIP
+        ip = saveIP.pop()
         stackS.pop()
         contParam.contFunc -= 1
-        contParam.reset()
     elif codigoOperacion == 'endProgram':
         print("-----maquina virtual-----\nEjecucion finalizada.")
     elif codigoOperacion == 'param':
@@ -369,9 +526,3 @@ while ip < numCuadruplos:
             
     ip = ip + 1
 
-
-    
-    """ faltan:
-    elif op == "eraObjeto":
-        self.generarCuadruplo('eraObjeto', '', '', res)
-    """

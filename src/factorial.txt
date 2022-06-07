@@ -1,0 +1,37 @@
+program id ;
+
+var
+    resultado , aux2 , numero, aux1 : int ;
+
+int function factorial(num : int) {
+    if(num > 1){
+        aux1 = factorial(num - 1);
+    }
+    else{
+        aux1 = 1;
+    }
+    return num * aux1;
+}
+
+int function fact(num : int){
+    from(aux1 = 1 to num + 1) do {
+        aux2 = aux2 * aux1;
+    }
+    return aux2;
+}
+
+main ( ) {
+    aux1 = 1;
+    aux2 = 1 ;
+    numero = 0 ;
+    resultado = 0;
+
+    write("Escribe un numero para conocer su factorial: ");
+    read(numero);
+
+    resultado = factorial(numero);
+    write("(Recursivo) El factorial es: ", resultado);
+    
+    resultado = fact(numero);
+    write("(Ciclo) El factorial es: ", resultado);
+}

@@ -1,26 +1,21 @@
 program id ;
-
+ 
 class idClase {
   attributes
     a, b, c, i : int ;
+  methods
+    void function func2 () {
+        write("holaaaaaaaaaaaaaaaa");
+        return;
+    }
 
-} 
+}
 
 var 
   str1 , str2 : string ;
   num1 , num2, num3, i, sum, a, b[3] : int ;
   obj : idClase;
-
-void function func2 (par1 : int, num4 : float, str : string) {
-          if ( par1 < 10 ) {
-            i = i + 1 ;
-          }
-          else {
-            i = i + 2 ;
-          }
-        sum = 5 * 2;
-  return  ;
-}
+     
 
 int function func3 (par1 : int, num4 : int, str : string) {
     if ( par1 < 10 ) {
@@ -38,7 +33,6 @@ int function func3 (par1 : int, num4 : int, str : string) {
 
     return 12 + 5;
 }
-      
 
 main ( ) {
   write ("escribe un string") ;
@@ -49,11 +43,13 @@ main ( ) {
   a = 4;
   b[1] = 5;
   write(b[1]);
-  func2(2, 10.0, "hola");
+  func2();
   num3 = func3(2, 10, "hola");
   num3 = func3(2, 10, "hola");
   write(num3, "-------------------");
   from(a = 2 to 5) do {
         write(a);
     }
+  obj?a = 7;
+  write("OBJ ", obj?a);
 }

@@ -37,9 +37,4 @@ var
 
 
 main ( ) {
-  obj.func2(1, 1.5, "hola") ;
-  i = obj.func3(1, 1, "hola") ;
-  obj?sum = 10;
-  obj2.func2(1, 1.5, "hola") ;
-  i = obj.func3(1, 1, "hola") ;
 }
